@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using StartScreen = HexGeneral.Client.Ui.StartScreen;
 
 namespace HexGeneral.Game;
@@ -17,9 +18,5 @@ public partial class Root : Node
 			throw new Exception();
 		}
 		AddChild(new StartScreen());
-	}
-
-	public override void _Process(double delta)
-	{
 	}
 }

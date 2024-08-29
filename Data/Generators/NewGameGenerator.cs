@@ -7,7 +7,7 @@ namespace HexGeneral.Game.Generators;
 
 public static class NewGameGenerator
 {
-    public static GodotUtilities.GameData.Data Generate(NewGameSettings settings)
+    public static HexGeneralData Generate(NewGameSettings settings)
     {
         var data = new HexGeneralData();
             

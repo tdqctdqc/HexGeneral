@@ -1,0 +1,2 @@
+for attribute serialization: make list of attributes, store as json dic with typeName property,
+ if property is type list of attributes, importer will recognize and parse accordingly 

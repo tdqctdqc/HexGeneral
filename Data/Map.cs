@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using GodotUtilities.GameData;
@@ -7,8 +8,6 @@ namespace HexGeneral.Game;
 
 public class Map : Entity
 {
-    
-
     public Dictionary<Vector3I, Hex> Hexes { get; private set; }
     public static Map Create(Data d)
     {
@@ -24,11 +23,12 @@ public class Map : Entity
     
     public override void Made(Data d)
     {
-        
+        d.SetEntitySingleton<Map>();
     }
 
     public override void CleanUp(Data d)
     {
-        
+        throw new Exception();
     }
+    
 }

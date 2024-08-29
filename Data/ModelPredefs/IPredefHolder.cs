@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Reflection;
 
@@ -21,7 +22,8 @@ public static class IPredefHolderExt
     public static Dictionary<string, T> GetPredefsByName<T>
         (this IPredefHolder<T> holder) where T : Model
     {
-        return holder.GetType().GetPropertiesOfType<T>()
+        var type = holder.GetType();
+        return type.GetPropertiesOfType<T>()
             .ToDictionary(t => t.Name, t => t);
     }
 }

@@ -3,14 +3,15 @@ using GodotUtilities.GameClient;
 using GodotUtilities.GameData;
 using GodotUtilities.Ui;
 using HexGeneral.Game;
+using HexGeneral.Game.Client;
 
 namespace HexGeneral.Client.Ui;
 
 public partial class NewGameIntroPanel : PanelContainer
 {
-    private Data _data;
+    private HexGeneralData _data;
 
-    public NewGameIntroPanel(Data data)
+    public NewGameIntroPanel(HexGeneralData data)
     {
         _data = data;
     }
@@ -22,11 +23,12 @@ public partial class NewGameIntroPanel : PanelContainer
         vbox.AddButton("Start Game",
             () =>
             {
-                var client = new GameClient();
+                var client = new HexGeneralClient();
                 var parent = GetParent();
                 parent.QueueFree();
                 this.QueueFree();
                 Root.I.AddChild(client);
+                client.OpenGameSession(_data);
             });
         AddChild(vbox);
         this.Center();

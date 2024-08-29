@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Serialization.Depot;
 
@@ -14,6 +15,12 @@ public class HexGeneralModelImporter(ModelPredefs predefs) : ModelImporter("hexG
             _predefs.Landforms.GetPredefsByName(),
             n => new Landform(n),
             importer);
+        
+        models.ImportWithPredefsAllowDefault<Vegetation>(
+            _predefs.Vegetations.GetPredefsByName(),
+            n => new Vegetation(n),
+            importer);
+        
         importer.FillAllProperties();
     }
 
