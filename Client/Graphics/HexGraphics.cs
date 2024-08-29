@@ -14,8 +14,8 @@ public partial class HexGraphics : Node2D
         _baseHexColors = DoTerrainColor(data);
         AddChild(_baseHexColors);
 
-        // var chunks = DoChunks(data);
-        // AddChild(chunks);
+        var chunks = DoChunkColor(data);
+        AddChild(chunks);
         
         // var greatChunks = DoGreatChunks(data);
         // AddChild(greatChunks);
@@ -50,44 +50,22 @@ public partial class HexGraphics : Node2D
 
         return mb.GetMeshInstance();
     }
-    private static MeshInstance2D DoChunks(HexGeneralData data)
+    private static MeshInstance2D DoChunkColor(HexGeneralData data)
     {
         var mb = new MeshBuilder();
         
         var map = data.Map;
-        var chunks = data.HexChunks.Chunks;
-        foreach (var (id, chunk) in chunks)
+        foreach (var (coords, hex) in map.Hexes)
         {
-            var color = ColorsExt.GetRandomColor();
-            foreach (var coords in chunk.HexCoords)
-            {
-                var worldPos = coords.CubeToGridCoords().GetWorldPos();
-                var hexTris = ShapeBuilder.GetHex(worldPos, 1f);
-                mb.AddTris(hexTris, color);
-            }
-            
+            var worldPos = coords.CubeToGridCoords().GetWorldPos();
+            var hexTris = ShapeBuilder.GetHex(worldPos, 1f);
+
+            var v = hex.Vegetation.Get(data);
+
+            mb.AddTris(hexTris, hex.Chunk1Color);
         }
 
         return mb.GetMeshInstance();
     }
-    private static MeshInstance2D DoGreatChunks(HexGeneralData data)
-    {
-        var mb = new MeshBuilder();
-        
-        var map = data.Map;
-        var chunks = data.HexChunks.Chunks;
-        foreach (var (id, chunk) in chunks)
-        {
-            var color = chunk.GreatChunkColor;
-            foreach (var coords in chunk.HexCoords)
-            {
-                var worldPos = coords.CubeToGridCoords().GetWorldPos();
-                var hexTris = ShapeBuilder.GetHex(worldPos, 1f);
-                mb.AddTris(hexTris, color);
-            }
-            
-        }
-
-        return mb.GetMeshInstance();
-    }
+    
 }

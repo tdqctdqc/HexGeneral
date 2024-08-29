@@ -11,7 +11,6 @@ public class HexGeneralData : Data
 {
     public ModelPredefs ModelPredefs { get; private set; } 
     public Map Map => (Map)Singletons[typeof(Map)];
-    public HexChunks HexChunks => (HexChunks)Singletons[typeof(HexChunks)];
     public RoadNetwork RoadNetwork => (RoadNetwork)Singletons[typeof(RoadNetwork)];
     public LandSeaMasses LandSeaMasses => (LandSeaMasses)Singletons[typeof(LandSeaMasses)];
     public HexGeneralData() 

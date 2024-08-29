@@ -13,8 +13,8 @@ public static class NewGameGenerator
             
         GodotUtilities.GameData.Data.SetupForHost(data, 
             new HexGeneralModelImporter(data.ModelPredefs));
-        
-        var map = MapGenerator.Generate(data, settings);
+        var setupData = new NewGameData(settings);
+        var map = MapGenerator.Generate(data, setupData);
         
 
         return data;
