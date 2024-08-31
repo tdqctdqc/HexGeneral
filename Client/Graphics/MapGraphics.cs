@@ -12,8 +12,8 @@ public partial class MapGraphics(HexGeneralData data) : Node2D, IClientComponent
     public void Connect(GameClient client)
     {
         client.GraphicsLayer.AddChild(this);
-        var hexGraphics = new HexGraphics(Data);
-        AddChild(hexGraphics);
+        AddChild(new HexGraphics(Data));
+        AddChild(new RoadGraphics(Data));
     }
 
     public Action Disconnect { get; set; }

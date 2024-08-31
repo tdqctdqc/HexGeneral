@@ -19,7 +19,7 @@ public class NewGameSettings : Settings
             200, 50, 1000, 1, true);
         
         LandRatio = new FloatSettingsOption("Land Ratio",
-            .5f, .1f, 1f, .05f, false);
+            .4f, .1f, 1f, .05f, false);
         
         Roughness = new FloatSettingsOption("Roughness",
             .5f, 0f, 1f, .05f, false);

@@ -351,6 +351,63 @@
             "isProps": false,
             "parentSheetGUID": "bea43e5d-34f7-444f-8c0b-087939f0e69e",
             "columnGUID": "86a7719a-8be4-4918-9296-148d5afeebc2"
+        },
+        {
+            "name": "RoadModel",
+            "description": "RoadModel",
+            "displayColumn": "id",
+            "guid": "98db14a5-b83b-470f-b4ac-2fda786ad355",
+            "columns": [
+                {
+                    "typeStr": "text",
+                    "guid": "8dfbe134-b3b6-43b9-b710-3db8abae75ca",
+                    "name": "Name",
+                    "description": "Name",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                },
+                {
+                    "typeStr": "text",
+                    "guid": "63a062ca-d4df-4648-a99f-2a49c4886669",
+                    "name": "Color",
+                    "description": "Color",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "5f960d41-f070-4922-baad-e7888216fc46",
+                    "id": "0",
+                    "Name": "Dirt",
+                    "Color": "5b3417"
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
         }
     ]
 }

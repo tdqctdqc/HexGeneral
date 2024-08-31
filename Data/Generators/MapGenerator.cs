@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Godot;
 using GodotUtilities.CSharpExt;
@@ -8,6 +9,7 @@ using GodotUtilities.DataStructures.AggregateTree;
 using GodotUtilities.DataStructures.Geometry;
 using GodotUtilities.DataStructures.Hex;
 using GodotUtilities.DataStructures.Noise;
+using GodotUtilities.DataStructures.PathFinder;
 using GodotUtilities.DataStructures.Picker;
 using GodotUtilities.DataStructures.Tree;
 using GodotUtilities.GameData;
@@ -26,9 +28,8 @@ public static class MapGenerator
         DoLandforms(data, setupData);
         DoVegetations(data, setupData);
         MakeChunks(data, setupData);
-        MakeChunkUrbans(data, setupData);
+        MakeSociety(data, setupData);
         MakeLandmasses(data, setupData);
-        MakeRoadNetwork(data, setupData);
         
         return map;
     }
@@ -44,8 +45,10 @@ public static class MapGenerator
             {
                 var gridCoord = new Vector2I(j, i);
                 var coord = gridCoord.GridCoordsToCube();
-                var hex = new Hex(coord, default, default);
+                var hex = new Hex(coord, default, default,
+                    data.IdDispenser.TakeId());
                 map.Hexes.Add(coord, hex);
+                map.CoordsById.Add(hex.Id, coord);
             }
         }
     }
@@ -167,71 +170,47 @@ public static class MapGenerator
         }
     }
 
-    
-
     private static void MakeChunks(HexGeneralData data, NewGameData setupData)
     {
         var map = data.Map;
-        var baseBranches = makeBase();
-        Func<Branch<Hex>, Branch<Hex>, bool> canShare = (b, c) =>
-        {
-            return b.GetFirstLeaf().Landform.Get(data).IsLand
-                == c.GetFirstLeaf().Landform.Get(data).IsLand;
-        };
-        var topBranches = TreeAggregator
-            .BuildTiers(baseBranches,
-                () => SeedFuncs
-                    .NoNeighborSeeds(canShare,
-                        h => h.Neighbors,
-                        1),
-                () => PickerFuncs.ChooseRandom(
-                    3,
-                    h => h.Neighbors,
-                    canShare, data.Random),
-                canShare,
-                () => new Branch<Hex>(),
-                4, 2
-            );
-            
-            
-            
-            // aggregate(baseBranches, 
-            // 4, 3, 2);
-        
-        foreach (var branch in topBranches)
-        {
-            var leaves = branch.GetLeaves();
-            var color = ColorsExt.GetRandomColor();
-            foreach (var leaf in leaves)
-            {
-                leaf.Chunk1Color = color;
-            }
-        }
+        var twigs = makeTwigs();
+        setupData.Twigs.AddRange(twigs);
+        Func<Branch<Hex>, Branch<Hex>, bool> canShare 
+            = (b, c) => 
+                b.GetFirstLeaf().Landform.Get(data).IsLand
+                    == c.GetFirstLeaf().Landform.Get(data).IsLand;
+        var topBranches = makeTopBranches();
+        setupData.TopBranches.AddRange(topBranches);
+        int colIter = 0;
+
+        writeBranchColors(topBranches);
         
         
         
-        List<Branch<Hex>> makeBase()
+        
+        List<Branch<Hex>> makeTwigs()
         {
             var hexes = map.Hexes
                 .Values
                 .ToHashSet();
             var landHexes = hexes.Where(h => h.Landform.Get(data).IsLand).ToHashSet();
-            Func<Hex, Hex, bool> canShare = (h, g) => landHexes.Contains(h) == landHexes.Contains(g);
+            Func<Hex, Hex, bool> canShareBase = (h, g) => landHexes.Contains(h) == landHexes.Contains(g);
             var noNeighbors = SeedFuncs
-                .NoNeighborSeeds(canShare,
+                .NoNeighborSeeds(canShareBase,
                     h => h.GetNeighbors(data),
                     5);
             var firstRemaining = SeedFuncs.GetFirstRemainingSeed<Hex>();
 
-            var choose = PickerFuncs.ChooseRandom<Hex>(_chunkSize, h => h.GetNeighbors(data),
-                canShare, data.Random);
+            var choose 
+                = PickerFuncs.ChooseMinByHeuristic(_chunkSize, h => h.GetNeighbors(data),
+                canShareBase, (h,g) => h.WorldPos().DistanceTo(g.WorldPos()));
             
             var res =  TreeAggregator
                 .Aggregate(
                     noNeighbors, 
                     choose, 
                     hexes,
-                    () => new Branch<Hex>(),
+                    Branch<Hex>.ConstructTwig,
                     h => h.GetNeighbors(data));
             var consolidated = TreeAggregator
                 .Consolidate<Branch<Hex>, Hex>(res, 10, 
@@ -240,172 +219,187 @@ public static class MapGenerator
             return res;
         }
 
-        List<Branch<Hex>> aggregate(List<Branch<Hex>> source, 
-            int times, int take, int min)
+        List<Branch<Hex>> makeTopBranches()
         {
-            var curr = source;
-            var landBranches = source.Where(s => s.Leaves.First().Landform.Get(data).IsLand)
-                .ToHashSet();
-            
-            for (var i = 0; i < times; i++)
-            {
-                Func<Branch<Hex>, Branch<Hex>, bool> canShare = (h, g) => landBranches.Contains(h) == landBranches.Contains(g);
-            
-                var noNeighbors 
-                    = SeedFuncs
+            return TreeAggregator
+                .BuildTiers(twigs,
+                    () => SeedFuncs
                         .NoNeighborSeeds(canShare,
                             h => h.Neighbors,
-                            1);
-                var choose 
-                    = PickerFuncs.ChooseRandom<Branch<Hex>>(take,
+                            1),
+                    () => PickerFuncs.ChooseMinByHeuristic(
+                        3,
                         h => h.Neighbors,
-                        canShare, data.Random);
-                
-                var next = TreeAggregator.Aggregate(
-                    noNeighbors,
-                    choose,
-                    curr.ToHashSet(),
-                    () => new Branch<Hex>(),
-                    b => b.Neighbors
+                        canShare, 
+                        (t, r) => t.GetFirstLeaf().WorldPos().DistanceTo(r.GetFirstLeaf().WorldPos())),
+                    canShare,
+                    Branch<Hex>.ConstructTrunk,
+                    4, 2
                 );
-                foreach (var branch in next)
+        }
+        void writeBranchColors(IEnumerable<Branch<Hex>> branches)
+        {
+            foreach (var branch in branches)
+            {
+
+                var baseColor
+                    = branch.GetFirstLeaf().Landform.Get(data).IsLand
+                        ? Colors.Green
+                        : Colors.Blue;
+
+                var color = baseColor.GetPeriodicShade(colIter++);
+                var hexes = branch.GetLeaves();
+                foreach (var hex in hexes)
                 {
-                    if (landBranches.Contains(branch.Children.First()))
-                    {
-                        landBranches.Add(branch);
-                    }
+                    hex.Colors.Add(color);
                 }
 
-                curr = next;
-                var c = TreeAggregator
-                    .Consolidate<Branch<Hex>, Branch<Hex>>(
-                        curr, min, canShare);
-                curr.RemoveAll(c.Contains);
+                if (branch.Children is not null)
+                {
+                    writeBranchColors(branch.Children);
+                }
             }
-            
-            
-            return curr;
         }
     }
 
+    private static void MakeSociety(HexGeneralData data, NewGameData setupData)
+    {
+        MakeChunkUrbans(data, setupData);
+        MakeRoadNetwork(data, setupData);
+    }
     private static void MakeChunkUrbans(HexGeneralData data, NewGameData setupData)
     {
-        // var urban = data.ModelPredefs.Landforms.Urban;
-        // var barren = data.ModelPredefs.Vegetations.Barren;
-        // var chunks = setupData.HexBranches
-        //     .SelectMany(b => b.GetLeaves())
-        //     .EnumerableToHashSet();
-        //
-        // var map = data.Map;
-        // var exclude = new HashSet<Branch<Hex>>();
-        //
-        // foreach (var chunk in chunks)
-        // {
-        //     if (exclude.Contains(chunk)) continue;
-        //     if (chunk.Children.Count < 4) continue; 
-        //     if (chunk.Children.First().Landform.Get(data).IsLand == false) continue;
-        //     if (data.Random.Randf() < .75f) continue;
-        //     var numUrbanHexes = data.Random.RandiRange(1, 5);
-        //     numUrbanHexes = Mathf.Min(chunk.Children.Count / 3, numUrbanHexes);
-        //     var flood = FloodFill<Hex>
-        //         .FloodFillRandomishToLimit(chunk.Seed, numUrbanHexes,
-        //             h => h.GetNeighbors(data),
-        //             h => chunk.Children.Contains(h), 
-        //             data.Random);
-        //     foreach (var hex in flood)
-        //     {
-        //         hex.SetLandform(urban.MakeIdRef(data));
-        //         hex.SetVegetation(barren.MakeIdRef(data));
-        //     }
-        //     foreach (var nChunk in chunk.Neighbors(data))
-        //     {
-        //         exclude.Add(nChunk);
-        //     }
-        // }
+        var map = data.Map;
+        var landHexes = data.Map.Hexes.Values
+            .Where(h => h.Landform.Get(data).IsLand)
+            .ToHashSet();
+        var landTwigs = setupData.TopBranches
+            .SelectMany(t => t.GetTwigs())
+            .Where(t => landHexes.Contains(t.TwigSeed))
+            .ToHashSet();
+        
+        var urban = data.ModelPredefs.Landforms.Urban;
+        var barren = data.ModelPredefs.Vegetations.Barren;
+
+        Func<Branch<Hex>, Branch<Hex>, bool> canShare = (t, r) => true;
+        var getSeeds = SeedFuncs
+            .NoNeighborSeeds<Branch<Hex>>(
+                canShare,
+                t => t.Neighbors.Where(landTwigs.Contains),
+                1);
+        var chooser = PickerFuncs
+            .ChooseMinByHeuristic<Branch<Hex>>(
+                10, t => t.Neighbors.Where(landTwigs.Contains),
+                canShare, (b, c) => b.TwigSeed.WorldPos().DistanceTo(c.TwigSeed.WorldPos()));
+        
+        var urbanTrunks = TreeAggregator
+            .Aggregate(getSeeds,
+                chooser, landTwigs.ToHashSet(),
+                Branch<Hex>.ConstructTrunk,
+                b => b.Neighbors.Where(landTwigs.Contains));
+
+        var extraUrbanHexes = new       
+        int[]{
+                0, 0, 0, 0, 0, 0, 0, 0, 0,
+                1, 1, 1, 1, 1,
+                2, 2, 2, 2,
+                3, 3, 3,
+                4, 4, 4,
+                5, 5,
+                6 };
+        foreach (var urbanTrunk in urbanTrunks)
+        {
+            var seedHex = urbanTrunk.TrunkSeed.TwigSeed;
+            seedHex.SetLandform(urban.MakeIdRef(data));
+            seedHex.SetVegetation(barren.MakeIdRef(data));
+            var moreUrban = extraUrbanHexes[data.Random.RandiRange(0, extraUrbanHexes.Length - 1)];
+            if (moreUrban > 0)
+            {
+                var index = data.Random.RandiRange(0, 5);
+                for (var i = 0; i < moreUrban; i++)
+                {
+                    var coord = seedHex.Coords 
+                                + HexExt.HexDirs[index % 6];
+                    index++;
+                    if (map.Hexes.TryGetValue(coord, out var nHex)
+                        && landHexes.Contains(nHex))
+                    {
+                        nHex.SetLandform(urban.MakeIdRef(data));
+                        nHex.SetVegetation(barren.MakeIdRef(data));
+                    }
+                }
+            }
+                
+            
+            
+            
+            var leaves = urbanTrunk.GetLeaves();
+            var color = ColorsExt.GetRandomColor();
+            foreach (var leaf in leaves)
+            {
+                leaf.Colors.Add(color);
+            }
+            setupData.UrbanTrunks.Add(urbanTrunk);
+        }
     }
-    private static void MakeLandmasses(HexGeneralData data, NewGameData setupData)
+    private static void MakeLandmasses(HexGeneralData data, 
+        NewGameData setupData)
     {
-        // var map = data.Map;
-        // var chunks = setupData.HexBranches.SelectMany(b => b.GetLeaves())
-        //     .EnumerableToHashSet();
-        // var landHexes = map.Hexes.Values
-        //     .Where(h => h.Landform.Get(data).IsLand)
-        //     .EnumerableToHashSet();
-        // var seaHexes = map.Hexes.Values.Except(landHexes)
-        //     .EnumerableToHashSet();
-        //
-        // var landUnions = UnionFind.Find<Hex, HashSet<Hex>>(
-        //         landHexes, (t, r) => true, t => t.GetNeighbors(data))
-        //     .Select(hs => hs.Select(h => h.Coords).EnumerableToHashSet())
-        //     .ToList();
-        //
-        // var seaUnions = UnionFind.Find<Hex, HashSet<Hex>>(
-        //         seaHexes, (t, r) => true, t => t.GetNeighbors(data))
-        //     .Select(hs => hs.Select(h => h.Coords).EnumerableToHashSet())
-        //     .ToList();
-        // var allUnions = landUnions.Concat(seaUnions).ToList();
-        // var dic = allUnions.ToDictionary(v => v, v => new HashSet<int>());
-        //
-        // foreach (var chunk in chunks)
-        // {
-        //     var union = allUnions.First(u => u.Contains(chunk.Seed));
-        //     dic[union].Add(id);
-        // }
-        // var landmasses = new LandSeaMasses(data.IdDispenser.TakeId(),
-        //     dic.Values.ToList());
-        // data.Entities.AddEntity(landmasses, data);
+        
     }
     private static void MakeRoadNetwork(HexGeneralData data, NewGameData setupData)
     {
-        // var map = data.Map;
-        // var urban = data.ModelPredefs.Landforms.Urban;
-        // var chunks = data.HexChunks;
-        // var landmasses = data.LandSeaMasses;
-        //
-        // foreach (var massChunkIds in landmasses.MassChunkIds)
-        // {
-        //     var firstChunk = chunks.Chunks[massChunkIds.First()];
-        //     if (firstChunk.IsLand == false) continue;
-        //     var massChunks = massChunkIds
-        //         .Select(id => chunks.Chunks[id]).ToArray();
-        //     var urbanChunks = massChunks
-        //         .Where(c => map.Hexes[c.Seed].Landform.Get(data) == urban);
-        //         
-        //
-        //     var greatChunkPicker = new Picker<HexChunk>(massChunks,
-        //         h => h.Neighbors(data));
-        //     foreach (var urbanSeed in urbanChunks)
-        //     {
-        //         greatChunkPicker.AddAgent(
-        //             new AdjacencyCountPickerAgent<HexChunk>(urbanSeed, greatChunkPicker, 1, h => true));
-        //     }
-        //     greatChunkPicker.RandomAgentPick();
-        //     
-        //     foreach (var agent in greatChunkPicker.Agents)
-        //     {
-        //         
-        //     }
-        // }
-        //
-        //
-        //
-        // List<Hex> getPath(Hex start, Hex end)
-        // {
-        //     if (start.WorldPos().DistanceTo(end.WorldPos()) > 20)
-        //     {
-        //         return new();
-        //     }
-        //     return PathFinder<Hex>.FindPath(
-        //         start, end, v => v.GetNeighbors(data)
-        //             .Where(n => n.Landform.Get(data).IsLand),
-        //         (v, w) =>
-        //         {
-        //             var vLf = v.Landform.Get(data);
-        //             var wLf = w.Landform.Get(data);
-        //             return 1f + vLf.MinRoughness + wLf.MinRoughness;
-        //         },
-        //         (v, w) => v.WorldPos().DistanceTo(w.WorldPos()));
-        // }
+        var roads = new RoadNetwork(data.IdDispenser.TakeId(), new Dictionary<Vector2I, ModelIdRef<RoadModel>>());
+        data.Entities.AddEntity(roads, data);
+        var landHexes = data.Map.Hexes.Values
+            .Where(h => h.Landform.Get(data).IsLand)
+            .ToHashSet();
+        var landTwigs = setupData.Twigs
+            .Where(t => landHexes.Contains(t.TwigSeed)).ToHashSet();
+
+        float getHexEdgeCost(Hex h, Hex n)
+        {
+            var hLf = h.Landform.Get(data);
+            var nLf = n.Landform.Get(data);
+            return 1f + Mathf.Clamp(hLf.MinRoughness, 0f, 1f) + Mathf.Clamp(nLf.MinRoughness, 0f, 1f);
+        }
+        
+        float heuristic(Hex v, Hex w) => v.WorldPos().DistanceTo(w.WorldPos());
+        
+        var dirt = data.ModelPredefs.RoadModels.Dirt.MakeIdRef(data);
+        var sw = new Stopwatch();
+        sw.Start();
+        
+        var hierarchicalPathFinder 
+                = HierarchicalCachedPathFinder<Branch<Hex>, Hex>
+                    .ConstructAStar(
+                        (b1, b2) => heuristic(b1.TwigSeed, b2.TwigSeed),
+                        h => h.Neighbors.Where(landTwigs.Contains),
+                        heuristic,
+                        b => b.TwigSeed,
+                        getHexEdgeCost,
+                        h => h.GetNeighbors(data).Where(landHexes.Contains)
+                );
+        var urbanTrunksBySeed = setupData.UrbanTrunks
+            .ToDictionary(t => t.Id,
+                t => t);
+        hierarchicalPathFinder.MakeNetworkPaths(
+            setupData.UrbanTrunks.Select(b => b.TrunkSeed),
+            b => urbanTrunksBySeed[b.Id]
+                .Neighbors.Select(n => n.TrunkSeed));
+        foreach (var ((x, y), path) in hierarchicalPathFinder.PathCache)
+        {
+            for (var i = 0; i < path.Count - 1; i++)
+            {
+                var from = path[i];
+                var to = path[i + 1];
+                var key = from.GetIdEdgeKey(to);
+                roads.Roads.TryAdd(key, dirt);
+            }
+        }
+        
+        sw.Stop();
+        GD.Print($"time {sw.Elapsed.TotalMilliseconds}");
         
     }
 }

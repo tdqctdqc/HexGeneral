@@ -11,16 +11,15 @@ public class HexGeneralModelImporter(ModelPredefs predefs) : ModelImporter("hexG
 
     protected override void SetupModelsSpecific(Models models, DepotImporter importer)
     {
-        models.ImportWithPredefsAllowDefault<Landform>(
-            _predefs.Landforms.GetPredefsByName(),
+        models.ImportNoPredefs(
             n => new Landform(n),
             importer);
-        
-        models.ImportWithPredefsAllowDefault<Vegetation>(
-            _predefs.Vegetations.GetPredefsByName(),
+        models.ImportNoPredefs(
             n => new Vegetation(n),
             importer);
-        
+        models.ImportNoPredefs(
+            n => new RoadModel(n),
+            importer);
         importer.FillAllProperties();
     }
 

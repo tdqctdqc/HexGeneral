@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
+using Godot;
 using GodotUtilities.GameData;
 
 namespace HexGeneral.Game;
 
-public class RoadNetwork : Entity
+public class RoadNetwork(
+    int id,
+    Dictionary<Vector2I, ModelIdRef<RoadModel>> roads)
+    : Entity(id)
 {
-    public Dictionary<long, ModelRef<RoadModel>> I { get; private set; }
-    public RoadNetwork(int id) : base(id)
-    {
-    }
+    public Dictionary<Vector2I, ModelIdRef<RoadModel>> Roads { get; private set; } = roads;
 
     public override void Made(Data d)
     {
