@@ -29,7 +29,6 @@ public static class MapGenerator
         DoVegetations(data, setupData);
         MakeChunks(data, setupData);
         MakeSociety(data, setupData);
-        MakeLandmasses(data, setupData);
         
         return map;
     }
@@ -113,7 +112,6 @@ public static class MapGenerator
             var isRoughSample = isRoughNoise.GetSample2D(worldPos);
             if (isRoughSample > isRoughCutoff) continue;
             var roughnessSample = roughnessNoise.GetSample2D(worldPos);
-            // GD.Print(roughnessSample);
             roughnessSample = Mathf.Clamp(roughnessSample, 0f, 1f);
             Landform lf = lfsByRoughness.First(r => roughnessSample >= r.MinRoughness);
             hex.SetLandform(lf.MakeIdRef(data));
@@ -289,8 +287,11 @@ public static class MapGenerator
                 1);
         var chooser = PickerFuncs
             .ChooseMinByHeuristic<Branch<Hex>>(
-                10, t => t.Neighbors.Where(landTwigs.Contains),
+                5, t => t.Neighbors.Where(landTwigs.Contains),
                 canShare, (b, c) => b.TwigSeed.WorldPos().DistanceTo(c.TwigSeed.WorldPos()));
+        
+        
+        
         
         var urbanTrunks = TreeAggregator
             .Aggregate(getSeeds,
@@ -330,9 +331,6 @@ public static class MapGenerator
                 }
             }
                 
-            
-            
-            
             var leaves = urbanTrunk.GetLeaves();
             var color = ColorsExt.GetRandomColor();
             foreach (var leaf in leaves)
@@ -341,11 +339,6 @@ public static class MapGenerator
             }
             setupData.UrbanTrunks.Add(urbanTrunk);
         }
-    }
-    private static void MakeLandmasses(HexGeneralData data, 
-        NewGameData setupData)
-    {
-        
     }
     private static void MakeRoadNetwork(HexGeneralData data, NewGameData setupData)
     {
@@ -389,6 +382,7 @@ public static class MapGenerator
                 .Neighbors.Select(n => n.TrunkSeed));
         foreach (var ((x, y), path) in hierarchicalPathFinder.PathCache)
         {
+            
             for (var i = 0; i < path.Count - 1; i++)
             {
                 var from = path[i];
@@ -400,6 +394,5 @@ public static class MapGenerator
         
         sw.Stop();
         GD.Print($"time {sw.Elapsed.TotalMilliseconds}");
-        
     }
 }
