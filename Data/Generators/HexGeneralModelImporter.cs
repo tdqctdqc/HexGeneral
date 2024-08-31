@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Serialization.Depot;
@@ -19,6 +20,9 @@ public class HexGeneralModelImporter(ModelPredefs predefs) : ModelImporter("hexG
             importer);
         models.ImportNoPredefs(
             n => new RoadModel(n),
+            importer);
+        models.ImportNoPredefs(
+            n => new RegimeModel(n),
             importer);
         importer.FillAllProperties();
     }

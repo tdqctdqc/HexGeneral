@@ -8,13 +8,14 @@ using GodotUtilities.GameData;
 
 namespace HexGeneral.Game;
 
-public class Hex(Vector3I coords, ModelIdRef<Landform> landform, ModelIdRef<Vegetation> vegetation, int id)
+public class Hex(Vector3I coords, ModelIdRef<Landform> landform, ModelIdRef<Vegetation> vegetation, int id, ERef<Regime> regime)
     : IIded
 {
     public int Id { get; private set; } = id;
     public Vector3I Coords { get; private set; } = coords;
     public ModelIdRef<Landform> Landform { get; private set; } = landform;
     public ModelIdRef<Vegetation> Vegetation { get; private set; } = vegetation;
+    public ERef<Regime> Regime { get; private set; } = regime;
     public List<Color> Colors { get; set; } = new List<Color>();
     public void SetLandform(ModelIdRef<Landform> lf)
     {

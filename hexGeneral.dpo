@@ -408,6 +408,69 @@
                     ]
                 }
             }
+        },
+        {
+            "name": "RegimeModel",
+            "description": "RegimeModel",
+            "displayColumn": "id",
+            "guid": "998682cf-9c6f-4dae-adbd-1d2f9c8cc22e",
+            "columns": [
+                {
+                    "typeStr": "text",
+                    "guid": "0b15844a-b0d4-42f6-873b-9997eff7386a",
+                    "name": "Name",
+                    "description": "Name",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                },
+                {
+                    "typeStr": "text",
+                    "guid": "9b562c37-9d00-473f-9d66-34e02afb6300",
+                    "name": "Color",
+                    "description": "Color",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "99beb334-3f52-4b38-97c7-3e48a1a78917",
+                    "id": "0",
+                    "Name": "Red",
+                    "Color": "ff0000"
+                },
+                {
+                    "guid": "193e03e3-f891-40cd-a518-49b54b107a60",
+                    "id": "1",
+                    "Name": "Blue",
+                    "Color": "0000ff"
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
         }
     ]
 }

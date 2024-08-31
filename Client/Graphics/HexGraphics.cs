@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using GodotUtilities.DataStructures.Hex;
+using GodotUtilities.GameData;
 using GodotUtilities.Graphics;
 using GodotUtilities.Input;
 
@@ -15,7 +17,9 @@ public partial class HexGraphics : Node2D
     public HexGraphics(HexGeneralData data)
     {
         _data = data;
-        _baseHexColors = DoTerrainColor(data);
+        _baseHexColors = GetHexMesh(
+            h => GetTerrainColor(h, _data), _data);
+
         AddChild(_baseHexColors);
     }
 
@@ -27,20 +31,39 @@ public partial class HexGraphics : Node2D
         {
             _showing = toShow;
             this.ClearChildren();
-            if (_showing == 0)
+            _baseHexColors = GetHexMesh(
+                h => GetDebugColor(toShow, h, _data), _data);
+            AddChild(_baseHexColors);
+        }
+        else
+        {
+            if (Input.IsKeyPressed(Key.T) && _showing != -1)
             {
-                _baseHexColors = DoTerrainColor(_data);
+                this.ClearChildren();
+                _showing = -1;
+                _baseHexColors = GetHexMesh(
+                    h => GetTerrainColor(h, _data), _data);
+
                 AddChild(_baseHexColors);
             }
-            else
+            else if (Input.IsKeyPressed(Key.R) 
+                     && _showing != -2)
             {
-                _baseHexColors = DoChunkColor(_showing - 1, _data);
+                this.ClearChildren();
+                _showing = -2;
+                _baseHexColors = _baseHexColors = GetHexMesh(
+                    h => GetRegimeColor(h, _data), _data);
+
                 AddChild(_baseHexColors);
             }
         }
+        
+        
+        
     }
 
-    private static MeshInstance2D DoTerrainColor(HexGeneralData data)
+    private static MeshInstance2D GetHexMesh(Func<Hex, Color> getColor,
+        HexGeneralData data)
     {
         var mb = new MeshBuilder();
         
@@ -49,41 +72,56 @@ public partial class HexGraphics : Node2D
         {
             var worldPos = coords.CubeToGridCoords().GetWorldPos();
             var hexTris = ShapeBuilder.GetHex(worldPos, 1f);
-
-            var v = hex.Vegetation.Get(data);
-
-            Color color;
-            if (v.Color == Colors.Transparent)
-            {
-                color = hex.Landform.Get(data).Color;
-            }
-            else
-            {
-                color = v.Color.Darkened(hex.Landform.Get(data).DarkenFactor);
-            }
-
-            color = color.Darkened(data.Random.RandfRange(-ColorWobble,
-                ColorWobble));
+            Color color = getColor(hex);
             mb.AddTris(hexTris, color);
         }
 
         return mb.GetMeshInstance();
     }
-    private static MeshInstance2D DoChunkColor(int i, HexGeneralData data)
-    {
-        var mb = new MeshBuilder();
-        
-        var map = data.Map;
-        foreach (var (coords, hex) in map.Hexes)
-        {
-            var worldPos = coords.CubeToGridCoords().GetWorldPos();
-            var hexTris = ShapeBuilder.GetHex(worldPos, 1f);
 
-            var color = hex.Colors.Count > i ? hex.Colors[i] : Colors.Transparent;
-            mb.AddTris(hexTris, color);
+    private static Color GetTerrainColor(Hex hex, HexGeneralData data)
+    {
+        var worldPos = hex.Coords.CubeToGridCoords().GetWorldPos();
+        var hexTris = ShapeBuilder.GetHex(worldPos, 1f);
+
+        var v = hex.Vegetation.Get(data);
+
+        Color color;
+        if (v.Color == Colors.Transparent)
+        {
+            color = hex.Landform.Get(data).Color;
         }
+        else
+        {
+            color = v.Color.Darkened(hex.Landform.Get(data).DarkenFactor);
+        }
+
+        color = color.Darkened(data.Random.RandfRange(-ColorWobble,
+            ColorWobble));
+        return color;
+    }
     
-        return mb.GetMeshInstance();
+    private static Color GetRegimeColor(Hex hex, HexGeneralData data)
+    {
+        Color color;
+        if (hex.Regime.Fulfilled())
+        {
+            color = hex.Regime.Get(data).RegimeModel.Get(data).Color;
+        }
+        else
+        {
+            return GetTerrainColor(hex, data);
+        }
+
+        return color.Darkened(data.Random.RandfRange(-ColorWobble,
+                ColorWobble));
+    }
+
+    public static Color GetDebugColor(int i,
+        Hex hex,
+        HexGeneralData data)
+    {
+        return hex.Colors.Count > i ? hex.Colors[i] : Colors.Transparent;
     }
     
 }

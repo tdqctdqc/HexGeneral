@@ -45,7 +45,7 @@ public static class MapGenerator
                 var gridCoord = new Vector2I(j, i);
                 var coord = gridCoord.GridCoordsToCube();
                 var hex = new Hex(coord, default, default,
-                    data.IdDispenser.TakeId());
+                    data.IdDispenser.TakeId(), new ERef<Regime>());
                 map.Hexes.Add(coord, hex);
                 map.CoordsById.Add(hex.Id, coord);
             }
@@ -183,9 +183,6 @@ public static class MapGenerator
 
         writeBranchColors(topBranches);
         
-        
-        
-        
         List<Branch<Hex>> makeTwigs()
         {
             var hexes = map.Hexes
@@ -264,6 +261,7 @@ public static class MapGenerator
     {
         MakeChunkUrbans(data, setupData);
         MakeRoadNetwork(data, setupData);
+        GenerateRegimes(data, setupData);
     }
     private static void MakeChunkUrbans(HexGeneralData data, NewGameData setupData)
     {
@@ -285,17 +283,16 @@ public static class MapGenerator
                 canShare,
                 t => t.Neighbors.Where(landTwigs.Contains),
                 1);
+        
         var chooser = PickerFuncs
             .ChooseMinByHeuristic<Branch<Hex>>(
-                5, t => t.Neighbors.Where(landTwigs.Contains),
+                10, t => t.Neighbors.Where(landTwigs.Contains),
                 canShare, (b, c) => b.TwigSeed.WorldPos().DistanceTo(c.TwigSeed.WorldPos()));
-        
-        
-        
         
         var urbanTrunks = TreeAggregator
             .Aggregate(getSeeds,
-                chooser, landTwigs.ToHashSet(),
+                chooser, 
+                landTwigs.ToHashSet(),
                 Branch<Hex>.ConstructTrunk,
                 b => b.Neighbors.Where(landTwigs.Contains));
 
@@ -394,5 +391,10 @@ public static class MapGenerator
         
         sw.Stop();
         GD.Print($"time {sw.Elapsed.TotalMilliseconds}");
+    }
+
+    private static void GenerateRegimes(HexGeneralData data, NewGameData setupData)
+    {
+        
     }
 }
