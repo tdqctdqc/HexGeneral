@@ -12,7 +12,7 @@ public partial class HexGraphics : Node2D
 {
     private MeshInstance2D _baseHexColors;
     private static float ColorWobble = .05f;
-    private int _showing = 0;
+    private int _showing = Int32.MinValue;
     private HexGeneralData _data;
     public HexGraphics(HexGeneralData data)
     {
@@ -27,7 +27,7 @@ public partial class HexGraphics : Node2D
     {
         int toShow = InputExt.GetNumKeyPressed();
 
-        if (toShow != -1 && toShow != _showing)
+        if (toShow != _showing && toShow >= 0)
         {
             _showing = toShow;
             this.ClearChildren();
