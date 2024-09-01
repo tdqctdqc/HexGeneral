@@ -199,15 +199,15 @@ public static class MapGenerator
 
         Picker<Branch<Hex>> pickerFactory(IEnumerable<Branch<Hex>> seeds)
         {
-            return new Picker<Branch<Hex>>(seeds, b => b.Neighbors);
+            return new Picker<Branch<Hex>>(seeds, 
+                b => b.Neighbors);
         }
         
         IPickerAgent<Branch<Hex>> agentFactory(Branch<Hex> seed, Picker<Branch<Hex>> picker)
         {
-            return new HeuristicPickerAgent<Branch<Hex>>(seed, picker,
-                x => canShare(seed, x), 
-                (t, r) => t.GetTwigSeed().WorldPos().DistanceTo(r.GetTwigSeed().WorldPos()), 
-                2);
+            return new AdjacencyCountPickerAgent<Branch<Hex>>(seed, picker,
+                3,
+                x => canShare(seed, x));
         }
 
         var topBranches = TreeAggregator
@@ -219,6 +219,7 @@ public static class MapGenerator
                 Branch<Hex>.ConstructTrunk,
                 BranchTreeDepth, 2
             );
+        
         setupData.TopBranches.AddRange(topBranches);
     }
 
@@ -235,6 +236,7 @@ public static class MapGenerator
                     : Colors.Blue;
             
             var color = baseColor.GetPeriodicShade(colIter++);
+            if(branch.Neighbors.Count() == 0) color = Colors.Black;
             var hexes = branch.GetLeaves();
             foreach (var hex in hexes)
             {
@@ -255,37 +257,47 @@ public static class MapGenerator
         var hexes = map.Hexes
             .Values
             .ToHashSet();
-        var landHexes = hexes.Where(h => h.Landform.Get(data).IsLand).ToHashSet();
-        Func<Hex, Hex, bool> canShareBase = (h, g) => landHexes.Contains(h) == landHexes.Contains(g);
-        
-        var picker = new Picker<Hex>(landHexes, 
-            h => h.GetNeighbors(data).Where(landHexes.Contains));
+        var landHexes = hexes
+            .Where(h => h.Landform.Get(data).IsLand)
+            .ToHashSet();
+        bool canShareBase(Hex h, Hex g)
+        {
+            return landHexes.Contains(h) == landHexes.Contains(g);
+        }
+
+        var picker = new Picker<Hex>(hexes, 
+            h => h.GetNeighbors(data));
         
         var noNeighbors = SeedFuncs
-            .NoNeighborSeeds(canShareBase,
-                h => h.GetNeighbors(data)
-                    .Where(picker.NotTaken.Contains),
+            .NoNeighborSeeds<Hex>(canShareBase,
+                h => h.GetNeighbors(data),
                 5);
+
+        var firstRemaining = SeedFuncs.GetFirstRemainingSeed<Hex>();
         
-        var toPick = 20;
+        var toPick = 10;
         IPickerAgent<Hex> agentFactory(Hex seed)
         {
-            return new HeuristicPickerAgent<Hex>(seed, 
+            var thisPick = landHexes.Contains(seed) ? toPick : 200;
+            var land = landHexes.Contains(seed);
+            return new AdjacencyCountPickerAgent<Hex>(seed, 
                 picker, 
-                landHexes.Contains, 
-                (t, r) => t.WorldPos().DistanceTo(r.WorldPos()), 
-                toPick);
+                thisPick, 
+                h => landHexes.Contains(h) == land 
+                );
         }
+
         var res =  TreeAggregator
             .Aggregate(
                 noNeighbors, 
                 picker,
                 agentFactory,
                 Branch<Hex>.ConstructTwig,
-                h => h.GetNeighbors(data).Where(landHexes.Contains));
+                h => h.GetNeighbors(data));
+
         var consolidated = TreeAggregator
             .Consolidate<Branch<Hex>, Hex>(res, 10, 
-                (b,c) => landHexes.Contains(b.Leaves.First()) == landHexes.Contains(c.Leaves.First()));
+                (b,c) => canShareBase(b.GetTwigSeed(), c.GetTwigSeed()));
         res.RemoveAll(consolidated.Contains);
         setupData.Twigs.AddRange(res);
         
@@ -367,12 +379,14 @@ public static class MapGenerator
     {
         var roads = new RoadNetwork(data.IdDispenser.TakeId(), new Dictionary<Vector2I, ModelIdRef<RoadModel>>());
         data.Entities.AddEntity(roads, data);
+        
         var landHexes = data.Map.Hexes.Values
             .Where(h => h.Landform.Get(data).IsLand)
             .ToHashSet();
         var pathFindDepth = 1;
-        var justBelow = setupData.UrbanTrunks
+        var pathFindDepthBranches = setupData.UrbanTrunks
             .GetAtDepth(pathFindDepth)
+            .Where(b => landHexes.Contains(b.GetTwigSeed()))
             .ToHashSet();
 
         float getHexEdgeCost(Hex h, Hex n)
@@ -392,22 +406,23 @@ public static class MapGenerator
                 = HierarchicalCachedPathFinder<Branch<Hex>, Hex>
                     .ConstructAStar(
                         (b1, b2) => heuristic(b1.GetTwigSeed(), b2.GetTwigSeed()),
-                        h => h.Neighbors.Where(justBelow.Contains),
+                        h => h.Neighbors.Where(pathFindDepthBranches.Contains),
                         heuristic,
                         b => b.GetTwigSeed(),
                         getHexEdgeCost,
                         h => h.GetNeighbors(data).Where(landHexes.Contains)
                 );
-        var urbanTrunksBySeed = setupData.UrbanTrunks
+        var urbanTrunksById = setupData.UrbanTrunks
             .ToDictionary(t => t.Id,
                 t => t);
+        var urbanTrunkSeeds = setupData.UrbanTrunks.Select(b => b.GetTrunkSeedAtDepth(pathFindDepth));
         hierarchicalPathFinder.MakeNetworkPaths(
-            setupData.UrbanTrunks.Select(b => b.GetTrunkSeedAtDepth(pathFindDepth)),
-            b => urbanTrunksBySeed[b.Id]
-                .Neighbors.Select(n => n.GetTrunkSeedAtDepth(pathFindDepth)));
+            urbanTrunkSeeds,
+            b => urbanTrunksById[b.Id]
+                .Neighbors.Select(n => n.GetTrunkSeedAtDepth(pathFindDepth))
+                .Where(pathFindDepthBranches.Contains));
         foreach (var ((x, y), path) in hierarchicalPathFinder.PathCache)
         {
-            
             for (var i = 0; i < path.Count - 1; i++)
             {
                 var from = path[i];
@@ -423,6 +438,107 @@ public static class MapGenerator
 
     private static void GenerateRegimes(HexGeneralData data, NewGameData setupData)
     {
+        var landHexes = data.Map.Hexes.Values
+            .Where(h => h.Landform.Get(data).IsLand).ToHashSet();
+
+        var landBranches = setupData.TopBranches
+            .Where(b => landHexes.Contains(b.GetTwigSeed()))
+            .ToHashSet();
         
+        var landmasses = 
+            UnionFind.Find<Branch<Hex>, HashSet<Branch<Hex>>>(
+                    landBranches,
+                    (t, r) => true, 
+                    h => h.Neighbors)
+            .ToArray();
+
+        var bigLandmasses = landmasses
+            .Where(lm => lm.Sum(b => b.GetLeaves().Count()) > 150)
+            .ToHashSet();
+        var smallLandmasses = landmasses
+            .Except(bigLandmasses)
+            .ToHashSet();
+        var bigHexes = bigLandmasses
+            .SelectMany(h => h)
+            .SelectMany(h => h.GetLeaves())
+            .ToHashSet();
+        var smallHexes = smallLandmasses
+            .SelectMany(h => h)
+            .SelectMany(h => h.GetLeaves())
+            .ToHashSet();
+        
+        var regimeTrunks = landBranches
+            .SelectMany(b => b.GetBranchesAtDepth(2))
+            .Where(b => bigHexes.Contains(b.GetTwigSeed()))
+            .ToHashSet();
+        
+        var regimeModels = data.Models
+            .GetModels<RegimeModel>().ToArray();
+        
+        for (var i = 0; i < regimeModels.Length; i++)
+        {
+            GD.Print(i + " " + regimeModels[i].Name);
+        }
+        
+        var picker = new Picker<Branch<Hex>>(regimeTrunks, 
+            b => b.Neighbors);
+        var seedFactory = SeedFuncs.NoNeighborSeeds<Branch<Hex>>(
+            (t, r) => true,
+            b => b.Neighbors,
+            1);
+        
+        IPickerAgent<Branch<Hex>> agentFactory(Branch<Hex> seed)
+        {
+            return new AdjacencyCountPickerAgent<Branch<Hex>>(seed, 
+                picker, 1, 
+                x => regimeTrunks.Contains(x));
+        }
+        var regimeIter = 0;
+        var regimeTerritories = TreeAggregator
+            .Aggregate(seedFactory,
+                picker, agentFactory, Branch<Hex>.ConstructTrunk,
+                b => b.Neighbors
+                    .Where(regimeTrunks.Contains));
+        // var consolidated = TreeAggregator
+        //     .Consolidate<Branch<Hex>, Branch<Hex>>(regimeTerritories,
+        //         10, (b, c) => true);
+        // regimeTerritories.RemoveAll(consolidated.Contains);
+        
+        
+        foreach (var regimeTerritory in regimeTerritories)
+        {
+            var hexes = regimeTerritory.GetLeaves();
+            var regimeModel = regimeModels.Modulo(regimeIter++);
+            var regime = new Regime(data.IdDispenser.TakeId(),
+                regimeModel.MakeIdRef(data));
+            data.Entities.AddEntity(regime, data);
+            foreach (var hex in hexes)
+            {
+                if (hex.Regime.Fulfilled()) throw new Exception();
+                hex.SetRegime(regime.MakeRef());
+            }
+        }
+
+        foreach (var smallLandmass in smallLandmasses)
+        {
+            var first = smallLandmass.First()
+                .GetTrunkSeedAtDepth(BranchTreeDepth);
+                
+            var closeBranch = FloodFill<Branch<Hex>>
+                .FindFirst(first,
+                    b => true,
+                    b => b.Neighbors,
+                    b => b.GetTwigSeed().Regime.Fulfilled()
+                        && bigHexes.Contains(b.GetTwigSeed()));
+            var closeHex = closeBranch.GetTwigSeed();
+            var closeRegime = closeHex.Regime.Get(data);
+            foreach (var branch in smallLandmass)
+            {
+                foreach (var hex in branch.GetLeaves())
+                {
+                    hex.SetRegime(closeRegime.MakeRef());
+                }
+            }
+        }
     }
 }

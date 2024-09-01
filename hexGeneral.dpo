@@ -454,6 +454,60 @@
                     "id": "1",
                     "Name": "Blue",
                     "Color": "0000ff"
+                },
+                {
+                    "guid": "4f53241c-1f42-4997-89f4-387eecfdc82f",
+                    "id": "2",
+                    "Name": "Green",
+                    "Color": "008000"
+                },
+                {
+                    "guid": "17670f89-8b91-488b-a25f-f7723fe79404",
+                    "id": "3",
+                    "Name": "Yellow",
+                    "Color": "FFFF00"
+                },
+                {
+                    "guid": "1aa5ee2c-bc16-4217-bf60-580e30939af2",
+                    "id": "4",
+                    "Name": "Orange",
+                    "Color": "FFA500"
+                },
+                {
+                    "guid": "c74089f1-b6b1-4c64-ba6e-70c96d4db0b3",
+                    "id": "5",
+                    "Name": "Purple",
+                    "Color": "800080"
+                },
+                {
+                    "guid": "0d7c7e93-84ae-422b-985f-277a388b4ca8",
+                    "id": "6",
+                    "Name": "Brown",
+                    "Color": "5C3317"
+                },
+                {
+                    "guid": "46159cbf-4d75-405a-a02b-a63895ded479",
+                    "id": "7",
+                    "Name": "White",
+                    "Color": "ffffff"
+                },
+                {
+                    "guid": "6c2eb4a8-c984-401d-a4d5-15dbae0bccb1",
+                    "id": "8",
+                    "Name": "Black",
+                    "Color": "000000"
+                },
+                {
+                    "guid": "f2823b2e-0596-41a4-ade2-edd684a9d227",
+                    "id": "9",
+                    "Name": "Pink",
+                    "Color": "FFC0CB"
+                },
+                {
+                    "guid": "b09b1b8c-9d14-459d-b94b-d8234eecf600",
+                    "id": "10",
+                    "Name": "Gray",
+                    "Color": "808080"
                 }
             ],
             "hidden": false,
