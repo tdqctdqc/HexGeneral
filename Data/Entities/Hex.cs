@@ -5,6 +5,7 @@ using Godot;
 using GodotUtilities.DataStructures;
 using GodotUtilities.DataStructures.Hex;
 using GodotUtilities.GameData;
+using HexGeneral.Game.Client.Graphics;
 
 namespace HexGeneral.Game;
 
@@ -18,7 +19,7 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
     public ModelIdRef<Landform> Landform { get; private set; } = landform;
     public ModelIdRef<Vegetation> Vegetation { get; private set; } = vegetation;
     public ERef<Regime> Regime { get; private set; } = regime;
-    public List<Color> Colors { get; set; } = new List<Color>();
+    public List<Color> DebugColors { get; set; } = new List<Color>();
     public void SetLandform(ModelIdRef<Landform> lf)
     {
         Landform = lf;
@@ -73,5 +74,27 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
         }
 
         return _gridCoords;
+    }
+
+    public Color GetTerrainColor(HexGeneralData data)
+    {
+        var worldPos = Coords.CubeToGridCoords().GetWorldPos();
+        var hexTris = ShapeBuilder.GetHex(worldPos, 1f);
+
+        var v = Vegetation.Get(data);
+
+        Color color;
+        if (v.Color == Colors.Transparent)
+        {
+            color = Landform.Get(data).Color;
+        }
+        else
+        {
+            color = v.Color.Darkened(Landform.Get(data).DarkenFactor);
+        }
+
+        // color = color.Darkened(data.Random.RandfRange(-HexBaseColorGraphics.ColorWobble,
+        //     HexBaseColorGraphics.ColorWobble));
+        return color;
     }
 }

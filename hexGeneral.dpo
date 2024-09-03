@@ -95,7 +95,7 @@
                     "id": "1",
                     "Name": "Sea",
                     "IsLand": false,
-                    "Color": "1873cc",
+                    "Color": "ffffff",
                     "DarkenFactor": 0,
                     "MinRoughness": 9999
                 },
@@ -113,7 +113,7 @@
                     "id": "3",
                     "Name": "Mountain",
                     "IsLand": true,
-                    "Color": "696969",
+                    "Color": "ffffff",
                     "DarkenFactor": 1,
                     "MinRoughness": 0.5
                 },
@@ -508,6 +508,263 @@
                     "id": "10",
                     "Name": "Gray",
                     "Color": "808080"
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "UnitModel",
+            "description": "UnitModel",
+            "displayColumn": "id",
+            "guid": "aceba9e8-51fd-4cdb-8d9e-0df0f7f93f90",
+            "columns": [
+                {
+                    "typeStr": "text",
+                    "guid": "198e889b-c35a-48b0-88d4-cfc07c317a1c",
+                    "name": "Name",
+                    "description": "Name",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "67ba4502-86bb-4ab4-aeaf-92b4df53d336",
+                    "description": "HitPoints",
+                    "name": "HitPoints",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "57d5a06d-639b-429d-826e-e471ddd51389",
+                    "description": "Organization",
+                    "name": "Organization",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "int",
+                    "guid": "95d8142c-65d8-4e0c-96fc-1766a4367c9a",
+                    "description": "AmmoCap",
+                    "name": "AmmoCap",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newInt",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "int",
+                        "max": "int",
+                        "defaultValue": "int"
+                    }
+                },
+                {
+                    "typeStr": "int",
+                    "guid": "ad74ea72-6f1e-4765-b049-c7f3f64f8782",
+                    "description": "AmmoPerShot",
+                    "name": "AmmoPerShot",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newInt",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "int",
+                        "max": "int",
+                        "defaultValue": "int"
+                    }
+                },
+                {
+                    "typeStr": "int",
+                    "guid": "704189a3-e31a-4191-8c72-6ace3bbe8925",
+                    "description": "Range",
+                    "name": "Range",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newInt",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "int",
+                        "max": "int",
+                        "defaultValue": "int"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "b7d7eb16-5453-46fd-8900-4456365aa420",
+                    "description": "HardAttack",
+                    "name": "HardAttack",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "4601b877-a0a9-450b-9db3-59f6ad7c3e4b",
+                    "description": "SoftAttack",
+                    "name": "SoftAttack",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "1b6b419e-f8fc-45f2-9fec-6577bc272dc8",
+                    "description": "Hardness",
+                    "name": "Hardness",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "67665eaf-fde4-4c0e-b84c-94215cb9ee57",
+                    "description": "RecruitCost",
+                    "name": "RecruitCost",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "c8cc583b-3100-4023-ac93-9ee8437738db",
+                    "description": "IndustrialCost",
+                    "name": "IndustrialCost",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "5c30c1d7-c07f-4bdc-92e1-4e51c3dbfe9f",
+                    "description": "MovePoints",
+                    "name": "MovePoints",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "7a735758-da4f-43c5-868a-5f557ecae1f8",
+                    "id": "0",
+                    "Name": "Infantry",
+                    "Organization": 100,
+                    "AmmoCap": 10,
+                    "AmmoPerShot": 1,
+                    "Range": 1,
+                    "HardAttack": 1,
+                    "SoftAttack": 5,
+                    "Hardness": 0,
+                    "RecruitCost": 10,
+                    "IndustrialCost": 10,
+                    "MovePoints": 5,
+                    "HitPoints": 100
+                },
+                {
+                    "guid": "4138b1b8-c2c1-43fa-8a34-d8f9b342b402",
+                    "id": "1",
+                    "Name": "Tank",
+                    "HitPoints": 100,
+                    "Organization": 50,
+                    "AmmoCap": 5,
+                    "AmmoPerShot": 1,
+                    "Range": 1,
+                    "HardAttack": 10,
+                    "SoftAttack": 15,
+                    "Hardness": 0.9,
+                    "RecruitCost": 5,
+                    "IndustrialCost": 50,
+                    "MovePoints": 10
                 }
             ],
             "hidden": false,

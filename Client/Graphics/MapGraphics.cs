@@ -12,7 +12,19 @@ public partial class MapGraphics(HexGeneralData data) : Node2D, IClientComponent
     public void Connect(GameClient client)
     {
         client.GraphicsLayer.AddChild(this);
-        AddChild(new HexGraphics(Data));
+        AddChild(new HexBaseColorGraphics(Data));
+        AddChild(new HexFilterGraphics<Landform>(
+            Data, h => h.Landform.Get(Data),
+            lf => TextureManager.Textures[lf.Name.ToLower()],
+            h => h.GetTerrainColor(Data)));
+
+        var veg = new HexFilterGraphics<Vegetation>(
+            Data, h => h.Vegetation.Get(Data),
+            v => TextureManager.Textures[v.Name.ToLower()],
+            h => Colors.White.Darkened(h.Landform.Get(data).DarkenFactor));
+        AddChild(veg);
+        veg.Modulate = new Color(1f, 1f, 1f, .5f);
+        
         AddChild(new RoadGraphics(Data));
     }
 

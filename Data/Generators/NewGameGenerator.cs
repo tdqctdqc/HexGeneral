@@ -14,9 +14,9 @@ public static class NewGameGenerator
         GodotUtilities.GameData.Data.SetupForHost(data, 
             new HexGeneralModelImporter(data.ModelPredefs));
         var setupData = new NewGameData(settings);
-        var map = MapGenerator.Generate(data, setupData);
+        MapGenerator.Generate(data, setupData);
+        RegimeGenerator.Generate(data, setupData);
         
-
         return data;
     }
 }

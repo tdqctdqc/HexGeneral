@@ -21,19 +21,15 @@ public static class MapGenerator
 {
     private static int _chunkSize = 30;
     public static int BranchTreeDepth = 5;
-    public static int UrbanGenDepth => BranchTreeDepth - 2;
-    public static Map Generate(HexGeneralData data, 
+    public static void Generate(HexGeneralData data, 
         NewGameData setupData)
     {
-        var map = Map.Create(data);
+        Map.Create(data);
         MakeHexes(data, setupData);
         DoLandSea(data, setupData);
         DoLandforms(data, setupData);
         DoVegetations(data, setupData);
         MakeChunks(data, setupData);
-        MakeSociety(data, setupData);
-        
-        return map;
     }
 
     private static void MakeHexes(HexGeneralData data, NewGameData setupData)
@@ -240,7 +236,7 @@ public static class MapGenerator
             var hexes = branch.GetLeaves();
             foreach (var hex in hexes)
             {
-                hex.Colors.Add(color);
+                hex.DebugColors.Add(color);
             }
 
             if (branch.Children is not null)
@@ -284,7 +280,7 @@ public static class MapGenerator
                 picker, 
                 thisPick, 
                 h => landHexes.Contains(h) == land 
-                );
+            );
         }
 
         var res =  TreeAggregator
@@ -300,245 +296,5 @@ public static class MapGenerator
                 (b,c) => canShareBase(b.GetTwigSeed(), c.GetTwigSeed()));
         res.RemoveAll(consolidated.Contains);
         setupData.Twigs.AddRange(res);
-        
-        foreach (var twig in res)
-        {
-            var col = ColorsExt.GetRandomColor();
-            foreach (var twigLeaf in twig.Leaves)
-            {
-                twigLeaf.Colors.Add(col);
-            }
-        }
-    }
-
-    private static void MakeSociety(HexGeneralData data, NewGameData setupData)
-    {
-        MakeChunkUrbans(data, setupData);
-        MakeRoadNetwork(data, setupData);
-        GenerateRegimes(data, setupData);
-    }
-    private static void MakeChunkUrbans(HexGeneralData data, NewGameData setupData)
-    {
-        var map = data.Map;
-        var landHexes = data.Map.Hexes.Values
-            .Where(h => h.Landform.Get(data).IsLand)
-            .ToHashSet();
-        
-        var urban = data.ModelPredefs.Landforms.Urban;
-        var barren = data.ModelPredefs.Vegetations.Barren;
-        
-        var atDepth = setupData
-            .TopBranches.GetAtDepth(UrbanGenDepth);
-        
-        var urbanTrunks = atDepth
-                .Where(t => landHexes.Contains(t.GetTwigSeed()))
-                .ToHashSet();
-            
-        var extraUrbanHexes = new       
-        int[]{
-                0, 0, 0, 0, 0, 0, 0, 0, 0,
-                1, 1, 1, 1, 1,
-                2, 2, 2, 2,
-                3, 3, 3,
-                4, 4, 4,
-                5, 5,
-                6 };
-        foreach (var urbanTrunk in urbanTrunks)
-        {
-            var seedHex = urbanTrunk.TrunkSeed.GetTwigSeed();
-            seedHex.SetLandform(urban.MakeIdRef(data));
-            seedHex.SetVegetation(barren.MakeIdRef(data));
-            var moreUrban = extraUrbanHexes[data.Random.RandiRange(0, extraUrbanHexes.Length - 1)];
-            if (moreUrban > 0)
-            {
-                var index = data.Random.RandiRange(0, 5);
-                for (var i = 0; i < moreUrban; i++)
-                {
-                    var coord = seedHex.Coords 
-                                + HexExt.HexDirs[index % 6];
-                    index++;
-                    if (map.Hexes.TryGetValue(coord, out var nHex)
-                        && landHexes.Contains(nHex))
-                    {
-                        nHex.SetLandform(urban.MakeIdRef(data));
-                        nHex.SetVegetation(barren.MakeIdRef(data));
-                    }
-                }
-            }
-                
-            var leaves = urbanTrunk.GetLeaves();
-            var color = ColorsExt.GetRandomColor();
-            foreach (var leaf in leaves)
-            {
-                leaf.Colors.Add(color);
-            }
-            setupData.UrbanTrunks.Add(urbanTrunk);
-        }
-    }
-    private static void MakeRoadNetwork(HexGeneralData data, NewGameData setupData)
-    {
-        var roads = new RoadNetwork(data.IdDispenser.TakeId(), new Dictionary<Vector2I, ModelIdRef<RoadModel>>());
-        data.Entities.AddEntity(roads, data);
-        
-        var landHexes = data.Map.Hexes.Values
-            .Where(h => h.Landform.Get(data).IsLand)
-            .ToHashSet();
-        var pathFindDepth = 1;
-        var pathFindDepthBranches = setupData.UrbanTrunks
-            .GetAtDepth(pathFindDepth)
-            .Where(b => landHexes.Contains(b.GetTwigSeed()))
-            .ToHashSet();
-
-        float getHexEdgeCost(Hex h, Hex n)
-        {
-            var hLf = h.Landform.Get(data);
-            var nLf = n.Landform.Get(data);
-            return 1f + Mathf.Clamp(hLf.MinRoughness, 0f, 1f) + Mathf.Clamp(nLf.MinRoughness, 0f, 1f);
-        }
-        
-        float heuristic(Hex v, Hex w) => v.WorldPos().DistanceTo(w.WorldPos());
-        
-        var dirt = data.ModelPredefs.RoadModels.Dirt.MakeIdRef(data);
-        var sw = new Stopwatch();
-        sw.Start();
-        
-        var hierarchicalPathFinder 
-                = HierarchicalCachedPathFinder<Branch<Hex>, Hex>
-                    .ConstructAStar(
-                        (b1, b2) => heuristic(b1.GetTwigSeed(), b2.GetTwigSeed()),
-                        h => h.Neighbors.Where(pathFindDepthBranches.Contains),
-                        heuristic,
-                        b => b.GetTwigSeed(),
-                        getHexEdgeCost,
-                        h => h.GetNeighbors(data).Where(landHexes.Contains)
-                );
-        var urbanTrunksById = setupData.UrbanTrunks
-            .ToDictionary(t => t.Id,
-                t => t);
-        var urbanTrunkSeeds = setupData.UrbanTrunks.Select(b => b.GetTrunkSeedAtDepth(pathFindDepth));
-        hierarchicalPathFinder.MakeNetworkPaths(
-            urbanTrunkSeeds,
-            b => urbanTrunksById[b.Id]
-                .Neighbors.Select(n => n.GetTrunkSeedAtDepth(pathFindDepth))
-                .Where(pathFindDepthBranches.Contains));
-        foreach (var ((x, y), path) in hierarchicalPathFinder.PathCache)
-        {
-            for (var i = 0; i < path.Count - 1; i++)
-            {
-                var from = path[i];
-                var to = path[i + 1];
-                var key = from.GetIdEdgeKey(to);
-                roads.Roads.TryAdd(key, dirt);
-            }
-        }
-        
-        sw.Stop();
-        GD.Print($"time {sw.Elapsed.TotalMilliseconds}");
-    }
-
-    private static void GenerateRegimes(HexGeneralData data, NewGameData setupData)
-    {
-        var landHexes = data.Map.Hexes.Values
-            .Where(h => h.Landform.Get(data).IsLand).ToHashSet();
-
-        var landBranches = setupData.TopBranches
-            .Where(b => landHexes.Contains(b.GetTwigSeed()))
-            .ToHashSet();
-        
-        var landmasses = 
-            UnionFind.Find<Branch<Hex>, HashSet<Branch<Hex>>>(
-                    landBranches,
-                    (t, r) => true, 
-                    h => h.Neighbors)
-            .ToArray();
-
-        var bigLandmasses = landmasses
-            .Where(lm => lm.Sum(b => b.GetLeaves().Count()) > 150)
-            .ToHashSet();
-        var smallLandmasses = landmasses
-            .Except(bigLandmasses)
-            .ToHashSet();
-        var bigHexes = bigLandmasses
-            .SelectMany(h => h)
-            .SelectMany(h => h.GetLeaves())
-            .ToHashSet();
-        var smallHexes = smallLandmasses
-            .SelectMany(h => h)
-            .SelectMany(h => h.GetLeaves())
-            .ToHashSet();
-        
-        var regimeTrunks = landBranches
-            .SelectMany(b => b.GetBranchesAtDepth(2))
-            .Where(b => bigHexes.Contains(b.GetTwigSeed()))
-            .ToHashSet();
-        
-        var regimeModels = data.Models
-            .GetModels<RegimeModel>().ToArray();
-        
-        for (var i = 0; i < regimeModels.Length; i++)
-        {
-            GD.Print(i + " " + regimeModels[i].Name);
-        }
-        
-        var picker = new Picker<Branch<Hex>>(regimeTrunks, 
-            b => b.Neighbors);
-        var seedFactory = SeedFuncs.NoNeighborSeeds<Branch<Hex>>(
-            (t, r) => true,
-            b => b.Neighbors,
-            1);
-        
-        IPickerAgent<Branch<Hex>> agentFactory(Branch<Hex> seed)
-        {
-            return new AdjacencyCountPickerAgent<Branch<Hex>>(seed, 
-                picker, 1, 
-                x => regimeTrunks.Contains(x));
-        }
-        var regimeIter = 0;
-        var regimeTerritories = TreeAggregator
-            .Aggregate(seedFactory,
-                picker, agentFactory, Branch<Hex>.ConstructTrunk,
-                b => b.Neighbors
-                    .Where(regimeTrunks.Contains));
-        // var consolidated = TreeAggregator
-        //     .Consolidate<Branch<Hex>, Branch<Hex>>(regimeTerritories,
-        //         10, (b, c) => true);
-        // regimeTerritories.RemoveAll(consolidated.Contains);
-        
-        
-        foreach (var regimeTerritory in regimeTerritories)
-        {
-            var hexes = regimeTerritory.GetLeaves();
-            var regimeModel = regimeModels.Modulo(regimeIter++);
-            var regime = new Regime(data.IdDispenser.TakeId(),
-                regimeModel.MakeIdRef(data));
-            data.Entities.AddEntity(regime, data);
-            foreach (var hex in hexes)
-            {
-                if (hex.Regime.Fulfilled()) throw new Exception();
-                hex.SetRegime(regime.MakeRef());
-            }
-        }
-
-        foreach (var smallLandmass in smallLandmasses)
-        {
-            var first = smallLandmass.First()
-                .GetTrunkSeedAtDepth(BranchTreeDepth);
-                
-            var closeBranch = FloodFill<Branch<Hex>>
-                .FindFirst(first,
-                    b => true,
-                    b => b.Neighbors,
-                    b => b.GetTwigSeed().Regime.Fulfilled()
-                        && bigHexes.Contains(b.GetTwigSeed()));
-            var closeHex = closeBranch.GetTwigSeed();
-            var closeRegime = closeHex.Regime.Get(data);
-            foreach (var branch in smallLandmass)
-            {
-                foreach (var hex in branch.GetLeaves())
-                {
-                    hex.SetRegime(closeRegime.MakeRef());
-                }
-            }
-        }
     }
 }
