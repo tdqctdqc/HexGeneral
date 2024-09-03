@@ -9,7 +9,7 @@ public class Vegetation : Model
     public Color Color { get; private set; }
     public float MinMoisture { get; private set; }
     public HashSet<Landform> AllowedLandforms { get; private set; }
-    public Vegetation(string name) : base(name)
+    public Vegetation()
     {
     }
 }

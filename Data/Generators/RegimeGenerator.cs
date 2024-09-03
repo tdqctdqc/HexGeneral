@@ -20,7 +20,11 @@ public static class RegimeGenerator
         MakeChunkUrbans(data, setupData);
         MakeRoadNetwork(data, setupData);
         GenerateRegimes(data, setupData);
+        GenerateUnits(data, setupData);
     }
+
+    
+
     private static void MakeChunkUrbans(HexGeneralData data, NewGameData setupData)
     {
         var map = data.Map;
@@ -199,12 +203,14 @@ public static class RegimeGenerator
             var hexes = regimeTerritory.GetLeaves();
             var regimeModel = regimeModels.Modulo(regimeIter++);
             var regime = new Regime(data.IdDispenser.TakeId(),
-                regimeModel.MakeIdRef(data), 500f, 500f);
+                regimeModel.MakeIdRef(data), 500f, 500f,
+                new HashSet<Vector3I>());
             data.Entities.AddEntity(regime, data);
             foreach (var hex in hexes)
             {
                 if (hex.Regime.Fulfilled()) throw new Exception();
                 hex.SetRegime(regime.MakeRef());
+                regime.Hexes.Add(hex.Coords);
             }
         }
 
@@ -226,6 +232,29 @@ public static class RegimeGenerator
                 foreach (var hex in branch.GetLeaves())
                 {
                     hex.SetRegime(closeRegime.MakeRef());
+                }
+            }
+        }
+    }
+    
+    private static void GenerateUnits(HexGeneralData data, NewGameData setupData)
+    {
+        var unitHolder = new MapUnitHolder(data.IdDispenser.TakeId(),
+            new Dictionary<ERef<Unit>, Vector3I>(),
+            new Dictionary<Vector3I, List<ERef<Unit>>>());
+        data.Entities.AddEntity(unitHolder, data);
+        var urban = data.ModelPredefs.Landforms.Urban;
+        var infantry = data.ModelPredefs.UnitModelPredefs.Infantry;
+        foreach (var hex in data.Map.Hexes.Values)
+        {
+            if (hex.Landform.Get(data) == urban)
+            {
+                var regime = hex.Regime.Get(data);
+                var rand = data.Random.RandiRange(1, 3);
+                for (var i = 0; i < rand; i++)
+                {
+                    var unit = infantry.Instantiate(regime, data);
+                    unitHolder.DeployUnit(unit, hex);
                 }
             }
         }

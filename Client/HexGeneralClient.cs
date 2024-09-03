@@ -17,6 +17,9 @@ public partial class HexGeneralClient : GameClient
     {
         AddComponent(new CameraController());
         AddComponent(new MapGraphics(data));
+        UiController.ModeOption.AddOption(
+            new UnitMode(this, "Unit"), "Unit");
+        UiController.ModeOption.Choose<UnitMode>();
     }
 
     public override void _Process(double delta)

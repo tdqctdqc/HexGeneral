@@ -13,6 +13,9 @@ public class HexGeneralData : Data
     public Map Map => (Map)Singletons[typeof(Map)];
     public RoadNetwork RoadNetwork => (RoadNetwork)Singletons[typeof(RoadNetwork)];
     public LandSeaMasses LandSeaMasses => (LandSeaMasses)Singletons[typeof(LandSeaMasses)];
+    public MapUnitHolder MapUnitHolder => (MapUnitHolder)Singletons[typeof(MapUnitHolder)];
+    
+    
     public HexGeneralData() 
         : base(new(0),
         new(new Dictionary<int, Entity>()),

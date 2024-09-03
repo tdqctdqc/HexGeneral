@@ -15,7 +15,16 @@ public class UnitModel : Model
     public float RecruitCost { get; private set; }
     public float IndustrialCost { get; private set; }
     public float MovePoints { get; private set; }
-    public UnitModel(string name) : base(name)
+    public UnitModel()
     {
+    }
+
+    public Unit Instantiate(Regime regime, HexGeneralData data)
+    {
+        var u = new Unit(data.IdDispenser.TakeId(),
+            regime.MakeRef(), HitPoints, Organization, AmmoCap,
+            this.MakeIdRef(data));
+        data.Entities.AddEntity(u, data);
+        return u;
     }
 }

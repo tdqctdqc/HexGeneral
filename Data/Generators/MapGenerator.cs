@@ -100,14 +100,16 @@ public static class MapGenerator
             .05f * setupData.Settings.NoiseScale.Value);
 
 
-        var lfsByRoughness = data.Models.GetModels<Landform>()
+        var lfsByRoughness = data.Models
+            .GetModels<Landform>()
+            .Where(lf => lf.CanChooseForGen)
             .OrderByDescending(lf => lf.MinRoughness).ToList();
         foreach (var (coord, hex) in map.Hexes)
         {
             var currLf = hex.Landform.Get(data);
             if (currLf.IsLand == false) continue;
             var worldPos = coord.CubeToGridCoords().GetWorldPos();
-
+            
             var isRoughSample = isRoughNoise.GetSample2D(worldPos);
             if (isRoughSample > isRoughCutoff) continue;
             var roughnessSample = roughnessNoise.GetSample2D(worldPos);

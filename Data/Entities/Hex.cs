@@ -20,6 +20,8 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
     public ModelIdRef<Vegetation> Vegetation { get; private set; } = vegetation;
     public ERef<Regime> Regime { get; private set; } = regime;
     public List<Color> DebugColors { get; set; } = new List<Color>();
+    
+    
     public void SetLandform(ModelIdRef<Landform> lf)
     {
         Landform = lf;

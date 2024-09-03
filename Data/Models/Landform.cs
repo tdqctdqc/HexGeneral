@@ -9,7 +9,8 @@ public class Landform : Model
     public Color Color { get; private set; }
     public float DarkenFactor { get; private set; }
     public float MinRoughness { get; private set; }
-    public Landform(string name) : base(name)
+    public bool CanChooseForGen { get; private set; }
+    public Landform()
     {
         
     }

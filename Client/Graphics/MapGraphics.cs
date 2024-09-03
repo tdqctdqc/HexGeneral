@@ -26,6 +26,8 @@ public partial class MapGraphics(HexGeneralData data) : Node2D, IClientComponent
         veg.Modulate = new Color(1f, 1f, 1f, .5f);
         
         AddChild(new RoadGraphics(Data));
+        
+        AddChild(new UnitGraphics(Data));
     }
 
     public Action Disconnect { get; set; }

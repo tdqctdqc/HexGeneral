@@ -6,7 +6,7 @@ namespace HexGeneral.Game;
 public class RoadModel : Model
 {
     public Color Color { get; private set; }
-    public RoadModel(string name) : base(name)
+    public RoadModel() 
     {
         
     }

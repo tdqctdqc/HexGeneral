@@ -9,34 +9,18 @@ using GodotUtilities.Serialization.Depot;
 namespace HexGeneral.Game.Generators;
 
 public class HexGeneralModelImporter(ModelPredefs predefs) 
-    : ModelImporter("hexGeneral.dpo")
+    : ModelImporter("hexGeneralNew.dpo")
 {
     private ModelPredefs _predefs = predefs;
 
     public override void Import(Models models)
     {
-        var importer = new DepotImporter(_path);
-        // var types = Assembly.GetExecutingAssembly().GetTypes();
-        // var modelTypes = typeof(Model).GetDerivedTypes(types);
-        // foreach (var modelType in modelTypes)
-        // {
-        //     
-        // }
-        models.ImportNoPredefs(
-            n => new Landform(n),
-            importer);
-        models.ImportNoPredefs(
-            n => new Vegetation(n),
-            importer);
-        models.ImportNoPredefs(
-            n => new RoadModel(n),
-            importer);
-        models.ImportNoPredefs(
-            n => new RegimeModel(n),
-            importer);
-        models.ImportNoPredefs(n => new UnitModel(n),
-            importer);
-        importer.FillAllProperties();
+        var types = Assembly.GetExecutingAssembly().GetTypes();
+        var modelTypes = typeof(Model)
+            .GetDerivedTypes(types)
+            .Distinct();
+        var importer = new DepotImporter(_path, modelTypes, models);
+        GD.Print("finished");
     }
 
 }
