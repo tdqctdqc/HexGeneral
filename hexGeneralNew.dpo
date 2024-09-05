@@ -1,0 +1,1074 @@
+{
+    "sheets": [
+        {
+            "name": "ModelNames",
+            "description": "ModelNames",
+            "displayColumn": "Name",
+            "guid": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+            "columns": [
+                {
+                    "typeStr": "text",
+                    "guid": "e813f68d-9faa-4516-a503-71e51da041aa",
+                    "name": "Name",
+                    "description": "Name",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                    "id": "0",
+                    "Name": "Landform_Plain"
+                },
+                {
+                    "guid": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                    "id": "1",
+                    "Name": "Landform_Sea"
+                },
+                {
+                    "guid": "28f79882-fd71-40d2-866d-434a48038a6b",
+                    "id": "2",
+                    "Name": "Landform_Hill"
+                },
+                {
+                    "guid": "88cfff75-d832-4951-9fea-d67c71822210",
+                    "id": "3",
+                    "Name": "Landform_Mountain"
+                },
+                {
+                    "guid": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                    "id": "4",
+                    "Name": "Landform_Urban"
+                },
+                {
+                    "guid": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                    "id": "5",
+                    "Name": "Vegetation_Desert"
+                },
+                {
+                    "guid": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                    "id": "6",
+                    "Name": "Vegetation_Arid"
+                },
+                {
+                    "guid": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                    "id": "7",
+                    "Name": "Vegetation_Barren"
+                },
+                {
+                    "guid": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                    "id": "8",
+                    "Name": "Vegetation_Grassland"
+                },
+                {
+                    "guid": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                    "id": "9",
+                    "Name": "Vegetation_Forest"
+                },
+                {
+                    "guid": "6ea1332f-97b4-4774-bbe2-9695e09de810",
+                    "id": "10",
+                    "Name": "RoadModel_Dirt"
+                },
+                {
+                    "guid": "cdd67929-6295-48a9-8db3-888182043ef6",
+                    "id": "11",
+                    "Name": "RegimeModel_Red"
+                },
+                {
+                    "guid": "72f540a7-f7ec-4a84-9e9b-ccaa08d4b6dc",
+                    "id": "12",
+                    "Name": "RegimeModel_Blue"
+                },
+                {
+                    "guid": "fbfae782-eee1-496b-8d06-5b8eb57d7062",
+                    "id": "13",
+                    "Name": "RegimeModel_Green"
+                },
+                {
+                    "guid": "7ccc7faa-8a24-4a41-aee9-2c66a8a45dfc",
+                    "id": "14",
+                    "Name": "RegimeModel_Yellow"
+                },
+                {
+                    "guid": "985028e6-1424-45f4-88cc-348050e890a7",
+                    "id": "15",
+                    "Name": "RegimeModel_Orange"
+                },
+                {
+                    "guid": "fbe11116-0d8c-4744-aaf0-d0679fdae524",
+                    "id": "16",
+                    "Name": "RegimeModel_Brown"
+                },
+                {
+                    "guid": "4a03b33b-2b71-4094-80bc-f08bfa0d44d4",
+                    "id": "17",
+                    "Name": "RegimeModel_White"
+                },
+                {
+                    "guid": "f04a08cf-36f4-462c-aba3-099452e81ada",
+                    "id": "18",
+                    "Name": "RegimeModel_Black"
+                },
+                {
+                    "guid": "e78a4150-c58c-4f73-84a8-a2d5f26623d6",
+                    "id": "19",
+                    "Name": "RegimeModel_Pink"
+                },
+                {
+                    "guid": "f3a286f5-5216-4ebf-b540-969b7e01d963",
+                    "id": "20",
+                    "Name": "RegimeModel_Gray"
+                },
+                {
+                    "guid": "739758df-9e5d-4167-bd95-697da4279549",
+                    "id": "21",
+                    "Name": "Unit_Infantry"
+                },
+                {
+                    "guid": "155d80a3-2d51-4f55-913b-e982c4d704a5",
+                    "id": "22",
+                    "Name": "Unit_Tank"
+                },
+                {
+                    "guid": "512402a2-b7fb-4dda-8581-714621a63ef7",
+                    "id": "23",
+                    "Name": "RegimeModel_Purple"
+                },
+                {
+                    "guid": "244f0ce6-f8ec-430d-b776-83f6df74765f",
+                    "id": "24",
+                    "Name": "PopBuilding_Village"
+                },
+                {
+                    "guid": "c039bc16-09ed-487c-ac6f-baf5127c14ec",
+                    "id": "25",
+                    "Name": "PopBuilding_Town"
+                },
+                {
+                    "guid": "ce0466c1-029b-4550-8f8f-e85c093c326e",
+                    "id": "26",
+                    "Name": "PopBuilding_City"
+                },
+                {
+                    "guid": "74c053e1-03a1-4198-82c0-168caea7616a",
+                    "id": "27",
+                    "Name": "PopBuilding_Metropolis"
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Landform",
+            "description": "Landform",
+            "displayColumn": "id",
+            "guid": "3863f3eb-72ad-415f-860b-8dd786dcd845",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "3eef1dc5-4b21-4d2e-967a-3c031f7ce659",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "bool",
+                    "guid": "b3b4eb06-7eaf-4b38-8ee3-71a23b058470",
+                    "description": "IsLand",
+                    "name": "IsLand",
+                    "defaultValue": true,
+                    "iconName": "newBool",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "bool"
+                    }
+                },
+                {
+                    "typeStr": "text",
+                    "guid": "8d65f5dc-1085-4157-846d-9ddf71872789",
+                    "name": "Color",
+                    "description": "Color",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "6e0b3def-02aa-4014-912f-841dacee88ef",
+                    "description": "DarkenFactor",
+                    "name": "DarkenFactor",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "5a1157e2-9316-43af-be3c-7da07826a723",
+                    "description": "MinRoughness",
+                    "name": "MinRoughness",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "bool",
+                    "guid": "3268b632-b397-4939-8c32-00806ff4902f",
+                    "description": "CanChooseForGen",
+                    "name": "CanChooseForGen",
+                    "defaultValue": true,
+                    "iconName": "newBool",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "bool"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "e43f7686-ee0b-4ff9-bfc9-ad41752c1820",
+                    "id": "0",
+                    "Model": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                    "IsLand": true,
+                    "Color": "d58773",
+                    "DarkenFactor": 0,
+                    "MinRoughness": 0,
+                    "CanChooseForGen": true
+                },
+                {
+                    "guid": "b81ee609-faf1-4ad2-b0ce-d408e0d2a3c5",
+                    "id": "1",
+                    "Model": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                    "IsLand": false,
+                    "Color": "ffffff",
+                    "DarkenFactor": 0,
+                    "MinRoughness": 9999,
+                    "CanChooseForGen": true
+                },
+                {
+                    "guid": "d5bb3fd1-1ac3-42e0-8f63-94562168df3a",
+                    "id": "2",
+                    "Model": "28f79882-fd71-40d2-866d-434a48038a6b",
+                    "IsLand": true,
+                    "Color": "a52a2a",
+                    "DarkenFactor": 0.3,
+                    "MinRoughness": 0.25,
+                    "CanChooseForGen": true
+                },
+                {
+                    "guid": "941f3cd2-e25d-49c1-8838-5a304a372e30",
+                    "id": "3",
+                    "Model": "88cfff75-d832-4951-9fea-d67c71822210",
+                    "IsLand": true,
+                    "Color": "ffffff",
+                    "DarkenFactor": 1,
+                    "MinRoughness": 0.5,
+                    "CanChooseForGen": true
+                },
+                {
+                    "guid": "d8c7fdc7-f227-425b-891a-07ce3dc41b64",
+                    "id": "4",
+                    "Model": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                    "IsLand": true,
+                    "Color": "cd5c5c",
+                    "DarkenFactor": 0,
+                    "MinRoughness": 0,
+                    "CanChooseForGen": false
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Vegetation",
+            "description": "Vegetation",
+            "displayColumn": "id",
+            "guid": "49eb77e3-aa1c-4ac3-82f4-fcea59e98e5d",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "05f94fd7-71cd-4c2e-8bf2-f95504beacd5",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "text",
+                    "guid": "b0263682-9016-4dec-84d7-b951d7883fa9",
+                    "name": "Color",
+                    "description": "Color",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "46424569-b281-49d2-b486-509f000e1fd0",
+                    "description": "MinMoisture",
+                    "name": "MinMoisture",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "list",
+                    "guid": "025f7d12-0e6d-4f81-9870-7a8268822211",
+                    "name": "AllowedLandforms",
+                    "description": "AllowedLandforms",
+                    "sheet": "90d62f64-8115-4586-bed1-988f3c436104",
+                    "defaultValue": [],
+                    "iconName": "newList",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "73da41f2-3524-454b-b0a6-96ecca0209e4",
+                    "id": "0",
+                    "Model": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                    "Color": "d2b48c",
+                    "MinMoisture": 0,
+                    "AllowedLandforms": [
+                        {
+                            "guid": "a8b3a516-5ce1-48dc-bb92-f503e327dcb1",
+                            "id": "0",
+                            "Value": "1299a3a2-4299-4960-b673-cf11b8d5aa93"
+                        },
+                        {
+                            "guid": "2587cc4a-50de-4052-8c2a-56fa7a4907b7",
+                            "id": "1",
+                            "Value": "28f79882-fd71-40d2-866d-434a48038a6b"
+                        }
+                    ]
+                },
+                {
+                    "guid": "cf30cb0b-8c0d-4aee-b5b0-7806f72d949f",
+                    "id": "1",
+                    "Model": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                    "Color": "b8dc70",
+                    "MinMoisture": 0.1,
+                    "AllowedLandforms": [
+                        {
+                            "guid": "6baa19d5-04d4-4fd2-8d8e-501a5f6c9c35",
+                            "id": "0",
+                            "Value": "1299a3a2-4299-4960-b673-cf11b8d5aa93"
+                        },
+                        {
+                            "guid": "3e8c793f-4b5c-409e-a783-2b98662230a6",
+                            "id": "1",
+                            "Value": "28f79882-fd71-40d2-866d-434a48038a6b"
+                        }
+                    ]
+                },
+                {
+                    "guid": "676667d4-2241-4e6f-b3ca-d59e66c0dadd",
+                    "id": "2",
+                    "Model": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                    "Color": "ffffff00",
+                    "MinMoisture": 0,
+                    "AllowedLandforms": [
+                        {
+                            "guid": "31144c2c-0517-492b-8641-01da7cb9de68",
+                            "id": "0",
+                            "Value": "88cfff75-d832-4951-9fea-d67c71822210"
+                        },
+                        {
+                            "guid": "a0fe754a-d77c-4b11-904d-96c08cd321b0",
+                            "id": "1",
+                            "Value": "769c0728-7bd3-4269-b45a-73c51ae93989"
+                        },
+                        {
+                            "guid": "1f0e0795-83d7-4691-b49e-a0d6e9bfc2cc",
+                            "id": "2",
+                            "Value": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6"
+                        }
+                    ]
+                },
+                {
+                    "guid": "c80664b6-07d6-4d12-8840-5e58719170e4",
+                    "id": "3",
+                    "Model": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                    "Color": "3cb371",
+                    "MinMoisture": 0.25,
+                    "AllowedLandforms": [
+                        {
+                            "guid": "b3fd1814-23c2-46d2-a381-040ac72df0ec",
+                            "id": "0",
+                            "Value": "1299a3a2-4299-4960-b673-cf11b8d5aa93"
+                        },
+                        {
+                            "guid": "fc6a1ee4-7acb-4cf4-b05b-b45409085e24",
+                            "id": "1",
+                            "Value": "28f79882-fd71-40d2-866d-434a48038a6b"
+                        }
+                    ]
+                },
+                {
+                    "guid": "eaa394b3-c55f-4bb1-87f8-2eef3191ffaf",
+                    "id": "4",
+                    "Model": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                    "Color": "1e7b1e",
+                    "MinMoisture": 0,
+                    "AllowedLandforms": [
+                        {
+                            "guid": "2fdc74db-31d2-4e34-9b89-1bc89a7d170f",
+                            "id": "0",
+                            "Value": "1299a3a2-4299-4960-b673-cf11b8d5aa93"
+                        },
+                        {
+                            "guid": "608b1761-4326-4f29-91ad-34a9e68bfbe2",
+                            "id": "1",
+                            "Value": "28f79882-fd71-40d2-866d-434a48038a6b"
+                        }
+                    ]
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "AllowedLandforms",
+            "description": "list@49eb77e3-aa1c-4ac3-82f4-fcea59e98e5d",
+            "displayColumn": "id",
+            "guid": "90d62f64-8115-4586-bed1-988f3c436104",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "9a6d2335-f846-4506-b606-6d647bb3882e",
+                    "name": "Value",
+                    "description": "Value",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                }
+            ],
+            "lines": [],
+            "hidden": true,
+            "isProps": false,
+            "parentSheetGUID": "49eb77e3-aa1c-4ac3-82f4-fcea59e98e5d",
+            "columnGUID": "025f7d12-0e6d-4f81-9870-7a8268822211"
+        },
+        {
+            "name": "RoadModel",
+            "description": "RoadModel",
+            "displayColumn": "id",
+            "guid": "766fcf30-6977-448e-b735-af7bbf1309f9",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "65936390-537e-461d-8109-307e99753141",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "text",
+                    "guid": "04241f8f-ed36-4fc2-a464-cd89a3322dbc",
+                    "name": "Color",
+                    "description": "Color",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "05063a05-ff15-4e66-a5f1-0ce9c171ac3d",
+                    "id": "0",
+                    "Model": "6ea1332f-97b4-4774-bbe2-9695e09de810",
+                    "Color": "5b3417"
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "RegimeModel",
+            "description": "RegimeModel",
+            "displayColumn": "id",
+            "guid": "c437c222-184f-4c61-9aa6-45e9ce421a93",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "82e8c7b9-e75a-43bf-9508-74b2717b326e",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "text",
+                    "guid": "4868df55-1a6a-458a-b58f-ad162cb67e15",
+                    "name": "Color",
+                    "description": "Color",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "4cbeee74-dba3-48b7-a66c-c5b3e063ac48",
+                    "id": "0",
+                    "Model": "cdd67929-6295-48a9-8db3-888182043ef6",
+                    "Color": "ff0000"
+                },
+                {
+                    "guid": "8c5c5f5e-6e7a-4569-9c65-e00ec5efd876",
+                    "id": "1",
+                    "Model": "72f540a7-f7ec-4a84-9e9b-ccaa08d4b6dc",
+                    "Color": "0000ff"
+                },
+                {
+                    "guid": "e319cb4c-ffc2-4eba-8f86-bc178b9675ea",
+                    "id": "2",
+                    "Model": "fbfae782-eee1-496b-8d06-5b8eb57d7062",
+                    "Color": "008000"
+                },
+                {
+                    "guid": "cb453b85-2a7c-4bc8-a1e5-c38211ce1307",
+                    "id": "3",
+                    "Model": "7ccc7faa-8a24-4a41-aee9-2c66a8a45dfc",
+                    "Color": "ffff00"
+                },
+                {
+                    "guid": "50a736d3-77af-4b59-9c75-5c31db13a184",
+                    "id": "4",
+                    "Model": "985028e6-1424-45f4-88cc-348050e890a7",
+                    "Color": "5C3317"
+                },
+                {
+                    "guid": "392a92e7-71e2-4a11-8de8-1a3d05ade48b",
+                    "id": "5",
+                    "Model": "fbe11116-0d8c-4744-aaf0-d0679fdae524",
+                    "Color": "5C3317"
+                },
+                {
+                    "guid": "f73021da-bb85-412a-9188-d8c2b119bd0f",
+                    "id": "6",
+                    "Model": "4a03b33b-2b71-4094-80bc-f08bfa0d44d4",
+                    "Color": "ffffff"
+                },
+                {
+                    "guid": "68f77b0b-0fcc-4f0b-87cc-a55204c0b3cc",
+                    "id": "7",
+                    "Model": "f04a08cf-36f4-462c-aba3-099452e81ada",
+                    "Color": "000000"
+                },
+                {
+                    "guid": "b5b554d6-fab0-42e2-ac25-99ea9e11f4fb",
+                    "id": "8",
+                    "Model": "e78a4150-c58c-4f73-84a8-a2d5f26623d6",
+                    "Color": "FFC0CB"
+                },
+                {
+                    "guid": "423eddc3-6058-472f-87e8-86b4a6b272f5",
+                    "id": "9",
+                    "Model": "f3a286f5-5216-4ebf-b540-969b7e01d963",
+                    "Color": "808080"
+                },
+                {
+                    "guid": "e76f036f-a9d2-4cf3-aaa3-b1612d6fdac4",
+                    "id": "10",
+                    "Model": "512402a2-b7fb-4dda-8581-714621a63ef7",
+                    "Color": "800080"
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "UnitModel",
+            "description": "UnitModel",
+            "displayColumn": "id",
+            "guid": "1357fdf7-1381-44e5-bb4f-6a94bd5ab0cd",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "b513af5d-89a1-45a9-b941-4425d88c5aef",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "679caa04-919b-4024-b56f-3c3f6275e06d",
+                    "description": "HitPoints",
+                    "name": "HitPoints",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "ac2c374a-5571-4f44-8274-23b6f58d7dc1",
+                    "description": "Organization",
+                    "name": "Organization",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "int",
+                    "guid": "a518c036-879f-4dbc-b82d-8d15bd22799e",
+                    "description": "AmmoCap",
+                    "name": "AmmoCap",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newInt",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "int",
+                        "max": "int",
+                        "defaultValue": "int"
+                    }
+                },
+                {
+                    "typeStr": "int",
+                    "guid": "9b54c697-fda7-4e59-88fd-cac7f99d687d",
+                    "description": "AmmoPerShot",
+                    "name": "AmmoPerShot",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newInt",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "int",
+                        "max": "int",
+                        "defaultValue": "int"
+                    }
+                },
+                {
+                    "typeStr": "int",
+                    "guid": "1aeaf2c2-f102-4252-8553-10a14595e178",
+                    "description": "Range",
+                    "name": "Range",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newInt",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "int",
+                        "max": "int",
+                        "defaultValue": "int"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "4f7059c6-c5fc-4f22-ba02-1139f5bfcde2",
+                    "description": "HardAttack",
+                    "name": "HardAttack",
+                    "min": -100000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "36852051-9239-4fde-abdb-b783ae651af5",
+                    "description": "SoftAttack",
+                    "name": "SoftAttack",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "e4a228ab-936f-4a05-8f77-02ebd141a205",
+                    "description": "Hardness",
+                    "name": "Hardness",
+                    "min": 0,
+                    "max": 1,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "34a862c9-fdea-4361-a9eb-e88a467ade39",
+                    "description": "RecruitCost",
+                    "name": "RecruitCost",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "bb90d663-2d2b-41e8-830e-5b18ddd7b7fe",
+                    "description": "IndustrialCost",
+                    "name": "IndustrialCost",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "91d802c6-346f-4f8c-b4b4-0a7c2527c2d4",
+                    "description": "MovePoints",
+                    "name": "MovePoints",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "56087ce9-574c-412e-a2b2-a82ed3effe0f",
+                    "id": "0",
+                    "Model": "739758df-9e5d-4167-bd95-697da4279549",
+                    "HitPoints": 100,
+                    "Organization": 100,
+                    "AmmoCap": 10,
+                    "AmmoPerShot": 1,
+                    "Range": 1,
+                    "HardAttack": 1,
+                    "SoftAttack": 5,
+                    "Hardness": 0,
+                    "RecruitCost": 10,
+                    "IndustrialCost": 10,
+                    "MovePoints": 5
+                },
+                {
+                    "guid": "63ed717a-7d46-46d7-b5fc-5dfc16c288f0",
+                    "id": "1",
+                    "Model": "155d80a3-2d51-4f55-913b-e982c4d704a5",
+                    "HitPoints": 100,
+                    "Organization": 50,
+                    "AmmoCap": 5,
+                    "AmmoPerShot": 1,
+                    "Range": 1,
+                    "HardAttack": 10,
+                    "SoftAttack": 15,
+                    "Hardness": 0.9,
+                    "RecruitCost": 5,
+                    "IndustrialCost": 50,
+                    "MovePoints": 10
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "PopBuilding",
+            "description": "PopBuilding",
+            "displayColumn": "id",
+            "guid": "90611ef9-496c-4c56-bf3b-90610bfd086c",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "6c1c8680-6794-47ce-a983-55915c8e7f56",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "2ae2e020-8a7c-4048-bcfd-ce8668c30503",
+                    "description": "Pop",
+                    "name": "Pop",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "8d68e108-c703-40af-9e56-f9b48327db9e",
+                    "id": "0",
+                    "Model": "244f0ce6-f8ec-430d-b776-83f6df74765f",
+                    "Pop": 250
+                },
+                {
+                    "guid": "191c7aba-8e5a-44a8-90e8-0147ff47bc81",
+                    "id": "1",
+                    "Model": "c039bc16-09ed-487c-ac6f-baf5127c14ec",
+                    "Pop": 500
+                },
+                {
+                    "guid": "372f7966-ac76-4ed0-b1b0-1007e253f0b7",
+                    "id": "2",
+                    "Model": "ce0466c1-029b-4550-8f8f-e85c093c326e",
+                    "Pop": 1000
+                },
+                {
+                    "guid": "e42bf3a9-af9c-4916-bfd0-0123de81e1e0",
+                    "id": "3",
+                    "Model": "74c053e1-03a1-4198-82c0-168caea7616a",
+                    "Pop": 2500
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        }
+    ]
+}

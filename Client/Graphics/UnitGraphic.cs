@@ -8,9 +8,21 @@ public partial class UnitGraphic : Node2D
     private static Mesh _mesh;
     private MeshInstance2D _unitTexture;
     private MeshInstance2D _bars;
+    private MeshInstance2D _highlight;
     private static float _dim = 1f;
     public UnitGraphic(Unit u, HexGeneralData data)
     {
+        var mb = new MeshBuilder();
+        mb.DrawBox((Vector2.Left + Vector2.Up) * _dim / 2f,
+            (Vector2.Right + Vector2.Down) * _dim / 2f,
+            Colors.White, .1f);
+        _highlight = mb.GetMeshInstance();
+        AddChild(_highlight);
+        _highlight.Visible = false;
+        
+        
+        
+        
         if (_mesh is null)
         {
             var q = new QuadMesh();
@@ -20,7 +32,7 @@ public partial class UnitGraphic : Node2D
         _unitTexture = new MeshInstance2D();
         _unitTexture.Scale = new Vector2(1f, -1f);
         _unitTexture.Mesh = _mesh;
-        _unitTexture.Texture = TextureManager.Textures[u.UnitModel.Get(data).Name.ToLower()];
+        _unitTexture.Texture = u.UnitModel.Get(data).GetTexture();
         AddChild(_unitTexture);
     }
 
@@ -48,5 +60,10 @@ public partial class UnitGraphic : Node2D
         var bars = mb.GetMeshInstance();
         bars.Position = Vector2.Down * _dim / 2f;
         AddChild(bars);
+    }
+
+    public void SetHighlight(bool highlight)
+    {
+        _highlight.Visible = highlight;
     }
 }

@@ -7,13 +7,14 @@ namespace HexGeneral.Game.Generators;
 
 public static class NewGameGenerator
 {
-    public static HexGeneralData Generate(NewGameSettings settings)
+    public static HexGeneralData Generate(GenerationSettings generationSettings)
     {
-        var data = new HexGeneralData();
+        var setupData = new GenerationData(generationSettings);
+        var gameSettings = new GameSettings();
+        var data = new HexGeneralData(gameSettings, generationSettings);
             
         GodotUtilities.GameData.Data.SetupForHost(data, 
             new HexGeneralModelImporter(data.ModelPredefs));
-        var setupData = new NewGameData(settings);
         MapGenerator.Generate(data, setupData);
         RegimeGenerator.Generate(data, setupData);
         

@@ -15,7 +15,7 @@ public static class RegimeGenerator
 {
     public static int UrbanGenDepth => MapGenerator.BranchTreeDepth - 2;
 
-    public static void Generate(HexGeneralData data, NewGameData setupData)
+    public static void Generate(HexGeneralData data, GenerationData setupData)
     {
         MakeChunkUrbans(data, setupData);
         MakeRoadNetwork(data, setupData);
@@ -25,12 +25,20 @@ public static class RegimeGenerator
 
     
 
-    private static void MakeChunkUrbans(HexGeneralData data, NewGameData setupData)
+    private static void MakeChunkUrbans(HexGeneralData data, GenerationData setupData)
     {
         var map = data.Map;
         var landHexes = data.Map.Hexes.Values
             .Where(h => h.Landform.Get(data).IsLand)
             .ToHashSet();
+
+        var locationHolder = new LocationHolder(data.IdDispenser.TakeId(),
+            new Dictionary<Vector3I, ERef<Location>>());
+        data.Entities.AddEntity(locationHolder, data);
+
+        var popBuildings = data.Models.GetModels<PopBuilding>()
+            .OrderBy(p => p.Pop).ToArray();
+        
         
         var urban = data.ModelPredefs.Landforms.Urban;
         var barren = data.ModelPredefs.Vegetations.Barren;
@@ -57,9 +65,24 @@ public static class RegimeGenerator
             var seedHex = urbanTrunk.TrunkSeed.GetTwigSeed();
             seedHex.SetLandform(urban.MakeIdRef(data));
             seedHex.SetVegetation(barren.MakeIdRef(data));
+            var loc = new Location(data.IdDispenser.TakeId(),
+                seedHex.Coords, new List<ModelIdRef<BuildingModel>>());
+            data.Entities.AddEntity(loc, data);
+            
             var moreUrban = extraUrbanHexes[data.Random.RandiRange(0, extraUrbanHexes.Length - 1)];
-            if (moreUrban > 0)
+            if (moreUrban == 0)
             {
+                var popBuilding = popBuildings[data.Random.RandiRange(0, 1)];
+                loc.Buildings.Add(popBuilding.MakeIdRef<BuildingModel>(data));
+            }
+            else
+            {
+                var popLevelMax = moreUrban;
+                popLevelMax = Mathf.Min(moreUrban, popBuildings.Length - 1);
+                var popLevelMin = moreUrban / 2;
+                
+                loc.Buildings.Add(popBuildings[popLevelMax].MakeIdRef<BuildingModel>(data));
+                
                 var index = data.Random.RandiRange(0, 5);
                 for (var i = 0; i < moreUrban; i++)
                 {
@@ -67,8 +90,16 @@ public static class RegimeGenerator
                                 + HexExt.HexDirs[index % 6];
                     index++;
                     if (map.Hexes.TryGetValue(coord, out var nHex)
-                        && landHexes.Contains(nHex))
+                        && landHexes.Contains(nHex)
+                        && locationHolder.Locations.ContainsKey(coord) == false)
                     {
+                        var extraLoc = new Location(data.IdDispenser.TakeId(),
+                            coord, 
+                            new List<ModelIdRef<BuildingModel>>());
+                        data.Entities.AddEntity(extraLoc, data);
+                        var extraPopBuilding = popBuildings[data.Random.RandiRange(popLevelMin, popLevelMax)];
+                        extraLoc.Buildings.Add(extraPopBuilding.MakeIdRef<BuildingModel>(data));
+                        
                         nHex.SetLandform(urban.MakeIdRef(data));
                         nHex.SetVegetation(barren.MakeIdRef(data));
                     }
@@ -91,7 +122,7 @@ public static class RegimeGenerator
             setupData.UrbanTrunks.Add(urbanTrunk);
         }
     }
-    private static void MakeRoadNetwork(HexGeneralData data, NewGameData setupData)
+    private static void MakeRoadNetwork(HexGeneralData data, GenerationData setupData)
     {
         var roads = new RoadNetwork(data.IdDispenser.TakeId(), new Dictionary<Vector2I, ModelIdRef<RoadModel>>());
         data.Entities.AddEntity(roads, data);
@@ -132,7 +163,7 @@ public static class RegimeGenerator
         }
     }
 
-    private static void GenerateRegimes(HexGeneralData data, NewGameData setupData)
+    private static void GenerateRegimes(HexGeneralData data, GenerationData setupData)
     {
         var landHexes = data.Map.Hexes.Values
             .Where(h => h.Landform.Get(data).IsLand).ToHashSet();
@@ -237,7 +268,7 @@ public static class RegimeGenerator
         }
     }
     
-    private static void GenerateUnits(HexGeneralData data, NewGameData setupData)
+    private static void GenerateUnits(HexGeneralData data, GenerationData setupData)
     {
         var unitHolder = new MapUnitHolder(data.IdDispenser.TakeId(),
             new Dictionary<ERef<Unit>, Vector3I>(),

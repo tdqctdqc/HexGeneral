@@ -18,4 +18,9 @@ public class Regime(int id, ModelIdRef<RegimeModel> regimeModel, float recruits,
     public override void CleanUp(Data d)
     {
     }
+
+    public void AddRecruits(float recruits)
+    {
+        Recruits += recruits;
+    }
 }

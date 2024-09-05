@@ -4,33 +4,35 @@ using GodotUtilities.GameClient;
 
 namespace HexGeneral.Game.Client.Graphics;
 
-public partial class MapGraphics(HexGeneralData data) : Node2D, IClientComponent
+public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientComponent
 {
     public Node Node => this;
-    public HexGeneralData Data { get; private set; } = data;
-    
+    public HexGeneralClient Client { get; private set; } = client;
+    public UnitGraphics Units { get; private set; }
+    public Action Disconnect { get; set; }
+
     public void Connect(GameClient client)
     {
         client.GraphicsLayer.AddChild(this);
-        AddChild(new HexBaseColorGraphics(Data));
+        AddChild(new HexBaseColorGraphics(Client.Data));
         AddChild(new HexFilterGraphics<Landform>(
-            Data, h => h.Landform.Get(Data),
-            lf => TextureManager.Textures[lf.Name.ToLower()],
-            h => h.GetTerrainColor(Data)));
+            Client.Data, h => h.Landform.Get(Client.Data),
+            lf => lf.GetTexture(),
+            h => h.GetTerrainColor(Client.Data)));
 
         var veg = new HexFilterGraphics<Vegetation>(
-            Data, h => h.Vegetation.Get(Data),
-            v => TextureManager.Textures[v.Name.ToLower()],
-            h => Colors.White.Darkened(h.Landform.Get(data).DarkenFactor));
+            Client.Data, h => h.Vegetation.Get(Client.Data),
+            v => v.GetTexture(),
+            h => Colors.White.Darkened(h.Landform.Get(Client.Data).DarkenFactor));
         AddChild(veg);
-        veg.Modulate = new Color(1f, 1f, 1f, .5f);
+        veg.Modulate = new Color(1f, 1f, 1f, .25f);
         
-        AddChild(new RoadGraphics(Data));
+        AddChild(new RoadGraphics(Client.Data));
         
-        AddChild(new UnitGraphics(Data));
+        Units = new UnitGraphics(Client);
+        AddChild(Units);
     }
 
-    public Action Disconnect { get; set; }
 
     public void Process(float delta)
     {

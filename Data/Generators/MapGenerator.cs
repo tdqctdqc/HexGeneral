@@ -22,9 +22,11 @@ public static class MapGenerator
     private static int _chunkSize = 30;
     public static int BranchTreeDepth = 5;
     public static void Generate(HexGeneralData data, 
-        NewGameData setupData)
+        GenerationData setupData)
     {
-        Map.Create(data);
+        var h = (int)setupData.Settings.Height.Value;
+        var w = (int)setupData.Settings.Width.Value;
+        Map.Create(new Vector2I(w, h), data);
         MakeHexes(data, setupData);
         DoLandSea(data, setupData);
         DoLandforms(data, setupData);
@@ -32,7 +34,7 @@ public static class MapGenerator
         MakeChunks(data, setupData);
     }
 
-    private static void MakeHexes(HexGeneralData data, NewGameData setupData)
+    private static void MakeHexes(HexGeneralData data, GenerationData setupData)
     {
         var map = data.Map;
         var h = (int)setupData.Settings.Height.Value;
@@ -50,7 +52,7 @@ public static class MapGenerator
             }
         }
     }
-    private static void DoLandSea(HexGeneralData data, NewGameData setupData)
+    private static void DoLandSea(HexGeneralData data, GenerationData setupData)
     {
         var map = data.Map;
         var landSeaNoise = new TieredNoise();
@@ -82,7 +84,7 @@ public static class MapGenerator
         }
     }
 
-    private static void DoLandforms(HexGeneralData data, NewGameData setupData)
+    private static void DoLandforms(HexGeneralData data, GenerationData setupData)
     {
         var map = data.Map;
 
@@ -119,7 +121,7 @@ public static class MapGenerator
         }
     }
 
-    private static void DoVegetations(HexGeneralData data, NewGameData setupData)
+    private static void DoVegetations(HexGeneralData data, GenerationData setupData)
     {
         var map = data.Map;
         var moistureLevel = setupData.Settings.Moisture.Value;
@@ -169,7 +171,7 @@ public static class MapGenerator
         }
     }
 
-    private static void MakeChunks(HexGeneralData data, NewGameData setupData)
+    private static void MakeChunks(HexGeneralData data, GenerationData setupData)
     {
         MakeTwigs(data, setupData);
         MakeTopBranches(data, setupData);
@@ -177,7 +179,7 @@ public static class MapGenerator
     }
 
     private static void MakeTopBranches(
-        HexGeneralData data, NewGameData setupData)
+        HexGeneralData data, GenerationData setupData)
     {
         var landHexes = data.Map.Hexes
             .Values
@@ -249,7 +251,7 @@ public static class MapGenerator
     }
 
     private static void MakeTwigs(HexGeneralData data,
-        NewGameData setupData)
+        GenerationData setupData)
     {
         var map = data.Map;
         var hexes = map.Hexes

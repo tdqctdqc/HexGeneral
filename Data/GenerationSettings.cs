@@ -2,7 +2,7 @@ using GodotUtilities.Ui;
 
 namespace HexGeneral.Game;
 
-public class NewGameSettings : Settings
+public class GenerationSettings : Settings
 {
     public FloatSettingsOption Height { get; private set; }
     public FloatSettingsOption Width { get; private set; }
@@ -10,7 +10,7 @@ public class NewGameSettings : Settings
     public FloatSettingsOption Roughness { get; private set; }
     public FloatSettingsOption Moisture { get; private set; }
     public FloatSettingsOption NoiseScale { get; private set; }
-    public NewGameSettings() : base("New Game")
+    public GenerationSettings() : base("New Game")
     {
         Width = new FloatSettingsOption("Width",
             300, 50, 1000, 1, true);

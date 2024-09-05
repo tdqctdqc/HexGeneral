@@ -23,7 +23,7 @@ public class UnitModel : Model
     {
         var u = new Unit(data.IdDispenser.TakeId(),
             regime.MakeRef(), HitPoints, Organization, AmmoCap,
-            this.MakeIdRef(data));
+            this.MakeIdRef(data), MovePoints);
         data.Entities.AddEntity(u, data);
         return u;
     }

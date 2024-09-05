@@ -12,7 +12,7 @@ public partial class NewGameGenerationPanel : PanelContainer
         Size = new Vector2(200f, 200f);
         var vbox = new VBoxContainer();
 
-        var settings = new NewGameSettings();
+        var settings = new GenerationSettings();
         vbox.AddChild(settings.GetControlInterface());
         
         vbox.AddButton("Make",

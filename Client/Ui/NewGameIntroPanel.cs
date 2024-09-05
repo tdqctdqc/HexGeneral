@@ -23,12 +23,12 @@ public partial class NewGameIntroPanel : PanelContainer
         vbox.AddButton("Start Game",
             () =>
             {
-                var client = new HexGeneralClient();
+                var client = new HexGeneralClient(_data);
                 var parent = GetParent();
                 parent.QueueFree();
                 this.QueueFree();
                 Root.I.AddChild(client);
-                client.OpenGameSession(_data);
+                Root.I.SetClient(client);
             });
         AddChild(vbox);
         this.Center();
