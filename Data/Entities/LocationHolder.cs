@@ -4,9 +4,9 @@ using GodotUtilities.GameData;
 
 namespace HexGeneral.Game;
 
-public class LocationHolder(int id, Dictionary<Vector3I, ERef<Location>> locations) : Entity(id)
+public class LocationHolder(int id, Dictionary<HexRef, ERef<Location>> locations) : Entity(id)
 {
-    public Dictionary<Vector3I, ERef<Location>> Locations { get; private set; } = locations;
+    public Dictionary<HexRef, ERef<Location>> Locations { get; private set; } = locations;
 
     public override void Made(Data d)
     {

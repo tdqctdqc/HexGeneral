@@ -38,7 +38,7 @@ public partial class UnitGraphics : Node2D
             }
         };
     }
-
+    
     public void Update(HexGeneralClient client)
     {
         var holder = client.Data.MapUnitHolder;
@@ -60,18 +60,40 @@ public partial class UnitGraphics : Node2D
             Graphics.Add(eRef, graphic);
         }
         
-        foreach (var (coords, hexUnits) in holder.HexLandUnits)
+        foreach (var (r, hexUnits) in holder.HexLandUnits)
         {
-            if (hexUnits.Count == 0) continue;
-            var hexPos = coords.GetWorldPos();
-            var offsets = GraphicOffsetsByNumUnits[hexUnits.Count - 1];
-            for (var i = 0; i < hexUnits.Count; i++)
-            {
-                var unit = hexUnits[i];
-                var graphic = Graphics[unit];
-                graphic.Position = offsets[i] + hexPos;
-                graphic.Update(unit.Get(client.Data), client.Data);
-            }
+            DrawHex(r, client);
         }
+    }
+
+    public void UpdateUnit(Unit u, HexGeneralClient client)
+    {
+        Graphics[u.MakeRef()].Update(u, client);
+    }
+    public void DrawHex(HexRef hex, HexGeneralClient client)
+    {
+        var hexUnits = client.Data.MapUnitHolder.HexLandUnits[hex];
+        
+        if (hexUnits.Count == 0) return;
+        var hexPos = hex.GetWorldPos();
+        var offsets = GraphicOffsetsByNumUnits[hexUnits.Count - 1];
+        for (var i = 0; i < hexUnits.Count; i++)
+        {
+            var unit = hexUnits[i];
+            var graphic = Graphics[unit];
+            graphic.Position = offsets[i] + hexPos;
+            graphic.Update(unit.Get(client.Data), client);
+        }
+    }
+
+    public void RemoveUnit(Unit u, Hex hex, HexGeneralClient client)
+    {
+        if (hex is null) return;
+
+        var r = u.MakeRef();
+        var graphic = Graphics[r];
+        Graphics.Remove(r);
+        graphic.QueueFree();
+        DrawHex(hex.MakeRef(), client);
     }
 }

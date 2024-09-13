@@ -12,5 +12,7 @@ public class BuildingPredefs(HexGeneralData data) : IPredefHolder<BuildingModel>
         => (PopBuilding)_data.Models.ModelsByName[nameof(City)];
     public PopBuilding Metropolis
         => (PopBuilding)_data.Models.ModelsByName[nameof(Metropolis)];
+    public IndustryBuilding Factory
+        => (IndustryBuilding)_data.Models.ModelsByName[nameof(Factory)];
 
 }

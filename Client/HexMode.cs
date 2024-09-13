@@ -10,16 +10,14 @@ public class HexMode : UiMode
 {
     public SettingsOption<Hex> SelectedHex { get; private set; }
     private MouseMode _mouseMode;
-    private MouseOverHandler _mouseOverHandler;
     public HexMode(HexGeneralClient client, string name) : base(client, name)
     {
         SelectedHex = new DefaultSettingsOption<Hex>("Selected Hex", null);
-        _mouseOverHandler = new MouseOverHandler();
         _mouseMode = new MouseMode(
             new List<MouseAction>
             {
                 new HexSelectAction(MouseButtonMask.Left, 
-                    client, _mouseOverHandler,
+                    client, 
                     SelectedHex.Set)
             });
     }

@@ -8,7 +8,6 @@ namespace HexGeneral.Client.Ui;
 
 public class MouseOverHandler
 {
-    
     public static (Hex closest, Hex close) FindTwoClosestHexes(Vector2 worldPos,
         Map map)
     {

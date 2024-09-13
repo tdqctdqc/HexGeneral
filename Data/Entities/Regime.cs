@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 using GodotUtilities.GameData;
+using GodotUtilities.Logic;
 
 namespace HexGeneral.Game;
 
@@ -18,9 +19,13 @@ public class Regime(int id, ModelIdRef<RegimeModel> regimeModel, float recruits,
     public override void CleanUp(Data d)
     {
     }
-
-    public void AddRecruits(float recruits)
+    
+    public void AddRecruits(float recruits, ProcedureKey key)
     {
         Recruits += recruits;
+    }
+    public void AddIndustrialPoints(float industrialPoints, ProcedureKey key)
+    {
+        IndustrialPoints += industrialPoints;
     }
 }

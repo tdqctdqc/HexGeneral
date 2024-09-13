@@ -15,9 +15,11 @@ public class HexGeneralData : Data
     public LandSeaMasses LandSeaMasses => (LandSeaMasses)Singletons[typeof(LandSeaMasses)];
     public MapUnitHolder MapUnitHolder => (MapUnitHolder)Singletons[typeof(MapUnitHolder)];
     public LocationHolder LocationHolder => (LocationHolder)Singletons[typeof(LocationHolder)];
+    public PlayerHolder PlayerHolder => (PlayerHolder)Singletons[typeof(PlayerHolder)];
+    public TurnManager TurnManager => (TurnManager)Singletons[typeof(TurnManager)];
     public GameSettings Settings { get; private set; }
     public GenerationSettings GenerationSettings { get; private set; }
-    
+    public DataNotices Notices { get; private set; }
     public HexGeneralData(GameSettings settings, GenerationSettings generationSettings) 
         : base(new(0),
         new(new Dictionary<int, Entity>()),
@@ -26,6 +28,7 @@ public class HexGeneralData : Data
         new(),
         new())
     {
+        Notices = new DataNotices();
         Settings = settings;
         GenerationSettings = generationSettings;
         ModelPredefs = new ModelPredefs(this);

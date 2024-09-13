@@ -4,15 +4,15 @@ using GodotUtilities.GameData;
 
 namespace HexGeneral.Game;
 
-public class Location(int id, Vector3I coords, List<ModelIdRef<BuildingModel>> buildings) 
+public class Location(int id, HexRef hex, List<ModelIdRef<BuildingModel>> buildings) 
     : Entity(id)
 {
-    public Vector3I Coords { get; private set; } = coords;
+    public HexRef Hex { get; private set; } = hex;
     public List<ModelIdRef<BuildingModel>> Buildings { get; private set; } = buildings;
 
     public override void Made(Data d)
     {
-        d.GetSingleton<LocationHolder>().Locations.Add(coords, this.MakeRef());
+        d.GetSingleton<LocationHolder>().Locations.Add(hex, this.MakeRef());
     }
 
     public override void CleanUp(Data d)

@@ -18,6 +18,7 @@ public partial class NewGameGenerationPanel : PanelContainer
         vbox.AddButton("Make",
             () =>
             {
+                
                 var data = NewGameGenerator.Generate(settings);
                 GetParent().AddChild(new NewGameIntroPanel(data));
                 this.QueueFree();

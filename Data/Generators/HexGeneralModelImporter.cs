@@ -20,7 +20,6 @@ public class HexGeneralModelImporter(ModelPredefs predefs)
             .GetDerivedTypes(types)
             .Distinct();
         var importer = new DepotImporter(_path, modelTypes, models);
-        GD.Print("finished");
     }
 
 }

@@ -1,4 +1,5 @@
 using Godot;
+using GodotUtilities.GameData;
 
 namespace HexGeneral.Game.Client;
 
@@ -12,7 +13,6 @@ public partial class HexPanel : PanelContainer
         _mode = mode;
         _mode.SelectedHex.SettingChanged.SubscribeForNode(v =>
         {
-            GD.Print("setting changed");
             Draw();
         }, this);
     }
@@ -27,11 +27,15 @@ public partial class HexPanel : PanelContainer
 
         var vbox = new VBoxContainer();
         vbox.CreateLabelAsChild("Hex: " + hex.Coords.ToString());
+        if (hex.Regime.Fulfilled())
+        {
+            vbox.CreateLabelAsChild($"Regime: {hex.Regime.Get(_client.Data).RegimeModel.Get(_client.Data).Name}");
+        }
         vbox.CreateLabelAsChild($"Landform: {hex.Landform.Get(_client.Data).Name}");
         vbox.CreateLabelAsChild($"Vegetation: {hex.Vegetation.Get(_client.Data).Name}");
 
         if (_client.Data.LocationHolder.Locations
-            .TryGetValue(hex.Coords, out var lRef))
+            .TryGetValue(hex.MakeRef(), out var lRef))
         {
             var location = lRef.Get(_client.Data);
             foreach (var buildingRef in location.Buildings)

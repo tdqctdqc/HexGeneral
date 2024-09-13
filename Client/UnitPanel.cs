@@ -1,4 +1,5 @@
 using Godot;
+using GodotUtilities.Ui;
 
 namespace HexGeneral.Game.Client;
 
@@ -39,12 +40,24 @@ public partial class UnitPanel : PanelContainer
         vbox.CreateLabelAsChild(model.Name);
         vbox.CreateLabelAsChild($"Hitpoints: {unit.CurrentHitPoints}/{model.HitPoints}");
         vbox.CreateLabelAsChild($"Organization: {unit.CurrentOrganization}/{model.Organization}");
-        vbox.CreateLabelAsChild($"Organization: {unit.CurrentAmmo}/{model.AmmoCap}");
+        vbox.CreateLabelAsChild($"Ammunition: {unit.CurrentAmmo}/{model.AmmoCap}");
         vbox.CreateLabelAsChild($"Move Points: {unit.MovePoints}/{model.MovePoints}");
         vbox.AddChild(new VSeparator());
         vbox.CreateLabelAsChild($"Soft Attack: {model.SoftAttack}");
         vbox.CreateLabelAsChild($"Hard Attack: {model.HardAttack}");
         vbox.CreateLabelAsChild($"Hardness: {model.Hardness}");
         vbox.CreateLabelAsChild($"Range: {model.Range}");
+
+
+        vbox.AddButton($"Reinforce", () =>
+        {
+            
+        });
+        
+        vbox.AddButton($"Resupply Ammo", () =>
+        {
+            
+        });
+        
     }
 }

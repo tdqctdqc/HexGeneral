@@ -21,6 +21,13 @@ public static class RegimeGenerator
         MakeRoadNetwork(data, setupData);
         GenerateRegimes(data, setupData);
         GenerateUnits(data, setupData);
+        var regimes = data.Entities.GetAll<Regime>();
+
+        data.Entities.AddEntity(new TurnManager(data.IdDispenser.TakeId(),
+            1,
+            regimes.Select(r => r.MakeRef()).ToList(),
+            0),
+            data);
     }
 
     
@@ -33,12 +40,13 @@ public static class RegimeGenerator
             .ToHashSet();
 
         var locationHolder = new LocationHolder(data.IdDispenser.TakeId(),
-            new Dictionary<Vector3I, ERef<Location>>());
+            new Dictionary<HexRef, ERef<Location>>());
         data.Entities.AddEntity(locationHolder, data);
 
         var popBuildings = data.Models.GetModels<PopBuilding>()
             .OrderBy(p => p.Pop).ToArray();
-        
+        var industryBuildings = data.Models.GetModels<IndustryBuilding>()
+            .OrderBy(p => p.IndustrialProd).ToArray();
         
         var urban = data.ModelPredefs.Landforms.Urban;
         var barren = data.ModelPredefs.Vegetations.Barren;
@@ -66,7 +74,7 @@ public static class RegimeGenerator
             seedHex.SetLandform(urban.MakeIdRef(data));
             seedHex.SetVegetation(barren.MakeIdRef(data));
             var loc = new Location(data.IdDispenser.TakeId(),
-                seedHex.Coords, new List<ModelIdRef<BuildingModel>>());
+                seedHex.MakeRef(), new List<ModelIdRef<BuildingModel>>());
             data.Entities.AddEntity(loc, data);
             
             var moreUrban = extraUrbanHexes[data.Random.RandiRange(0, extraUrbanHexes.Length - 1)];
@@ -74,6 +82,7 @@ public static class RegimeGenerator
             {
                 var popBuilding = popBuildings[data.Random.RandiRange(0, 1)];
                 loc.Buildings.Add(popBuilding.MakeIdRef<BuildingModel>(data));
+                loc.Buildings.Add(industryBuildings[0].MakeIdRef<BuildingModel>(data));
             }
             else
             {
@@ -82,6 +91,11 @@ public static class RegimeGenerator
                 var popLevelMin = moreUrban / 2;
                 
                 loc.Buildings.Add(popBuildings[popLevelMax].MakeIdRef<BuildingModel>(data));
+
+                var industryMax = Mathf.CeilToInt((float)moreUrban / industryBuildings.Length) ;
+                industryMax = Mathf.Clamp(industryMax, 0, industryBuildings.Length - 1);
+                
+                loc.Buildings.Add(industryBuildings[industryMax].MakeIdRef<BuildingModel>(data));
                 
                 var index = data.Random.RandiRange(0, 5);
                 for (var i = 0; i < moreUrban; i++)
@@ -89,16 +103,25 @@ public static class RegimeGenerator
                     var coord = seedHex.Coords 
                                 + HexExt.HexDirs[index % 6];
                     index++;
+
                     if (map.Hexes.TryGetValue(coord, out var nHex)
                         && landHexes.Contains(nHex)
-                        && locationHolder.Locations.ContainsKey(coord) == false)
+                        && locationHolder.Locations.ContainsKey(new HexRef(coord)) == false)
                     {
                         var extraLoc = new Location(data.IdDispenser.TakeId(),
-                            coord, 
+                            new HexRef(coord), 
                             new List<ModelIdRef<BuildingModel>>());
                         data.Entities.AddEntity(extraLoc, data);
-                        var extraPopBuilding = popBuildings[data.Random.RandiRange(popLevelMin, popLevelMax)];
+
+                        var extraPopSample = data.Random.RandiRange(popLevelMin, popLevelMax);
+                        var extraPopBuilding = popBuildings[extraPopSample];
                         extraLoc.Buildings.Add(extraPopBuilding.MakeIdRef<BuildingModel>(data));
+
+                        var industrySample = Mathf.CeilToInt((float)extraPopSample / industryBuildings.Length) ;
+                        industrySample = Mathf.Clamp(industrySample, 0, industryBuildings.Length - 1);
+                        
+                        var industryBuilding = industryBuildings[industrySample];
+                        extraLoc.Buildings.Add(industryBuilding.MakeIdRef<BuildingModel>(data));
                         
                         nHex.SetLandform(urban.MakeIdRef(data));
                         nHex.SetVegetation(barren.MakeIdRef(data));
@@ -271,8 +294,8 @@ public static class RegimeGenerator
     private static void GenerateUnits(HexGeneralData data, GenerationData setupData)
     {
         var unitHolder = new MapUnitHolder(data.IdDispenser.TakeId(),
-            new Dictionary<ERef<Unit>, Vector3I>(),
-            new Dictionary<Vector3I, List<ERef<Unit>>>());
+            new Dictionary<ERef<Unit>, HexRef>(),
+            new Dictionary<HexRef, List<ERef<Unit>>>());
         data.Entities.AddEntity(unitHolder, data);
         var urban = data.ModelPredefs.Landforms.Urban;
         var infantry = data.ModelPredefs.UnitModelPredefs.Infantry;

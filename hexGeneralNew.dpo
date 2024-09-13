@@ -160,6 +160,36 @@
                     "guid": "74c053e1-03a1-4198-82c0-168caea7616a",
                     "id": "27",
                     "Name": "PopBuilding_Metropolis"
+                },
+                {
+                    "guid": "061cff56-8c94-44bb-9cdd-2ad8d58e0ce5",
+                    "id": "28",
+                    "Name": "MoveType_InfantryMoveType"
+                },
+                {
+                    "guid": "8aa468b8-5baa-4ac9-8d77-7e4f3b763383",
+                    "id": "29",
+                    "Name": "MoveType_TrackedMoveType"
+                },
+                {
+                    "guid": "77e7a72f-5491-4eb6-8d42-5fdd88978edc",
+                    "id": "30",
+                    "Name": "IndustryBuilding_Factory"
+                },
+                {
+                    "guid": "f790eafc-741d-44ab-9070-6b72bf361e42",
+                    "id": "31",
+                    "Name": "IndustryBuilding_Workshop"
+                },
+                {
+                    "guid": "fa9c98e5-6e4a-45c7-9928-8fe6dcd11a58",
+                    "id": "32",
+                    "Name": "IndustryBuilding_ManufacturingPlant"
+                },
+                {
+                    "guid": "8608e997-8079-46ca-adc7-4ccefc90ddfb",
+                    "id": "33",
+                    "Name": "MoveType_SupplyMoveType"
                 }
             ],
             "hidden": false,
@@ -804,23 +834,6 @@
                 },
                 {
                     "typeStr": "int",
-                    "guid": "9b54c697-fda7-4e59-88fd-cac7f99d687d",
-                    "description": "AmmoPerShot",
-                    "name": "AmmoPerShot",
-                    "min": -10000,
-                    "max": 100000,
-                    "defaultValue": 0,
-                    "iconName": "newInt",
-                    "configurable": {
-                        "name": "text",
-                        "description": "text",
-                        "min": "int",
-                        "max": "int",
-                        "defaultValue": "int"
-                    }
-                },
-                {
-                    "typeStr": "int",
                     "guid": "1aeaf2c2-f102-4252-8553-10a14595e178",
                     "description": "Range",
                     "name": "Range",
@@ -937,6 +950,38 @@
                         "max": "float",
                         "defaultValue": "float"
                     }
+                },
+                {
+                    "typeStr": "lineReference",
+                    "guid": "15893504-75a4-4540-98bb-0a0040ffef06",
+                    "name": "MoveType",
+                    "description": "MoveType",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "7cef04fe-6114-48e3-ba55-b8fd798ecbe8",
+                    "description": "AmmoCost",
+                    "name": "AmmoCost",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
                 }
             ],
             "lines": [
@@ -944,33 +989,35 @@
                     "guid": "56087ce9-574c-412e-a2b2-a82ed3effe0f",
                     "id": "0",
                     "Model": "739758df-9e5d-4167-bd95-697da4279549",
-                    "HitPoints": 100,
+                    "HitPoints": 50,
                     "Organization": 100,
                     "AmmoCap": 10,
-                    "AmmoPerShot": 1,
                     "Range": 1,
-                    "HardAttack": 1,
-                    "SoftAttack": 5,
+                    "HardAttack": 2,
+                    "SoftAttack": 10,
                     "Hardness": 0,
-                    "RecruitCost": 10,
-                    "IndustrialCost": 10,
-                    "MovePoints": 5
+                    "RecruitCost": 50,
+                    "IndustrialCost": 50,
+                    "MovePoints": 10,
+                    "MoveType": "061cff56-8c94-44bb-9cdd-2ad8d58e0ce5",
+                    "AmmoCost": 0.1
                 },
                 {
                     "guid": "63ed717a-7d46-46d7-b5fc-5dfc16c288f0",
                     "id": "1",
                     "Model": "155d80a3-2d51-4f55-913b-e982c4d704a5",
-                    "HitPoints": 100,
+                    "HitPoints": 50,
                     "Organization": 50,
                     "AmmoCap": 5,
-                    "AmmoPerShot": 1,
                     "Range": 1,
                     "HardAttack": 10,
-                    "SoftAttack": 15,
+                    "SoftAttack": 25,
                     "Hardness": 0.9,
-                    "RecruitCost": 5,
-                    "IndustrialCost": 50,
-                    "MovePoints": 10
+                    "RecruitCost": 20,
+                    "IndustrialCost": 200,
+                    "MovePoints": 10,
+                    "MoveType": "8aa468b8-5baa-4ac9-8d77-7e4f3b763383",
+                    "AmmoCost": 0.2
                 }
             ],
             "hidden": false,
@@ -1052,6 +1099,444 @@
                     "id": "3",
                     "Model": "74c053e1-03a1-4198-82c0-168caea7616a",
                     "Pop": 2500
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "MoveType",
+            "description": "MoveType",
+            "displayColumn": "id",
+            "guid": "5969234a-5929-49f5-ab22-f23143f83ff5",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "8e247e80-2cb6-4876-9c83-180de2ec2715",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "list",
+                    "guid": "c5aa739c-c3e4-4b02-ac3c-609c1c1ac097",
+                    "name": "LandformCosts",
+                    "description": "LandformCosts",
+                    "sheet": "4a92bbcf-c57b-4e61-a115-6e8886ff9a68",
+                    "defaultValue": [],
+                    "iconName": "newList",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text"
+                    }
+                },
+                {
+                    "typeStr": "list",
+                    "guid": "c09207de-0759-4952-84ad-a4548a0163a9",
+                    "name": "VegetationCosts",
+                    "description": "VegetationCosts",
+                    "sheet": "61a04ae3-59a1-4d22-b200-cde556ef700e",
+                    "defaultValue": [],
+                    "iconName": "newList",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "b1e34f54-c2ee-4061-8e5f-855f36fcccc9",
+                    "id": "0",
+                    "Model": "061cff56-8c94-44bb-9cdd-2ad8d58e0ce5",
+                    "VegetationCosts": [
+                        {
+                            "guid": "11aec90f-ea76-4e18-93a0-06d446ce38ab",
+                            "id": "0",
+                            "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "cc76e994-8656-49cd-b9ae-c6314c3d9f50",
+                            "id": "1",
+                            "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "7f59d45e-9bb9-433e-a22f-6ddf3b35bcc5",
+                            "id": "2",
+                            "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "fe4a1cd1-04f8-454b-9c85-32f6c17b2813",
+                            "id": "3",
+                            "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "94b23b9e-1711-45a4-a9bf-f33c7bb396ee",
+                            "id": "4",
+                            "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                            "Value": 0.5
+                        }
+                    ],
+                    "LandformCosts": [
+                        {
+                            "guid": "edff1366-2428-471a-ae1b-bbc47f4ce4b3",
+                            "id": "0",
+                            "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                            "Value": 1
+                        },
+                        {
+                            "guid": "58328f5a-423e-4362-bb28-53eb8f80e878",
+                            "id": "1",
+                            "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                            "Value": -1
+                        },
+                        {
+                            "guid": "05cbfd61-c3d6-4c0c-9830-b6fdded798d1",
+                            "id": "2",
+                            "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
+                            "Value": 1.5
+                        },
+                        {
+                            "guid": "cfd3e516-b078-4cf2-a8ac-164aeaec7332",
+                            "id": "3",
+                            "Key": "88cfff75-d832-4951-9fea-d67c71822210",
+                            "Value": 2
+                        },
+                        {
+                            "guid": "8df881cb-67a2-443a-bd64-784504037dc9",
+                            "id": "4",
+                            "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                            "Value": 1.5
+                        }
+                    ]
+                },
+                {
+                    "guid": "1b32c4e6-5550-498d-8f75-ecebb3cc0d8b",
+                    "id": "1",
+                    "Model": "8aa468b8-5baa-4ac9-8d77-7e4f3b763383",
+                    "VegetationCosts": [
+                        {
+                            "guid": "c7ab8da4-cb29-4e98-80a0-ddc9720d7424",
+                            "id": "0",
+                            "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "8e30ce61-d89e-4b6f-bb4d-ecfc815ec717",
+                            "id": "1",
+                            "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "1dd7a6db-c08e-4856-9e37-27c4d9f502bc",
+                            "id": "2",
+                            "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "7823c8b0-71b0-4f3f-8442-ada65cefb7a2",
+                            "id": "3",
+                            "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "801a2a59-99c3-47f5-8eab-815a036bf50b",
+                            "id": "4",
+                            "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                            "Value": 1
+                        }
+                    ],
+                    "LandformCosts": [
+                        {
+                            "guid": "4bb4fc00-9135-45b4-be53-a812390a9d5f",
+                            "id": "0",
+                            "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                            "Value": 0.5
+                        },
+                        {
+                            "guid": "92efbd86-a15a-41b1-aa71-8030a235f401",
+                            "id": "1",
+                            "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                            "Value": -1
+                        },
+                        {
+                            "guid": "0eec153c-f32f-42e9-b8bd-9803232d7ff5",
+                            "id": "2",
+                            "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
+                            "Value": 1.5
+                        },
+                        {
+                            "guid": "6f827b42-ded2-44b4-8ecc-ecea8c0a0ab8",
+                            "id": "3",
+                            "Key": "88cfff75-d832-4951-9fea-d67c71822210",
+                            "Value": 4
+                        },
+                        {
+                            "guid": "fa53b31f-9dab-42ee-966a-0192c7e219d6",
+                            "id": "4",
+                            "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                            "Value": 2
+                        }
+                    ]
+                },
+                {
+                    "guid": "2a5867f6-b910-41db-8677-2f1c2195757d",
+                    "id": "1_copy_0",
+                    "Model": "8608e997-8079-46ca-adc7-4ccefc90ddfb",
+                    "VegetationCosts": [
+                        {
+                            "guid": "99b3f7ef-7681-451d-9a73-f26aadf4e2cc",
+                            "id": "0",
+                            "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "abe9be90-c9af-4853-b49a-1148cf89cf61",
+                            "id": "1",
+                            "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "ad401917-45b8-4e87-8bbb-b30e39685efd",
+                            "id": "2",
+                            "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "b9bb8c69-6793-4c7d-91a6-9b275e2e3bf8",
+                            "id": "3",
+                            "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "a53a45cd-457f-47e5-a664-929d9a90994e",
+                            "id": "4",
+                            "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                            "Value": 1
+                        }
+                    ],
+                    "LandformCosts": [
+                        {
+                            "guid": "856b9c85-577d-4022-831a-38d39951eab5",
+                            "id": "0",
+                            "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                            "Value": 0.5
+                        },
+                        {
+                            "guid": "ff4f368e-687a-423b-b4b7-2918bee0d374",
+                            "id": "1",
+                            "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                            "Value": -1
+                        },
+                        {
+                            "guid": "ebefc148-928a-44a6-87b6-e18cf62c2476",
+                            "id": "2",
+                            "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
+                            "Value": 1.5
+                        },
+                        {
+                            "guid": "5acb4398-ec2d-4ae5-abcd-7cc648b6c4e4",
+                            "id": "3",
+                            "Key": "88cfff75-d832-4951-9fea-d67c71822210",
+                            "Value": 4
+                        },
+                        {
+                            "guid": "34262db4-a068-414d-b8cb-42c5ee21800d",
+                            "id": "4",
+                            "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                            "Value": 2
+                        }
+                    ]
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": " LandformCosts",
+            "description": "list@5969234a-5929-49f5-ab22-f23143f83ff5",
+            "displayColumn": "id",
+            "guid": "4a92bbcf-c57b-4e61-a115-6e8886ff9a68",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "534e5838-e34f-4d69-81f8-0ba00ca8d7c2",
+                    "name": "Key",
+                    "description": "Key",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "11a783c1-23dd-40f4-9593-41274aa1f469",
+                    "description": "Value",
+                    "name": "Value",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                }
+            ],
+            "lines": [],
+            "hidden": true,
+            "isProps": false,
+            "parentSheetGUID": "5969234a-5929-49f5-ab22-f23143f83ff5",
+            "columnGUID": "c5aa739c-c3e4-4b02-ac3c-609c1c1ac097"
+        },
+        {
+            "name": "VegetationCosts",
+            "description": "list@5969234a-5929-49f5-ab22-f23143f83ff5",
+            "displayColumn": "id",
+            "guid": "61a04ae3-59a1-4d22-b200-cde556ef700e",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "78e2ada2-e006-4227-b0f7-c3363bae2dd3",
+                    "name": "Key",
+                    "description": "Key",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "fb65688d-5c7f-47e0-9448-80f86be6efac",
+                    "description": "Value",
+                    "name": "Value",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                }
+            ],
+            "lines": [],
+            "hidden": true,
+            "isProps": false,
+            "parentSheetGUID": "5969234a-5929-49f5-ab22-f23143f83ff5",
+            "columnGUID": "c09207de-0759-4952-84ad-a4548a0163a9"
+        },
+        {
+            "name": "IndustryBuilding",
+            "description": "IndustryBuilding",
+            "displayColumn": "id",
+            "guid": "666e14a9-e31a-4368-a60e-14430b57f5c6",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "1946e360-9d20-4b61-b881-fc7c1ed4c6d2",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "a0a79dce-29a8-47b2-9351-fde0bb26cd1e",
+                    "description": "IndustrialProd",
+                    "name": "IndustrialProd",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "8813217f-3b98-41df-b0d3-02a6c5eb2cc2",
+                    "id": "0",
+                    "Model": "f790eafc-741d-44ab-9070-6b72bf361e42",
+                    "IndustrialProd": 5
+                },
+                {
+                    "guid": "a49efa90-09ee-4b59-a55d-60a18ec12a83",
+                    "id": "1",
+                    "Model": "77e7a72f-5491-4eb6-8d42-5fdd88978edc",
+                    "IndustrialProd": 10
+                },
+                {
+                    "guid": "a09a52fe-f25f-4cf4-8df3-a0c02ba62d62",
+                    "id": "2",
+                    "Model": "fa9c98e5-6e4a-45c7-9928-8fe6dcd11a58",
+                    "IndustrialProd": 20
                 }
             ],
             "hidden": false,

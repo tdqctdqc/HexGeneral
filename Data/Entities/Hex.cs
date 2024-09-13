@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Godot;
 using GodotUtilities.DataStructures;
 using GodotUtilities.DataStructures.Hex;
 using GodotUtilities.GameData;
+using GodotUtilities.Logic;
 using HexGeneral.Game.Client.Graphics;
 
 namespace HexGeneral.Game;
@@ -32,6 +34,10 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
     }
 
     public void SetRegime(ERef<Regime> regime)
+    {
+        Regime = regime;
+    }
+    public void SetRegime(ERef<Regime> regime, ProcedureKey key)
     {
         Regime = regime;
     }
@@ -98,5 +104,24 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
         // color = color.Darkened(data.Random.RandfRange(-HexBaseColorGraphics.ColorWobble,
         //     HexBaseColorGraphics.ColorWobble));
         return color;
+    }
+
+    public bool Full(HexGeneralData data)
+    {
+        return data.MapUnitHolder.HexLandUnits.TryGetValue(MakeRef(), out var units)
+               && units.Count == MapUnitHolder.MaxLandUnitsPerHex;
+    }
+
+    public IEnumerable<ERef<Unit>> GetUnitRefs(HexGeneralData data)
+    {
+        return data.MapUnitHolder.HexLandUnits
+            .TryGetValue(MakeRef(), out var units)
+            ? units
+            : ImmutableArray<ERef<Unit>>.Empty;
+    }
+
+    public HexRef MakeRef()
+    {
+        return new HexRef(Coords);
     }
 }

@@ -11,11 +11,9 @@ namespace HexGeneral.Game.Client;
 public class UnitSelectAction(
     MouseButtonMask button,
     HexGeneralClient client,
-    MouseOverHandler mouseOverHandler,
     Action<Unit> selectAction)
     : MouseAction(button)
 {
-    private MouseOverHandler _mouseOverHandler = mouseOverHandler;
     protected override void MouseDown(InputEventMouse m)
     {
     }
@@ -36,7 +34,8 @@ public class UnitSelectAction(
         }
         
         var hexWorldPos = hex.WorldPos();
-        if (client.Data.MapUnitHolder.HexLandUnits.TryGetValue(hex.Coords, out var hexUnits)
+        if (client.Data.MapUnitHolder.HexLandUnits
+                .TryGetValue(hex.MakeRef(), out var hexUnits)
             && hexUnits.Count > 0)
         {
             var unitGraphics = client.GetComponent<MapGraphics>()
