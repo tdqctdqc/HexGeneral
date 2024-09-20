@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="66.196663mm"
+   height="66.196663mm"
+   viewBox="0 0 66.196663 66.196663"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="ammo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#070d56"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.74742565"
+     inkscape:cx="122.4202"
+     inkscape:cy="127.77191"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-15.575686,-143.3671)">
+    <path
+       id="rect1"
+       style="fill:#ffffff;stroke-width:0.793938;stroke-miterlimit:0;paint-order:markers fill stroke"
+       d="M 48.673992,143.3671 A 18.207584,24.915637 0 0 0 30.50046,167.56443 h -0.03427 v 25.63404 h 2.89579 v 8.55517 h -2.89579 v 7.28423 H 66.8811 v -7.28423 h -2.895786 v -8.55517 h 2.895791 V 167.56443 H 66.8692 A 18.207584,24.915637 0 0 0 48.673992,143.3671 Z" />
+  </g>
+</svg>

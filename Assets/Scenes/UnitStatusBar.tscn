@@ -1,0 +1,50 @@
+[gd_scene load_steps=9 format=3 uid="uid://djcgkhy5dlk4j"]
+
+[ext_resource type="Script" path="res://Client/Graphics/UnitStatusBar.cs" id="1_8a8ug"]
+[ext_resource type="QuadMesh" uid="uid://2ysggeiudtsc" path="res://Assets/Resources/SmallIconQuadMesh.tres" id="2_3bwoj"]
+[ext_resource type="Texture2D" uid="uid://dpty30onat4rv" path="res://Assets/Textures/health.svg" id="3_0787h"]
+[ext_resource type="Texture2D" uid="uid://blyevtiusw43p" path="res://Assets/Textures/ammo.svg" id="4_ryvbm"]
+[ext_resource type="Texture2D" uid="uid://cv61iuvsijmjk" path="res://Assets/Textures/wheel.svg" id="5_8bdkl"]
+[ext_resource type="Texture2D" uid="uid://c6e8yc5ae0325" path="res://Assets/Textures/target.svg" id="6_augkm"]
+[ext_resource type="Texture2D" uid="uid://d1hljgm3u7ptb" path="res://Assets/Textures/check.svg" id="6_jgup7"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_1b0m3"]
+
+[node name="UnitStatusBar" type="Node2D"]
+position = Vector2(-0.5, 0)
+script = ExtResource("1_8a8ug")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+modulate = Color(0.212305, 0.212305, 0.212305, 1)
+position = Vector2(0.5, 0)
+scale = Vector2(5.75, 1.5)
+mesh = SubResource("QuadMesh_1b0m3")
+
+[node name="HealthIcon" type="MeshInstance2D" parent="."]
+position = Vector2(-1.59105, -0.00827706)
+mesh = ExtResource("2_3bwoj")
+texture = ExtResource("3_0787h")
+
+[node name="AmmoIcon" type="MeshInstance2D" parent="."]
+position = Vector2(-0.591047, -0.00827706)
+scale = Vector2(1, -1)
+mesh = ExtResource("2_3bwoj")
+texture = ExtResource("4_ryvbm")
+
+[node name="MoveIcon" type="MeshInstance2D" parent="."]
+position = Vector2(1.50895, -0.00827706)
+scale = Vector2(1, -1)
+mesh = ExtResource("2_3bwoj")
+texture = ExtResource("5_8bdkl")
+
+[node name="OrgIcon" type="MeshInstance2D" parent="."]
+position = Vector2(0.408953, -0.00827706)
+scale = Vector2(1, -1)
+mesh = ExtResource("2_3bwoj")
+texture = ExtResource("6_jgup7")
+
+[node name="AttackIcon" type="MeshInstance2D" parent="."]
+position = Vector2(2.65895, -0.00827706)
+scale = Vector2(1.2, -1.2)
+mesh = ExtResource("2_3bwoj")
+texture = ExtResource("6_augkm")

@@ -9,6 +9,6 @@ public class IndustryBuilding : BuildingModel
     public override void Produce(Location location, ProcedureKey key)
     {
         var regime = location.Hex.Get(key.Data).Regime.Get(key.Data);
-        regime.AddIndustrialPoints(IndustrialProd, key);
+        regime.IncrementIndustrialPoints(IndustrialProd, key);
     }
 }

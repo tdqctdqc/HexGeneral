@@ -10,7 +10,7 @@ namespace HexGeneral.Game.Client;
 
 public class HexSelectAction(
     MouseButtonMask button,
-    HexGeneralClient client,
+    HexGeneralClient _client,
     Action<Hex> selectAction)
     : MouseAction(button)
 {
@@ -25,10 +25,10 @@ public class HexSelectAction(
 
     protected override void MouseUp(InputEventMouse m)
     {
-        var mousePos = client.GetComponent<CameraController>()
+        var mousePos = _client.GetComponent<CameraController>()
             .GetGlobalMousePosition();
         var (hex, _) = MouseOverHandler.FindTwoClosestHexes(mousePos,
-            client.Data.Map);
+            _client.Data.Map);
         _selectAction?.Invoke(hex);
     }
 }

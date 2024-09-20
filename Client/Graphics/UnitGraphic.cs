@@ -1,5 +1,7 @@
+using System.Linq;
 using Godot;
 using GodotUtilities.Graphics;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game.Client.Graphics;
 
@@ -34,7 +36,17 @@ public partial class UnitGraphic : Node2D
         _unitTexture = new MeshInstance2D();
         _unitTexture.Scale = new Vector2(1f, -1f);
         _unitTexture.Mesh = _unitMesh;
-        _unitTexture.Texture = u.UnitModel.Get(data).GetTexture();
+
+
+        if (u.Components.OfType<MobilizerComponent>().SingleOrDefault()
+            is MobilizerComponent m && m.Active)
+        {
+            _unitTexture.Texture = m.Mobilizer.Get(data).GetTexture();
+        }
+        else
+        {
+            _unitTexture.Texture = u.UnitModel.Get(data).GetTexture();
+        }
         AddChild(_unitTexture);
 
         _statusBar = SceneManager.Instance<UnitStatusBar>();
@@ -45,28 +57,16 @@ public partial class UnitGraphic : Node2D
 
     public void Update(Unit u, HexGeneralClient client)
     {
-        
-        // var mb = new MeshBuilder();
+        if (u.Components.OfType<MobilizerComponent>().SingleOrDefault()
+            is MobilizerComponent { Active: true } m)
+        {
+            _unitTexture.Texture = m.Mobilizer.Get(client.Data).GetTexture();
+        }
+        else
+        {
+            _unitTexture.Texture = u.UnitModel.Get(client.Data).GetTexture();
+        }
         _statusBar.Update(u, client.Data);
-        // _health.Text = Mathf.FloorToInt(hitPointRatio * 100f).ToString();
-        // var orgRatio = u.CurrentOrganization / model.Organization;
-        // var ammoRatio = u.CurrentAmmo / model.AmmoCap;
-        // var lineThickness = .025f;
-        // var from = Vector2.Left * _dim / 4f;
-        // var dir = Vector2.Right * _dim / 2f;
-        // var down = Vector2.Down * lineThickness;
-        // mb.AddLine(from + down * 0f, 
-        //     from + dir * hitPointRatio + down * 0f,
-        //     Colors.Red, lineThickness);
-        // mb.AddLine(from + down * 1f, 
-        //     from + dir * orgRatio + down * 1f,
-        //     Colors.Yellow, lineThickness);
-        // mb.AddLine(from + down * 2f, 
-        //     from + dir * ammoRatio + down * 2f,
-        //     Colors.Blue, lineThickness);
-        // var bars = mb.GetMeshInstance();
-        // bars.Position = Vector2.Down * _dim / 2f;
-        // AddChild(bars);
     }
 
     public void SetHighlight(bool highlight)

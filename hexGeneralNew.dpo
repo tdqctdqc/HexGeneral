@@ -190,6 +190,36 @@
                     "guid": "8608e997-8079-46ca-adc7-4ccefc90ddfb",
                     "id": "33",
                     "Name": "MoveType_SupplyMoveType"
+                },
+                {
+                    "guid": "4e8b6ff1-3031-4076-800f-bc10a62fd5e0",
+                    "id": "34",
+                    "Name": "MoveType_WheeledMoveType"
+                },
+                {
+                    "guid": "c4f6cd0a-1113-4595-9e3d-1f235a09469e",
+                    "id": "35",
+                    "Name": "TerrainDamageModel_InfantryAttackTerrainDamage"
+                },
+                {
+                    "guid": "fad22220-4b10-4fa1-ae2f-141cc3e2c0f8",
+                    "id": "36",
+                    "Name": "TerrainDamageModel_InfantryDefendTerrainDamage"
+                },
+                {
+                    "guid": "a7e12b7d-5d6e-49f5-8051-ca227ab43f68",
+                    "id": "37",
+                    "Name": "TerrainDamageModel_TrackedAttackTerrainDamage"
+                },
+                {
+                    "guid": "270764a8-ed88-48e4-92a5-a5fb867356b6",
+                    "id": "38",
+                    "Name": "TerrainDamageModel_TrackedDefendTerrainDamage"
+                },
+                {
+                    "guid": "de3c3760-bda2-4ced-b17c-540e0b2b2236",
+                    "id": "39",
+                    "Name": "Mobilizer_Truck"
                 }
             ],
             "hidden": false,
@@ -319,7 +349,7 @@
                     "id": "1",
                     "Model": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
                     "IsLand": false,
-                    "Color": "ffffff",
+                    "Color": "1873cc",
                     "DarkenFactor": 0,
                     "MinRoughness": 9999,
                     "CanChooseForGen": true
@@ -339,7 +369,7 @@
                     "id": "3",
                     "Model": "88cfff75-d832-4951-9fea-d67c71822210",
                     "IsLand": true,
-                    "Color": "ffffff",
+                    "Color": "696969",
                     "DarkenFactor": 1,
                     "MinRoughness": 0.5,
                     "CanChooseForGen": true
@@ -1163,6 +1193,49 @@
                         "name": "text",
                         "description": "text"
                     }
+                },
+                {
+                    "typeStr": "list",
+                    "guid": "9e8563ac-c66c-43ab-b1bf-8c1d458e2f35",
+                    "name": "RoadCosts",
+                    "description": "RoadCosts",
+                    "sheet": "699f8ec7-6ee3-4818-8dc8-6ffa153e0b79",
+                    "defaultValue": [],
+                    "iconName": "newList",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text"
+                    }
+                },
+                {
+                    "typeStr": "lineReference",
+                    "guid": "ddca4dc5-91f4-4522-8ed2-e20b6771b919",
+                    "name": "AttackTerrainDamageModel",
+                    "description": "AttackTerrainDamageModel",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "lineReference",
+                    "guid": "4e67f855-5c9a-4673-ad36-004518687caa",
+                    "name": "DefendTerrainDamageModel",
+                    "description": "DefendTerrainDamageModel",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
                 }
             ],
             "lines": [
@@ -1233,7 +1306,17 @@
                             "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
                             "Value": 1.5
                         }
-                    ]
+                    ],
+                    "RoadCosts": [
+                        {
+                            "guid": "3d6cf1d9-bcb0-43a1-bb79-65227c84e69d",
+                            "Key": "6ea1332f-97b4-4774-bbe2-9695e09de810",
+                            "Value": 0.5,
+                            "id": "0"
+                        }
+                    ],
+                    "AttackTerrainDamageModel": "c4f6cd0a-1113-4595-9e3d-1f235a09469e",
+                    "DefendTerrainDamageModel": "fad22220-4b10-4fa1-ae2f-141cc3e2c0f8"
                 },
                 {
                     "guid": "1b32c4e6-5550-498d-8f75-ecebb3cc0d8b",
@@ -1302,11 +1385,21 @@
                             "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
                             "Value": 2
                         }
-                    ]
+                    ],
+                    "RoadCosts": [
+                        {
+                            "guid": "923e98dc-3e8b-4a6f-8b9d-91cfb66e2bd4",
+                            "Key": "6ea1332f-97b4-4774-bbe2-9695e09de810",
+                            "Value": 0.25,
+                            "id": "0"
+                        }
+                    ],
+                    "AttackTerrainDamageModel": "a7e12b7d-5d6e-49f5-8051-ca227ab43f68",
+                    "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6"
                 },
                 {
                     "guid": "2a5867f6-b910-41db-8677-2f1c2195757d",
-                    "id": "1_copy_0",
+                    "id": "2",
                     "Model": "8608e997-8079-46ca-adc7-4ccefc90ddfb",
                     "VegetationCosts": [
                         {
@@ -1337,7 +1430,7 @@
                             "guid": "a53a45cd-457f-47e5-a664-929d9a90994e",
                             "id": "4",
                             "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
-                            "Value": 1
+                            "Value": 0.1
                         }
                     ],
                     "LandformCosts": [
@@ -1345,7 +1438,7 @@
                             "guid": "856b9c85-577d-4022-831a-38d39951eab5",
                             "id": "0",
                             "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
-                            "Value": 0.5
+                            "Value": 0.1
                         },
                         {
                             "guid": "ff4f368e-687a-423b-b4b7-2918bee0d374",
@@ -1357,21 +1450,110 @@
                             "guid": "ebefc148-928a-44a6-87b6-e18cf62c2476",
                             "id": "2",
                             "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
-                            "Value": 1.5
+                            "Value": 0.15
                         },
                         {
                             "guid": "5acb4398-ec2d-4ae5-abcd-7cc648b6c4e4",
                             "id": "3",
                             "Key": "88cfff75-d832-4951-9fea-d67c71822210",
-                            "Value": 4
+                            "Value": 0.3
                         },
                         {
                             "guid": "34262db4-a068-414d-b8cb-42c5ee21800d",
                             "id": "4",
                             "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
-                            "Value": 2
+                            "Value": 0.1
                         }
-                    ]
+                    ],
+                    "RoadCosts": [
+                        {
+                            "guid": "e756c641-784b-422e-97b3-6534f104629f",
+                            "Key": "6ea1332f-97b4-4774-bbe2-9695e09de810",
+                            "Value": 0.05,
+                            "id": "0"
+                        }
+                    ],
+                    "AttackTerrainDamageModel": "a7e12b7d-5d6e-49f5-8051-ca227ab43f68",
+                    "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6"
+                },
+                {
+                    "guid": "1999567e-cb25-4aac-93c5-9a8dd572a600",
+                    "id": "2_copy_0",
+                    "Model": "4e8b6ff1-3031-4076-800f-bc10a62fd5e0",
+                    "VegetationCosts": [
+                        {
+                            "guid": "964de18d-9e60-44e4-9eb4-e8f994c52c10",
+                            "id": "0",
+                            "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "7c13e423-6852-4e5f-9c42-341eef1b9ffc",
+                            "id": "1",
+                            "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "2a807375-8359-446b-b669-7e3172625124",
+                            "id": "2",
+                            "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "69eb1111-788a-46b7-91ce-1f2c85081f9f",
+                            "id": "3",
+                            "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "b8ba2f1a-15c1-47d4-9aba-3c611fa04a30",
+                            "id": "4",
+                            "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                            "Value": 1
+                        }
+                    ],
+                    "LandformCosts": [
+                        {
+                            "guid": "40e363d2-b9e6-4353-9f01-0900f8e65aa6",
+                            "id": "0",
+                            "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                            "Value": 0.5
+                        },
+                        {
+                            "guid": "1b6621de-cec9-4c78-aeec-6bb732b68a62",
+                            "id": "1",
+                            "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                            "Value": -1
+                        },
+                        {
+                            "guid": "796fdab4-4a91-4944-915a-ab4a4382cdf5",
+                            "id": "2",
+                            "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
+                            "Value": 1.5
+                        },
+                        {
+                            "guid": "e42217aa-02e7-4c03-b01f-311e55bc7bbf",
+                            "id": "3",
+                            "Key": "88cfff75-d832-4951-9fea-d67c71822210",
+                            "Value": 4
+                        },
+                        {
+                            "guid": "199f124c-3130-48a6-831c-28cbf61a6f0e",
+                            "id": "4",
+                            "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                            "Value": 0.5
+                        }
+                    ],
+                    "RoadCosts": [
+                        {
+                            "guid": "1655353c-2b48-4fbb-8554-3d6f1b4faab2",
+                            "Key": "6ea1332f-97b4-4774-bbe2-9695e09de810",
+                            "Value": 0.25,
+                            "id": "0"
+                        }
+                    ],
+                    "AttackTerrainDamageModel": "a7e12b7d-5d6e-49f5-8051-ca227ab43f68",
+                    "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6"
                 }
             ],
             "hidden": false,
@@ -1554,6 +1736,678 @@
                     ]
                 }
             }
+        },
+        {
+            "name": "RoadCosts",
+            "description": "list@5969234a-5929-49f5-ab22-f23143f83ff5",
+            "displayColumn": "id",
+            "guid": "699f8ec7-6ee3-4818-8dc8-6ffa153e0b79",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "89572430-3ad2-49cf-9565-cc5347d158cf",
+                    "name": "Key",
+                    "description": "Key",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "2e51cc86-71ff-4ae3-92ab-272273305bfb",
+                    "description": "Value",
+                    "name": "Value",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                }
+            ],
+            "lines": [],
+            "hidden": true,
+            "isProps": false,
+            "parentSheetGUID": "5969234a-5929-49f5-ab22-f23143f83ff5",
+            "columnGUID": "9e8563ac-c66c-43ab-b1bf-8c1d458e2f35"
+        },
+        {
+            "name": "TerrainDamageModel",
+            "description": "TerrainDamageModel",
+            "displayColumn": "id",
+            "guid": "3c235f22-43ec-4ad0-b31f-111535415637",
+            "columns": [
+                {
+                    "typeStr": "list",
+                    "guid": "90dfbdc7-881d-4836-b28d-5d0920c7f28e",
+                    "name": "LandformDamageMults",
+                    "description": "LandformDamageMults",
+                    "sheet": "2be9a356-81a4-42b5-ac9d-90d7debe64af",
+                    "defaultValue": [],
+                    "iconName": "newList",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text"
+                    }
+                },
+                {
+                    "typeStr": "list",
+                    "guid": "6c986c43-07fd-4241-9157-d3db9dd0c2ad",
+                    "name": "VegetationDamageMults",
+                    "description": "VegetationDamageMults",
+                    "sheet": "60e9c32f-8c1d-454d-aedf-747a2587daea",
+                    "defaultValue": [],
+                    "iconName": "newList",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text"
+                    }
+                },
+                {
+                    "typeStr": "lineReference",
+                    "guid": "789c8b7e-e924-4b7d-b37e-46a227b796d1",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "2657f4f2-205e-4912-a793-e5f0f642efe2",
+                    "id": "0",
+                    "LandformDamageMults": [
+                        {
+                            "guid": "28a7c800-7119-4dd2-9d08-3a8a75b0a0b0",
+                            "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                            "Value": 1,
+                            "id": "0"
+                        },
+                        {
+                            "guid": "136969bf-d255-4418-9cdf-16e12749f9d1",
+                            "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                            "Value": 1,
+                            "id": "1"
+                        },
+                        {
+                            "guid": "30bf36dc-9eb0-4c9f-aa4b-601ba2f8ceef",
+                            "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
+                            "Value": 1.25,
+                            "id": "2"
+                        },
+                        {
+                            "guid": "66a86f45-5d15-4aa0-834b-47946d829382",
+                            "Key": "88cfff75-d832-4951-9fea-d67c71822210",
+                            "Value": 1.5,
+                            "id": "3"
+                        },
+                        {
+                            "guid": "d6bfabac-14a6-4064-8ee0-d331e87d818a",
+                            "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                            "Value": 1.5,
+                            "id": "4"
+                        }
+                    ],
+                    "VegetationDamageMults": [
+                        {
+                            "guid": "479b59ed-a3ca-48e8-8446-24c5345150dc",
+                            "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                            "Value": 1,
+                            "id": "0"
+                        },
+                        {
+                            "guid": "9f31da09-feaa-4873-9615-f1ebda608649",
+                            "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                            "Value": 1,
+                            "id": "1"
+                        },
+                        {
+                            "guid": "9e0b8ea1-091e-4799-9cf2-45290f553c5f",
+                            "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                            "Value": 1,
+                            "id": "2"
+                        },
+                        {
+                            "guid": "125961a5-92e1-4395-9161-7d65d4e65711",
+                            "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                            "Value": 1,
+                            "id": "3"
+                        },
+                        {
+                            "guid": "c223bce9-fda4-49de-ba3d-37ccf19e0863",
+                            "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                            "Value": 1.25,
+                            "id": "4"
+                        }
+                    ],
+                    "Model": "c4f6cd0a-1113-4595-9e3d-1f235a09469e"
+                },
+                {
+                    "guid": "f00da6e9-2068-491c-b43a-0ebd102bdf74",
+                    "id": "1",
+                    "LandformDamageMults": [
+                        {
+                            "guid": "c0902aea-a987-4ab3-b227-134590ad02b9",
+                            "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                            "Value": 1,
+                            "id": "0"
+                        },
+                        {
+                            "guid": "28f2206a-7871-4883-be0d-9b22c0e10ec6",
+                            "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                            "Value": 1,
+                            "id": "1"
+                        },
+                        {
+                            "guid": "5925f16c-b727-4323-8d80-66d25b0eb22b",
+                            "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
+                            "Value": 0.75,
+                            "id": "2"
+                        },
+                        {
+                            "guid": "d3f38554-0231-42f0-9d4e-bf890590c834",
+                            "Key": "88cfff75-d832-4951-9fea-d67c71822210",
+                            "Value": 0.5,
+                            "id": "3"
+                        },
+                        {
+                            "guid": "468a2846-1d1b-47e7-80ee-8627b59e91ca",
+                            "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                            "Value": 0.5,
+                            "id": "4"
+                        }
+                    ],
+                    "VegetationDamageMults": [
+                        {
+                            "guid": "37228ae4-6c98-43ba-a018-3abf5acd4d63",
+                            "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                            "Value": 1,
+                            "id": "0"
+                        },
+                        {
+                            "guid": "19cbc01a-4af7-4625-a427-ac453ce0c8f3",
+                            "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                            "Value": 1,
+                            "id": "1"
+                        },
+                        {
+                            "guid": "3e7f398b-5023-479e-94d8-3c3a1131532e",
+                            "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                            "Value": 1,
+                            "id": "2"
+                        },
+                        {
+                            "guid": "13ae4a4c-6f94-413a-a522-9cc4745116cf",
+                            "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                            "Value": 1,
+                            "id": "3"
+                        },
+                        {
+                            "guid": "4204f42f-ccba-462e-839e-7feedee34533",
+                            "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                            "Value": 0.75,
+                            "id": "4"
+                        }
+                    ],
+                    "Model": "fad22220-4b10-4fa1-ae2f-141cc3e2c0f8"
+                },
+                {
+                    "guid": "3e6c923e-d3d8-4435-88ce-4c6e0892e10b",
+                    "id": "2",
+                    "LandformDamageMults": [
+                        {
+                            "guid": "11ea371c-3913-4745-9f9c-e508fbef5387",
+                            "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                            "Value": 1,
+                            "id": "0"
+                        },
+                        {
+                            "guid": "f04ead24-2b6d-4310-88bd-d7241bc897d2",
+                            "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                            "Value": 1,
+                            "id": "1"
+                        },
+                        {
+                            "guid": "9ea480d6-69b4-41a1-b954-197e4aa0f972",
+                            "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
+                            "Value": 1.5,
+                            "id": "2"
+                        },
+                        {
+                            "guid": "9495c2cd-3093-4de4-8394-24e104f48f01",
+                            "Key": "88cfff75-d832-4951-9fea-d67c71822210",
+                            "Value": 2,
+                            "id": "3"
+                        },
+                        {
+                            "guid": "3f2b0dab-a6c6-45d6-9705-f178f35da8cf",
+                            "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                            "Value": 2,
+                            "id": "4"
+                        }
+                    ],
+                    "VegetationDamageMults": [
+                        {
+                            "guid": "784ee87b-c6b5-43fa-91c0-02551bdd6454",
+                            "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                            "Value": 1,
+                            "id": "0"
+                        },
+                        {
+                            "guid": "5bba3370-2158-4b12-ac2e-4cca9598d444",
+                            "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                            "Value": 1,
+                            "id": "1"
+                        },
+                        {
+                            "guid": "4ff22a67-b708-4cbb-a2f5-4e97f00a7eec",
+                            "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                            "Value": 1,
+                            "id": "2"
+                        },
+                        {
+                            "guid": "3e2796a6-0de7-4f09-8191-02b4befbe502",
+                            "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                            "Value": 1,
+                            "id": "3"
+                        },
+                        {
+                            "guid": "736d4cb7-85a0-4471-ba66-125642532437",
+                            "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                            "Value": 1.25,
+                            "id": "4"
+                        }
+                    ],
+                    "Model": "a7e12b7d-5d6e-49f5-8051-ca227ab43f68"
+                },
+                {
+                    "guid": "e7638bb2-0dca-48ef-b824-0dd10d778d46",
+                    "id": "3",
+                    "LandformDamageMults": [
+                        {
+                            "guid": "9ceddf22-a87e-41ad-a06f-c391b7acc4bc",
+                            "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                            "Value": 1,
+                            "id": "0"
+                        },
+                        {
+                            "guid": "f6605274-226a-406b-8fdf-ec7e62505651",
+                            "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                            "Value": 1,
+                            "id": "1"
+                        },
+                        {
+                            "guid": "c3f64be5-0ad1-458f-a356-0ba2bbf2c724",
+                            "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
+                            "Value": 1.25,
+                            "id": "2"
+                        },
+                        {
+                            "guid": "24e0ba3d-ab56-440e-bbbb-987f20673a38",
+                            "Key": "88cfff75-d832-4951-9fea-d67c71822210",
+                            "Value": 1.5,
+                            "id": "3"
+                        },
+                        {
+                            "guid": "78aff596-ceb7-4030-b186-5897d9a85bd4",
+                            "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                            "Value": 1.5,
+                            "id": "4"
+                        }
+                    ],
+                    "VegetationDamageMults": [
+                        {
+                            "guid": "43cc2561-0a62-48e0-a2a5-a1727eb540af",
+                            "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                            "Value": 1,
+                            "id": "0"
+                        },
+                        {
+                            "guid": "96a07139-b7bb-4dbb-ae27-0723d69224e8",
+                            "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                            "Value": 1,
+                            "id": "1"
+                        },
+                        {
+                            "guid": "f5a10f14-637d-4590-8048-8a06789c47f0",
+                            "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                            "Value": 1,
+                            "id": "2"
+                        },
+                        {
+                            "guid": "85ae7bee-cf83-4186-8605-4a67c55ce953",
+                            "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                            "Value": 1,
+                            "id": "3"
+                        },
+                        {
+                            "guid": "65dcda5f-9a94-4b8e-ab67-ef6b3fcded5a",
+                            "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                            "Value": 1.5,
+                            "id": "4"
+                        }
+                    ],
+                    "Model": "270764a8-ed88-48e4-92a5-a5fb867356b6"
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "LandformDamageMults",
+            "description": "list@3c235f22-43ec-4ad0-b31f-111535415637",
+            "displayColumn": "id",
+            "guid": "2be9a356-81a4-42b5-ac9d-90d7debe64af",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "8c45849e-172a-4522-adcf-c2755e7f033f",
+                    "name": "Key",
+                    "description": "Key",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "e3dd1a52-8e2d-4ca1-afdd-c5cce61c521f",
+                    "description": "Value",
+                    "name": "Value",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                }
+            ],
+            "lines": [],
+            "hidden": true,
+            "isProps": false,
+            "parentSheetGUID": "3c235f22-43ec-4ad0-b31f-111535415637",
+            "columnGUID": "90dfbdc7-881d-4836-b28d-5d0920c7f28e"
+        },
+        {
+            "name": "VegetationDamageMults",
+            "description": "list@3c235f22-43ec-4ad0-b31f-111535415637",
+            "displayColumn": "id",
+            "guid": "60e9c32f-8c1d-454d-aedf-747a2587daea",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "ff3f062c-52f5-4685-986d-80cfad085742",
+                    "name": "Key",
+                    "description": "Key",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "851a0a9f-a3bb-47ea-a055-d3eae88ad59e",
+                    "description": "Value",
+                    "name": "Value",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                }
+            ],
+            "lines": [],
+            "hidden": true,
+            "isProps": false,
+            "parentSheetGUID": "3c235f22-43ec-4ad0-b31f-111535415637",
+            "columnGUID": "6c986c43-07fd-4241-9157-d3db9dd0c2ad"
+        },
+        {
+            "name": "Mobilizer",
+            "description": "Mobilizer",
+            "displayColumn": "id",
+            "guid": "f6fd8f0c-3393-44b6-b7fd-48ea1f6f1800",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "64fffd02-c9dc-403f-b2ad-2b8a4f7c7ef9",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "79607d03-4a28-48e7-89a8-8f7c0bf091f3",
+                    "description": "MovePoints",
+                    "name": "MovePoints",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "c17f5d6e-7d68-4058-a782-505242fc89a3",
+                    "description": "DamageMult",
+                    "name": "DamageMult",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "be3b76d3-2ad9-4349-b55c-f085366513ae",
+                    "description": "RecruitCost",
+                    "name": "RecruitCost",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "94245ef3-0a2e-4394-ae69-f0230416c8e4",
+                    "description": "IndustrialCost",
+                    "name": "IndustrialCost",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "lineReference",
+                    "guid": "091c578f-c184-465c-804d-0e96b764f6ce",
+                    "name": "MoveType",
+                    "description": "MoveType",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "bool",
+                    "guid": "3bc1af73-38db-4f03-950a-6d7d7ec9b2d0",
+                    "description": "CanAttack",
+                    "name": "CanAttack",
+                    "defaultValue": true,
+                    "iconName": "newBool",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "bool"
+                    }
+                },
+                {
+                    "typeStr": "list",
+                    "guid": "96f41ef2-3428-4b00-b600-05d5b2f7d229",
+                    "name": "AllowedMoveTypes",
+                    "description": "AllowedMoveTypes",
+                    "sheet": "dc8d5109-acbf-4043-9583-41ddbc14d660",
+                    "defaultValue": [],
+                    "iconName": "newList",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "36740d3a-6582-447e-ac73-368b9949a2eb",
+                    "id": "0",
+                    "Model": "de3c3760-bda2-4ced-b17c-540e0b2b2236",
+                    "MovePoints": 10,
+                    "DamageMult": 3,
+                    "RecruitCost": 1,
+                    "IndustrialCost": 25,
+                    "MoveType": "4e8b6ff1-3031-4076-800f-bc10a62fd5e0",
+                    "CanAttack": false,
+                    "AllowedMoveTypes": [
+                        {
+                            "guid": "b3c169e7-2d12-4a5a-ae5b-9227b4718a92",
+                            "id": "0",
+                            "Value": "061cff56-8c94-44bb-9cdd-2ad8d58e0ce5"
+                        }
+                    ]
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "AllowedMoveTypes",
+            "description": "list@f6fd8f0c-3393-44b6-b7fd-48ea1f6f1800",
+            "displayColumn": "id",
+            "guid": "dc8d5109-acbf-4043-9583-41ddbc14d660",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "a6bc144a-5dbd-4ba3-9914-728b3ba3e9bf",
+                    "name": "Value",
+                    "description": "Value",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                }
+            ],
+            "lines": [],
+            "hidden": true,
+            "isProps": false,
+            "parentSheetGUID": "f6fd8f0c-3393-44b6-b7fd-48ea1f6f1800",
+            "columnGUID": "96f41ef2-3428-4b00-b600-05d5b2f7d229"
         }
     ]
 }

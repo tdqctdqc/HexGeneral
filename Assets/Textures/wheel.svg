@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="123.3009mm"
+   height="123.30765mm"
+   viewBox="0 0 123.3009 123.30765"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="wheel.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.74742566"
+     inkscape:cx="309.7298"
+     inkscape:cy="335.15039"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="ruler"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       unit="px"
+       mark_distance="20"
+       mark_length="23"
+       minor_mark_length="7"
+       major_mark_steps="8"
+       shift="0"
+       offset="0"
+       mark_dir="left"
+       border_marks="both" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-13.592622,-56.926576)">
+    <path
+       id="path1"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:20.3;stroke-miterlimit:0;stroke-dasharray:10.15, 10.15;stroke-dashoffset:0;paint-order:markers fill stroke"
+       d="M 75.246234,67.076576 A 51.506093,51.506093 0 0 0 23.740714,118.5821 51.506093,51.506093 0 0 0 75.246234,170.08838 51.506093,51.506093 0 0 0 126.75252,118.5821 51.506093,51.506093 0 0 0 75.246234,67.076576 Z m 0,14.388801 A 37.117447,37.117447 0 0 1 112.36372,118.5821 37.117447,37.117447 0 0 1 75.246234,155.69958 37.117447,37.117447 0 0 1 38.128744,118.5821 37.117447,37.117447 0 0 1 75.246234,81.465377 Z" />
+    <path
+       id="path2"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:3.02712;stroke-miterlimit:0;paint-order:markers fill stroke"
+       d="m 75.246234,67.076576 a 51.524935,51.524935 0 0 0 -51.52509,51.525104 51.524935,51.524935 0 0 0 51.52509,51.52351 51.524935,51.524935 0 0 0 51.523526,-51.52351 51.524935,51.524935 0 0 0 -51.523526,-51.525104 z m 0,28.414054 a 23.110447,23.110447 0 0 1 23.109482,23.11105 23.110447,23.110447 0 0 1 -23.109482,23.1095 23.110447,23.110447 0 0 1 -23.111049,-23.1095 23.110447,23.110447 0 0 1 23.111049,-23.11105 z" />
+  </g>
+</svg>

@@ -2,4 +2,8 @@ for attribute serialization: make list of attributes, store as json dic with typ
  if property is type list of attributes, importer will recognize and parse accordingly 
 
 
-solution for graphics / event queueing system?
+mobilizers 
+
+terrain mods to combat 
+
+unit graphic facing

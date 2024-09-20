@@ -16,7 +16,7 @@ public partial class TurnBar : HBoxContainer, IClientComponent
     {
         _client = client.Client();
         _client.GetComponent<UiFrame>().TopBars.AddChild(this);
-        _client.Data.Notices.TurnStarted += Draw;
+        _client.Data.Notices.TurnStarted.Subscribe(Draw);
         Draw();
     }
 
@@ -35,7 +35,14 @@ public partial class TurnBar : HBoxContainer, IClientComponent
             $"Current Regime: {_client.Data.TurnManager.GetCurrentRegime().Get(_client.Data).RegimeModel.Get(_client.Data).Name}");
         AddChild(new VSeparator());
         this.AddButton("End Turn", () => _client.SubmitCommand(new SubmitTurnCommand()));
-
-
     }
+    
+    // public override void _UnhandledInput(InputEvent e)
+    // {
+    //     GD.Print($"{GetType().Name} getting unhandled input");
+    // }
+    // public override void _Input(InputEvent e)
+    // {
+    //     GD.Print($"{GetType().Name} getting input");
+    // }
 }

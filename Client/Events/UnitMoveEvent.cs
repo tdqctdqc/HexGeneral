@@ -24,13 +24,13 @@ public class UnitMoveEvent : ClientEvent
         var graphic = unitGraphics.Graphics[unit.MakeRef()];
         for (var i = 0; i < _procedure.Path.Count - 1; i++)
         {
-            var pos = _procedure.Path[i + 1].GetWorldPos();
-            graphic.Position = pos;
-            var hex = client.Data.Map.Hexes[_procedure.Path[i + 1].Coords];
-            mapGraphics.RegimeGraphics.UpdateHex(hex, client);
+            // var pos = _procedure.Path[i + 1].GetWorldPos();
+            // graphic.Position = pos;
+            // var hex = client.Data.Map.Hexes[_procedure.Path[i + 1].Coords];
+            // mapGraphics.RegimeGraphics.UpdateHex(hex, client);
         }
-        unitGraphics.DrawHex(_procedure.Path[0], client);
-        unitGraphics.DrawHex(_procedure.Path[^1], client);
-        unitGraphics.UpdateUnit(unit, client);
+        new HexRedrawEvent(_procedure.Path[0]).Handle(client);
+        new HexRedrawEvent(_procedure.Path[^1]).Handle(client);
+        new UnitRedrawEvent(unit).Handle(client);
     }
 }

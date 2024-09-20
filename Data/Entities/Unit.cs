@@ -1,12 +1,17 @@
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game;
 
 public class Unit(int id, ERef<Regime> regime, float currentHitPoints,
-    float currentOrganization, int currentAmmo, ModelIdRef<UnitModel> unitModel, float movePoints, bool moved, bool attacked) : Entity(id)
+    float currentOrganization, int currentAmmo, ModelIdRef<UnitModel> unitModel, float movePoints, bool moved, bool attacked,
+    bool reinforced,
+    bool restockedAmmo,
+    List<IComponent> components) : Entity(id), IComponented
 {
     public ERef<Regime> Regime { get; private set; } = regime;
     public ModelIdRef<UnitModel> UnitModel { get; private set; } = unitModel;
@@ -16,6 +21,9 @@ public class Unit(int id, ERef<Regime> regime, float currentHitPoints,
     public int CurrentAmmo { get; private set; } = currentAmmo;
     public bool Moved { get; private set; } = moved;
     public bool Attacked { get; private set; } = attacked;
+    public bool Reinforced { get; private set; } = reinforced;
+    public bool RestockedAmmo { get; private set; } = restockedAmmo;
+    public List<IComponent> Components { get; private set; } = components;
 
     public override void Made(Data d)
     {
@@ -38,6 +46,17 @@ public class Unit(int id, ERef<Regime> regime, float currentHitPoints,
         Attacked = true;
     }
 
+    public void Reinforce(float amount, ProcedureKey key)
+    {
+        CurrentHitPoints += amount;
+        Reinforced = true;
+    }
+
+    public void RestockAmmo(int amount, ProcedureKey key)
+    {
+        CurrentAmmo += amount;
+        RestockedAmmo = true;
+    }
     public void IncrementHitpoints(float amount, ProcedureKey key)
     {
         CurrentHitPoints += amount;
@@ -92,7 +111,14 @@ public class Unit(int id, ERef<Regime> regime, float currentHitPoints,
         Moved = false;
         Attacked = false;
         MovePoints = UnitModel.Get(key.Data).MovePoints;
+        Reinforced = false;
+        RestockedAmmo = false;
         RegenerateOrganization(key);
+        if (Components.OfType<MobilizerComponent>().SingleOrDefault()
+            is MobilizerComponent mob && mob.Mobilizer.Get(key.Data).CanAttack == false)
+        {
+            mob.MarkInactive(key);
+        }
     }
 
     public Hex GetHex(HexGeneralData data)
@@ -103,5 +129,19 @@ public class Unit(int id, ERef<Regime> regime, float currentHitPoints,
             return data.Map.Hexes[r.Coords];
         }
         return null;
+    }
+
+    public bool Deployed(HexGeneralData data)
+    {
+        return data.MapUnitHolder.UnitPositions.ContainsKey(this.MakeRef());
+    }
+
+    public bool CanReinforce()
+    {
+        return Moved == false && Reinforced == false;
+    }
+    public bool CanRestockAmmo()
+    {
+        return Moved == false && RestockedAmmo == false;
     }
 }

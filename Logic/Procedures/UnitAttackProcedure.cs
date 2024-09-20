@@ -6,7 +6,7 @@ using HexGeneral.Game;
 
 namespace HexGeneral.Logic.Procedures;
 
-public class UnitAttackedProcedure(ERef<Unit> unit, ERef<Unit> targetUnit, float damageToUnit, float damageToTarget, float damageToUnitOrg, float damageToTargetOrg) : GodotUtilities.Server.Procedure
+public class UnitAttackProcedure(ERef<Unit> unit, ERef<Unit> targetUnit, float damageToUnit, float damageToTarget, float damageToUnitOrg, float damageToTargetOrg) : GodotUtilities.Server.Procedure
 {
     public ERef<Unit> Unit { get; private set; } = unit;
     public ERef<Unit> TargetUnit { get; private set; } = targetUnit;
@@ -28,7 +28,9 @@ public class UnitAttackedProcedure(ERef<Unit> unit, ERef<Unit> targetUnit, float
         
         unit.IncrementAmmo(-1, key);
         targetUnit.IncrementAmmo(-1, key);
-        
+        var notices = key.Data.Data().Notices;
+        notices.UnitAltered?.Invoke(unit);
+        notices.UnitAltered?.Invoke(targetUnit);
         key.Data.Data().Notices.UnitAttacked?.Invoke(this);
     }
 }

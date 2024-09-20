@@ -22,12 +22,12 @@ public partial class RegimeInfoBar : HBoxContainer, IClientComponent
             }
         };
 
-        data.Notices.FinishedTurnStartLogic += Draw;
+        data.Notices.FinishedTurnStartLogic.SubscribeForNode(Draw, this);
     }
 
     public Action Disconnect { get; set; }
 
-    private void Draw()
+    public void Draw()
     {
         this.ClearChildren();
         var data = _client.Client().Data;
@@ -46,4 +46,13 @@ public partial class RegimeInfoBar : HBoxContainer, IClientComponent
     {
         
     }
+    
+    // public override void _UnhandledInput(InputEvent e)
+    // {
+    //     GD.Print($"{GetType().Name} getting unhandled input");
+    // }
+    // public override void _Input(InputEvent e)
+    // {
+    //     GD.Print($"{GetType().Name} getting input");
+    // }
 }

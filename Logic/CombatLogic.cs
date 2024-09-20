@@ -1,6 +1,7 @@
 using System.Linq;
 using Godot;
 using GodotUtilities.DataStructures;
+using GodotUtilities.DataStructures.Hex;
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
 using HexGeneral.Logic.Procedure;
@@ -10,21 +11,33 @@ namespace HexGeneral.Game.Logic;
 
 public static class CombatLogic
 {
-    public static void HandleAttack(Unit unit, Hex targetHex, LogicKey key)
+    public static void HandleAttack(Unit unit, Unit targetUnit, 
+        LogicKey key)
     {
         var data = key.Data.Data();
-        var targetUnit = targetHex.GetUnitRefs(data)
-            .GetRandomElement().Get(data);
+        var targetHex = targetUnit.GetHex(data);
         var unitModel = unit.UnitModel.Get(data);
         var targetUnitModel = targetUnit.UnitModel.Get(data);
 
+        var unitHex = unit.GetHex(data);
+        var dist = unitHex.Coords.GetHexDistance(targetHex.Coords);
+        if (dist > unitModel.Range) return;
+        
         var startHp = unit.CurrentHitPoints;
         var targetStartHp = targetUnit.CurrentHitPoints;
         
-        var dmgToTarget = GetDamageAgainst(unit, targetUnit, data);
-        var dmgToUnit = GetDamageAgainst(targetUnit, unit, data);
+        var dmgToTarget = GetDamageAgainst(unit,
+            targetUnit, targetHex, true, data);
+        
+        var dmgToUnit = 0f;
+        if (dist <= targetUnitModel.Range)
+        {
+            dmgToUnit = GetDamageAgainst(targetUnit,
+                unit,  targetHex, false, data);
+        }
 
-        key.SendMessage(new UnitAttackedProcedure(unit.MakeRef(), targetUnit.MakeRef(),
+
+        key.SendMessage(new UnitAttackProcedure(unit.MakeRef(), targetUnit.MakeRef(),
             dmgToUnit, dmgToTarget, dmgToUnit, dmgToTarget));
 
         DoUnitDestroyedCheck(unit, key);
@@ -65,19 +78,30 @@ public static class CombatLogic
             }
         }
     }
+    
     public static float
-        GetDamageAgainst(Unit attacker, 
-        Unit defender, HexGeneralData data)
+        GetDamageAgainst(Unit damager, 
+        Unit damagee, Hex hex, bool damagerAttacking, HexGeneralData data)
     {
-        var atkModel = attacker.UnitModel.Get(data);
-        var defModel = defender.UnitModel.Get(data);
+        var atkModel = damager.UnitModel.Get(data);
+        var defModel = damagee.UnitModel.Get(data);
         var soft = atkModel.SoftAttack * (1f - defModel.Hardness);
         var hard = atkModel.HardAttack * defModel.Hardness;
+        
+        return (soft + hard)
+               * damagee.UnitModel.Get(data).MoveType.GetDamageMult(hex, data, damagerAttacking == false)
+               * GetEffectiveAttackRatio(damager, data);
+    }
+
+    public static float GetEffectiveAttackRatio(Unit attacker,
+        HexGeneralData data)
+    {
+        var atkModel = attacker.UnitModel.Get(data);
 
         var atkOrgRatio = attacker.CurrentOrganization / atkModel.Organization;
         var ammoEffect = atkModel.AmmoCap > 0 && attacker.CurrentAmmo == 0f
             ? .25f
             : 1f;
-        return (soft + hard) * atkOrgRatio * ammoEffect;
+        return atkOrgRatio * ammoEffect;
     }
 }

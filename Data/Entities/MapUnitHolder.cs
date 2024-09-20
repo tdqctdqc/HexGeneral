@@ -16,7 +16,7 @@ public class MapUnitHolder(int id,
 
     public void DeployUnit(Unit u, Hex hex)
     {
-        if (unitPositions.ContainsKey(u.MakeRef()))
+        if (UnitPositions.ContainsKey(u.MakeRef()))
         {
             throw new Exception();
         }

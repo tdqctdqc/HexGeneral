@@ -31,9 +31,16 @@ public partial class HexGeneralClient : GameClient
             new HexMode(this, "Location"), "Location");
         UiController.ModeOption.AddOption(
             new SupplyMode(this), "Supply");
+        UiController.ModeOption.AddOption(
+            new DeploymentMode(this), "Deployment");
 
-        
-        AddComponent(new MapGraphics(this));
+
+        var mapGraphics = new MapGraphics(this);
+        AddComponent(mapGraphics);
+        mapGraphics.Input.Input += e =>
+        {
+            UiController.Mode?.HandleInput(e);
+        };
         var uiFrame = GetComponent<UiFrame>();
         foreach (var option in UiController.ModeOption.Options)
         {
@@ -54,6 +61,7 @@ public partial class HexGeneralClient : GameClient
             () => GraphicsSettingsWindow.Open(this));
         AddComponent(new TurnBar());
         AddComponent(new RegimeInfoBar());
+        AddComponent(new RegimeControlBar());
     }
     public override void _Ready()
     {
@@ -61,6 +69,12 @@ public partial class HexGeneralClient : GameClient
         
     }
 
+    public Player GetPlayer()
+    {
+        return Data.PlayerHolder.PlayerByGuid.TryGetValue(PlayerGuid, out var p)
+            ? p.Get(Data)
+            : null;
+    }
     //DON'T REMOVE THIS
     public override void _Process(double delta)
     {

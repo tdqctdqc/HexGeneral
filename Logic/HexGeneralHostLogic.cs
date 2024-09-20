@@ -11,7 +11,7 @@ public class HexGeneralHostLogic : HostLogic
     public HexGeneralHostLogic(Data data, Guid hostPlayerGuid) : base(data, hostPlayerGuid)
     {
         HostLogicData = new HostLogicData();
-        data.Data().Notices.FinishedTurnStartLogic += HandleAi;
+        data.Data().Notices.FinishedTurnStartLogic.Subscribe(HandleAi);
     }
 
     public HostLogicData HostLogicData { get; private set; }

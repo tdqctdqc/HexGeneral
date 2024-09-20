@@ -4,6 +4,7 @@ using Godot;
 using GodotUtilities.DataStructures.Hex;
 using GodotUtilities.GameData;
 using GodotUtilities.Graphics;
+using HexGeneral.Client.Ui;
 
 namespace HexGeneral.Game.Client.Graphics;
 
@@ -13,6 +14,8 @@ public partial class UnitGraphics : Node2D
     public static Vector2[][] GraphicOffsetsByNumUnits { get; private set; } = new Vector2[][] { new[] { Vector2.Zero }, new[] { Vector2.Left / 2f, Vector2.Right / 2f }, new[] { Vector2.Up * HexExt.HexHeight / 2f, Vector2.Up.Rotated(2f * Mathf.Pi / 3f)  * HexExt.HexHeight / 2f, Vector2.Up.Rotated(4f * Mathf.Pi / 3f)  * HexExt.HexHeight / 2f, }, };
     public UnitGraphics(HexGeneralClient client)
     {
+        ZIndex = (int)GraphicsLayers.Units;
+        ZAsRelative = false;
         Graphics = new Dictionary<ERef<Unit>, UnitGraphic>();
         Update(client);
 
@@ -37,6 +40,8 @@ public partial class UnitGraphics : Node2D
                 graphic.SetHighlight(false);
             }
         };
+        
+        
     }
     
     public void Update(HexGeneralClient client)
@@ -72,7 +77,8 @@ public partial class UnitGraphics : Node2D
     }
     public void DrawHex(HexRef hex, HexGeneralClient client)
     {
-        var hexUnits = client.Data.MapUnitHolder.HexLandUnits[hex];
+        var hexUnits = client.Data.MapUnitHolder
+            .HexLandUnits[hex];
         
         if (hexUnits.Count == 0) return;
         var hexPos = hex.GetWorldPos();
@@ -80,6 +86,12 @@ public partial class UnitGraphics : Node2D
         for (var i = 0; i < hexUnits.Count; i++)
         {
             var unit = hexUnits[i];
+            if (Graphics.ContainsKey(unit) == false)
+            {
+                var g = new UnitGraphic(unit.Get(client.Data), client.Data);
+                AddChild(g);
+                Graphics.Add(unit, g);
+            }
             var graphic = Graphics[unit];
             graphic.Position = offsets[i] + hexPos;
             graphic.Update(unit.Get(client.Data), client);
@@ -95,5 +107,24 @@ public partial class UnitGraphics : Node2D
         Graphics.Remove(r);
         graphic.QueueFree();
         DrawHex(hex.MakeRef(), client);
+    }
+
+    public static Unit GetClosestUnitInHex(Hex hex, Vector2 worldPos, HexGeneralClient client)
+    {
+        if (client.Data.MapUnitHolder.HexLandUnits.ContainsKey(hex.MakeRef()) == false) return null;
+        var unitsInTargetHex = client.Data.MapUnitHolder.HexLandUnits[hex.MakeRef()];
+        
+        if (unitsInTargetHex.Count == 0)
+        {
+            return null;
+        }
+
+        var offsets = GraphicOffsetsByNumUnits[unitsInTargetHex.Count - 1];
+        var close = offsets.IndexOf(offsets.MinBy(o =>
+        {
+            return (o + hex.WorldPos()).DistanceSquaredTo(worldPos);
+        }));
+        var targetUnit = unitsInTargetHex[close];
+        return targetUnit.Get(client.Data);
     }
 }

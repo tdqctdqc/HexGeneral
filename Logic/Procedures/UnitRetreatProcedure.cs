@@ -22,5 +22,6 @@ public class UnitRetreatProcedure(HexRef from, HexRef to,
         var model = unit.UnitModel.Get(data);
         unit.IncrementOrganization(-model.Organization * RetreatDistance / 10f, key);
         data.Notices.UnitRetreated?.Invoke(this);
+        data.Notices.UnitAltered?.Invoke(unit);
     }
 }

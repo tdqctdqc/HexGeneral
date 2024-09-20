@@ -10,5 +10,6 @@ public class UnitDestroyedEvent(Unit unit, Hex hex) : ClientEvent
     public override void Handle(HexGeneralClient client)
     {
         client.GetComponent<MapGraphics>().Units.RemoveUnit(Unit, Hex, client);
+        new HexRedrawEvent(Hex.MakeRef()).Handle(client);
     }
 }

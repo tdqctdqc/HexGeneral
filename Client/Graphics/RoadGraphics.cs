@@ -10,6 +10,8 @@ public partial class RoadGraphics : Node2D
 
     public RoadGraphics(HexGeneralData data)
     {
+        ZIndex = (int)GraphicsLayers.Roads;
+        ZAsRelative = false; 
         _data = data;
         var map = _data.Map;
         _data = data;

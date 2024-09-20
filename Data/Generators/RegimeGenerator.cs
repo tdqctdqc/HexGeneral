@@ -286,6 +286,7 @@ public static class RegimeGenerator
                 foreach (var hex in branch.GetLeaves())
                 {
                     hex.SetRegime(closeRegime.MakeRef());
+                    closeRegime.Hexes.Add(hex.Coords);
                 }
             }
         }
@@ -308,6 +309,7 @@ public static class RegimeGenerator
                 for (var i = 0; i < rand; i++)
                 {
                     var unit = infantry.Instantiate(regime, data);
+                    data.Entities.AddEntity(unit, data);
                     unitHolder.DeployUnit(unit, hex);
                 }
             }

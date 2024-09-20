@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using GodotUtilities.GameData;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game;
 
@@ -21,8 +23,9 @@ public class UnitModel : Model
     {
         var u = new Unit(data.IdDispenser.TakeId(),
             regime.MakeRef(), HitPoints, Organization, AmmoCap,
-            this.MakeIdRef(data), MovePoints, false, false);
-        data.Entities.AddEntity(u, data);
+            this.MakeIdRef(data), MovePoints, false, 
+            false, false, false,
+            new List<IComponent>());
         return u;
     }
 }

@@ -10,6 +10,7 @@ using GodotUtilities.Graphics;
 using GodotUtilities.Ui;
 using HexGeneral.Client.Ui;
 using HexGeneral.Game.Client.Command;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game.Client;
 
@@ -20,6 +21,7 @@ public class UnitMoveAction : MouseAction
     private SettingsOption<Unit> _selectedUnit;
     private Hex _cachedHex;
     private HashSet<Hex> _moveRadius;
+    private HashSet<Hex> _mobilizerRadius;
     
     public UnitMoveAction(MouseButtonMask button, 
         SettingsOption<Unit> selectedUnit,
@@ -35,12 +37,14 @@ public class UnitMoveAction : MouseAction
         _client = client;
         _radiusOverlay = radiusOverlay;
         _moveRadius = new HashSet<Hex>();
+        _mobilizerRadius = new HashSet<Hex>();
     }
 
     private void SetMoveRadius()
     {
         _radiusOverlay.Clear();
         _moveRadius.Clear();
+        _mobilizerRadius.Clear();
         var unit = _selectedUnit.Value;
         if (unit is null || unit.Moved) return;
         
@@ -51,11 +55,29 @@ public class UnitMoveAction : MouseAction
         var hexTris = ShapeBuilder.GetHex(Vector2.Zero, 1f);
         _moveRadius = moveType.GetMoveRadius(unitHex, regime, unitModel.MovePoints,
             _client.Data);
+        if (unit.Components.OfType<MobilizerComponent>().SingleOrDefault()
+            is MobilizerComponent m)
+        {
+            _mobilizerRadius = moveType.GetMoveRadius(unitHex, regime, unitModel.MovePoints,
+                _client.Data);
+            if (m.Active)
+            {
+                _moveRadius.Clear();
+            }
+            else
+            {
+                _mobilizerRadius.ExceptWith(_moveRadius);
+            }
+        }
         _radiusOverlay.Draw(mb =>
         {
             foreach (var hex in _moveRadius)
             {
                 mb.AddTris(hexTris.Select(p => p + hex.WorldPos()), Colors.White.Tint(.5f));
+            }
+            foreach (var hex in _mobilizerRadius)
+            {
+                mb.AddTris(hexTris.Select(p => p + hex.WorldPos()), Colors.Red.Tint(.5f));
             }
         }, Vector2.Zero);
     }
@@ -124,18 +146,39 @@ public class UnitMoveAction : MouseAction
             .PlayerByGuid[_client.PlayerGuid].Get(_client.Data);
         if (player.Regime != unit.Regime) return;
         var regime = unit.Regime.Get(_client.Data);
+
+
+        List<Hex> path;
+        bool mobilized = false;
+        float cost;
+        if (_moveRadius.Contains(_cachedHex))
+        {
+            path = unit.UnitModel.Get(_client.Data).MoveType
+                .GetPath(unitHex, _cachedHex, regime, _client.Data, out var c);
+            cost = c;
+        }
+        else if (_mobilizerRadius.Contains(_cachedHex))
+        {
+            mobilized = true;
+            var mob = unit.Components.OfType<MobilizerComponent>().Single();
+            path = mob.Mobilizer.Get(_client.Data).MoveType
+                .GetPath(unitHex, _cachedHex, regime, _client.Data, out var c);
+            cost = c;
+        }
+        else return;
         
-        var path = unit.UnitModel.Get(_client.Data).MoveType
-            .GetPath(unitHex, _cachedHex, regime, _client.Data, out var cost);
+        
         if (path is null)
         {
             return;
         }
-
+        
         var inner = new UnitMoveCommand(unit.MakeRef(), 
-            path.Select(h => h.MakeRef()).ToList(), cost);
+            path.Select(h => h.MakeRef()).ToList(), cost,
+            mobilized);
         var com = CallbackCommand.Construct(inner,
             SetMoveRadius, _client);
         _client.SubmitCommand(com);
+        
     }
 }

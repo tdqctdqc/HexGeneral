@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
 
 namespace HexGeneral.Game;
 
-public class Regime(int id, ModelIdRef<RegimeModel> regimeModel, float recruits, float industrialPoints, HashSet<Vector3I> hexes) : Entity(id)
+public class Regime(int id, ModelIdRef<RegimeModel> regimeModel, float recruits, float industrialPoints, 
+    HashSet<Vector3I> hexes) : Entity(id)
 {
     public ModelIdRef<RegimeModel> RegimeModel { get; private set; } = regimeModel;
     public HashSet<Vector3I> Hexes { get; private set; } = hexes;
@@ -20,12 +22,20 @@ public class Regime(int id, ModelIdRef<RegimeModel> regimeModel, float recruits,
     {
     }
     
-    public void AddRecruits(float recruits, ProcedureKey key)
+    public void IncrementRecruits(float recruits, ProcedureKey key)
     {
         Recruits += recruits;
+        key.Data.Data().Notices.ResourcesAltered?.Invoke(this);
     }
-    public void AddIndustrialPoints(float industrialPoints, ProcedureKey key)
+    public void IncrementIndustrialPoints(float industrialPoints, ProcedureKey key)
     {
         IndustrialPoints += industrialPoints;
+        key.Data.Data().Notices.ResourcesAltered?.Invoke(this);
+    }
+
+    public IEnumerable<Unit> GetUnits(HexGeneralData data)
+    {
+        return data.Entities.GetAll<Unit>()
+            .Where(u => u.Regime == this);
     }
 }

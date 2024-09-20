@@ -14,6 +14,8 @@ public class MoveType : Model
     public Dictionary<Landform, float> LandformCosts { get; private set; }
     public Dictionary<Vegetation, float> VegetationCosts { get; private set; }
     public Dictionary<RoadModel, float> RoadCosts { get; private set; }
+    public TerrainDamageModel AttackTerrainDamageModel { get; private set; }
+    public TerrainDamageModel DefendTerrainDamageModel { get; private set; }
     public float GetMoveCost(Hex from, Hex to, 
         Regime movingRegime, HexGeneralData data)
     {
@@ -60,5 +62,15 @@ public class MoveType : Model
             (h, g) => GetMoveCost(h, g, movingRegime, data),
             maxCost);
         return radius.Where(h => h.Full(data) == false).ToHashSet();
+    }
+
+    public float GetDamageMult(Hex hex, HexGeneralData data, bool attacking)
+    {
+        if (attacking)
+        {
+            return AttackTerrainDamageModel.GetMult(hex, data);
+        }
+
+        return DefendTerrainDamageModel.GetMult(hex, data);
     }
 }

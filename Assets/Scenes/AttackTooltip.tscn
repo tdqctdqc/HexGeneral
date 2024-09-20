@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsbtlbwr3smys"]
+
+[ext_resource type="Script" path="res://Client/Graphics/AttackTooltip.cs" id="1_s31od"]
+
+[node name="AttackTooltip" type="Node2D"]
+script = ExtResource("1_s31od")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 134.0
+offset_bottom = 64.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Attacker" type="Label" parent="PanelContainer/VBoxContainer"]
+modulate = Color(0, 1, 0, 1)
+layout_mode = 2
+text = "xxxxxxxxxxxx"
+
+[node name="Defender" type="Label" parent="PanelContainer/VBoxContainer"]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 2
+text = "xxxxxxxxxxxx"

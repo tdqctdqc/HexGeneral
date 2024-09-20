@@ -20,6 +20,8 @@ public partial class RegimeGraphics : Node2D
                 ? h.Regime.Get(client.Data).RegimeModel.Get(client.Data).Color
                 : Colors.Transparent, 1f);
         AddChild(RegimeColor);
+        RegimeColor.ZIndex = (int)GraphicsLayers.RegimeFill;
+        RegimeColor.ZAsRelative = false;
 
         RegimeBorder = new HexBorderMultiMesh<Regime>(
             r =>
@@ -28,6 +30,8 @@ public partial class RegimeGraphics : Node2D
                 return r.RegimeModel.Get(client.Client().Data).Color.Inverted();
             }, h => h.Regime.Get(client.Client().Data), client.Client());
         AddChild(RegimeBorder);
+        RegimeBorder.ZIndex = (int)GraphicsLayers.RegimeBorders;
+        RegimeBorder.ZAsRelative = false;
         MakeSettings(client);
     }
 

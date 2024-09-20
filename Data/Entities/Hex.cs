@@ -106,10 +106,37 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
         return color;
     }
 
+    public bool TryGetLocation(HexGeneralData data, out Location loc)
+    {
+        loc = null;
+        if (data.LocationHolder.Locations.TryGetValue(MakeRef(),
+                out var l))
+        {
+            loc = l.Get(data);
+            return true;
+        }
+        return false;
+    }
+    
     public bool Full(HexGeneralData data)
     {
         return data.MapUnitHolder.HexLandUnits.TryGetValue(MakeRef(), out var units)
                && units.Count == MapUnitHolder.MaxLandUnitsPerHex;
+    }
+
+    public bool CanDeploy(HexGeneralData data)
+    {
+        if (Full(data)) return false;
+        if(
+        TryGetLocation(data, out var loc) == false
+            || loc.Buildings
+                .Any(b => b.Get(data) is ISupplyCenter)
+            == false)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public IEnumerable<ERef<Unit>> GetUnitRefs(HexGeneralData data)
