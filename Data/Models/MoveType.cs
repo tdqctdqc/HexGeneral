@@ -5,10 +5,12 @@ using Godot;
 using GodotUtilities.DataStructures;
 using GodotUtilities.DataStructures.PathFinder;
 using GodotUtilities.GameData;
+using GodotUtilities.Logic;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game;
 
-public class MoveType : Model
+public abstract class MoveType : Model
 {
     public static float HostileHexCostMult { get; private set; } = 1.5f;
     public Dictionary<Landform, float> LandformCosts { get; private set; }
@@ -48,7 +50,7 @@ public class MoveType : Model
         var path = PathFinder<Hex>.FindPathAStar(
             start, end, h => h.GetNeighbors(data),
             (h, g) => GetMoveCost(h, g, movingRegime, data),
-            (h, g) => h.WorldPos().DistanceTo(g.WorldPos()), out var pCost);
+            (h, g) => GetMoveCost(h, g, movingRegime, data), out var pCost);
         cost = pCost;
         return path;
     }
@@ -73,4 +75,7 @@ public class MoveType : Model
 
         return DefendTerrainDamageModel.GetMult(hex, data);
     }
+
+    public abstract void MoveThru(Hex hex, Unit unit, ProcedureKey key);
+    public abstract IMoveComponent MakeNativeMoveComponent(ERef<Unit> unit);
 }

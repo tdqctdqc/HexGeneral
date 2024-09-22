@@ -21,11 +21,7 @@ public class UnitModel : Model
 
     public Unit Instantiate(Regime regime, HexGeneralData data)
     {
-        var u = new Unit(data.IdDispenser.TakeId(),
-            regime.MakeRef(), HitPoints, Organization, AmmoCap,
-            this.MakeIdRef(data), MovePoints, false, 
-            false, false, false,
-            new List<IComponent>());
+        var u = Unit.Instantiate(this, regime, data);
         return u;
     }
 }

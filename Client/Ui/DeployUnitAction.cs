@@ -28,8 +28,7 @@ public class DeployUnitAction(MouseButtonMask button,
             .GetGlobalMousePosition();
         var regime = _client.GetPlayer()?.Regime.Get(_client.Data);
         if (regime is null) return;
-        var (hex, _) = MouseOverHandler.FindTwoClosestHexes(mousePos,
-            _client.Data.Map);
+        var hex = MouseOverHandler.FindMouseOverHex(_client);
         if (hex.Regime != regime || hex.CanDeploy(_client.Data) == false)
         {
             return;

@@ -4,26 +4,55 @@ using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
 using HexGeneral.Game.Components;
+using MessagePack;
 
 namespace HexGeneral.Game;
 
-public class Unit(int id, ERef<Regime> regime, float currentHitPoints,
-    float currentOrganization, int currentAmmo, ModelIdRef<UnitModel> unitModel, float movePoints, bool moved, bool attacked,
-    bool reinforced,
-    bool restockedAmmo,
-    List<IComponent> components) : Entity(id), IComponented
+public class Unit : Entity, IComponentedEntity
 {
-    public ERef<Regime> Regime { get; private set; } = regime;
-    public ModelIdRef<UnitModel> UnitModel { get; private set; } = unitModel;
-    public float MovePoints { get; private set; } = movePoints;
-    public float CurrentHitPoints { get; private set; } = currentHitPoints;
-    public float CurrentOrganization { get; private set; } = currentOrganization;
-    public int CurrentAmmo { get; private set; } = currentAmmo;
-    public bool Moved { get; private set; } = moved;
-    public bool Attacked { get; private set; } = attacked;
-    public bool Reinforced { get; private set; } = reinforced;
-    public bool RestockedAmmo { get; private set; } = restockedAmmo;
-    public List<IComponent> Components { get; private set; } = components;
+    public ERef<Regime> Regime { get; private set; }
+    public ModelIdRef<UnitModel> UnitModel { get; private set; }
+    public float CurrentHitPoints { get; private set; }
+    public float CurrentOrganization { get; private set; }
+    public int CurrentAmmo { get; private set; }
+    public bool Attacked { get; private set; }
+    public bool Reinforced { get; private set; }
+    public bool RestockedAmmo { get; private set; }
+    public EntityComponentHolder EntityComponents { get; private set; }
+    public static Unit Instantiate(UnitModel model, 
+        Regime regime, HexGeneralData data)
+    {
+        var id = data.IdDispenser.TakeId();
+        var moveComp = model.MoveType.MakeNativeMoveComponent(new ERef<Unit>(id));
+        var movesTaken = new MoveCountComponent(0, 1, 1f);
+        var compHolder = new EntityComponentHolder(
+            new List<IEntityComponent> { moveComp, movesTaken });
+        var u = new Unit(id,
+            regime.MakeRef(), model.HitPoints, model.Organization, model.AmmoCap,
+            model.MakeIdRef(data), model.MovePoints, 
+            false, false, false,
+            compHolder);
+        return u;
+    }
+    [SerializationConstructor] private Unit(int id, ERef<Regime> regime, float currentHitPoints,
+        float currentOrganization, int currentAmmo, 
+        ModelIdRef<UnitModel> unitModel, float movePointRatioRemaining, bool attacked,
+        bool reinforced,
+        bool restockedAmmo,
+        EntityComponentHolder entityComponents) : base(id)
+    {
+        Regime = regime;
+        UnitModel = unitModel;
+        CurrentHitPoints = currentHitPoints;
+        CurrentOrganization = currentOrganization;
+        CurrentAmmo = currentAmmo;
+        Attacked = attacked;
+        Reinforced = reinforced;
+        RestockedAmmo = restockedAmmo;
+        EntityComponents = entityComponents;
+    }
+
+    
 
     public override void Made(Data d)
     {
@@ -35,11 +64,6 @@ public class Unit(int id, ERef<Regime> regime, float currentHitPoints,
         d.Data().MapUnitHolder.Remove(this);
     }
 
-    public void MarkMoved(float movePointsSpent, ProcedureKey key)
-    {
-        MovePoints -= movePointsSpent;
-        Moved = true;
-    }
 
     public void MarkHasAttacked(ProcedureKey key)
     {
@@ -108,17 +132,11 @@ public class Unit(int id, ERef<Regime> regime, float currentHitPoints,
     }
     public void RefreshForTurn(ProcedureKey key)
     {
-        Moved = false;
         Attacked = false;
-        MovePoints = UnitModel.Get(key.Data).MovePoints;
         Reinforced = false;
         RestockedAmmo = false;
         RegenerateOrganization(key);
-        if (Components.OfType<MobilizerComponent>().SingleOrDefault()
-            is MobilizerComponent mob && mob.Mobilizer.Get(key.Data).CanAttack == false)
-        {
-            mob.MarkInactive(key);
-        }
+        EntityComponents.TurnTick(key);
     }
 
     public Hex GetHex(HexGeneralData data)
@@ -138,10 +156,12 @@ public class Unit(int id, ERef<Regime> regime, float currentHitPoints,
 
     public bool CanReinforce()
     {
-        return Moved == false && Reinforced == false;
+        return EntityComponents.Get<MoveCountComponent>().HasMoved() == false 
+               && Reinforced == false;
     }
     public bool CanRestockAmmo()
     {
-        return Moved == false && RestockedAmmo == false;
+        return EntityComponents.Get<MoveCountComponent>().HasMoved() == false 
+               && RestockedAmmo == false;
     }
 }

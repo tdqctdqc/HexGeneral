@@ -26,8 +26,7 @@ public class UnitSelectAction(
     {
         var mousePos = client.GetComponent<CameraController>()
             .GetGlobalMousePosition();
-        var (hex, _) = MouseOverHandler.FindTwoClosestHexes(mousePos,
-            client.Data.Map);
+        var hex = MouseOverHandler.FindMouseOverHex(client);
         if (hex is null)
         {
             return;

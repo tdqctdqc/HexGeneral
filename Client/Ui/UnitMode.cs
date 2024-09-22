@@ -36,10 +36,8 @@ public class UnitMode : UiMode
                 new UnitSelectAction(MouseButtonMask.Left,
                     _hexGenClient, SelectedUnit.Set),
 
-                new UnitMoveAction(MouseButtonMask.Right,
-                    SelectedUnit,
-                    pathOverlay, _hexGenClient,
-                    radiusOverlay),
+                new UnitMoveAction(radiusOverlay, pathOverlay,
+                    SelectedUnit, _hexGenClient, MouseButtonMask.Right),
                 
                 new UnitAttackAction(MouseButtonMask.Right,
                     SelectedUnit,

@@ -3,6 +3,7 @@ using GodotUtilities.GameClient;
 using GodotUtilities.GameData;
 using GodotUtilities.Ui;
 using HexGeneral.Client.Ui;
+using HexGeneral.Game.Components;
 using HexGeneral.Game.Logic;
 using HexGeneral.Logic.Procedures;
 
@@ -65,7 +66,6 @@ public partial class UnitPanel : PanelContainer
         vbox.CreateLabelAsChild($"Hitpoints: {unit.CurrentHitPoints} / {model.HitPoints}");
         vbox.CreateLabelAsChild($"Organization: {unit.CurrentOrganization} / {model.Organization}");
         vbox.CreateLabelAsChild($"Ammunition: {unit.CurrentAmmo} / {model.AmmoCap}");
-        vbox.CreateLabelAsChild($"Move Points: {unit.MovePoints} / {model.MovePoints}");
         vbox.AddChild(new VSeparator());
         var effective = CombatLogic.GetEffectiveAttackRatio(unit, _client.Data);
         vbox.CreateLabelAsChild($"Soft Attack: {model.SoftAttack * effective} / {model.SoftAttack}");
@@ -79,7 +79,7 @@ public partial class UnitPanel : PanelContainer
         vbox.CreateLabelAsChild($"Supply Availability: {supplyAvailability}");
         
         
-        foreach (var unitComponent in unit.Components)
+        foreach (var unitComponent in unit.EntityComponents.Components)
         {
             vbox.AddChild(unitComponent.GetDisplay(_client));
         }
@@ -131,6 +131,6 @@ public partial class UnitPanel : PanelContainer
         {
             MobilizeUnitWindow.Open(unit, _client);
         });
-        mobilize.Disabled = unit.Moved;
+        mobilize.Disabled = MobilizerComponent.CanAdd(unit, _client.Data) == false;
     }
 }

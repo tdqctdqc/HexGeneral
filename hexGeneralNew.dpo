@@ -1478,7 +1478,7 @@
                 },
                 {
                     "guid": "1999567e-cb25-4aac-93c5-9a8dd572a600",
-                    "id": "2_copy_0",
+                    "id": "3",
                     "Model": "4e8b6ff1-3031-4076-800f-bc10a62fd5e0",
                     "VegetationCosts": [
                         {
@@ -1509,7 +1509,7 @@
                             "guid": "b8ba2f1a-15c1-47d4-9aba-3c611fa04a30",
                             "id": "4",
                             "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
-                            "Value": 1
+                            "Value": 0.5
                         }
                     ],
                     "LandformCosts": [
@@ -1529,7 +1529,7 @@
                             "guid": "796fdab4-4a91-4944-915a-ab4a4382cdf5",
                             "id": "2",
                             "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
-                            "Value": 1.5
+                            "Value": 1
                         },
                         {
                             "guid": "e42217aa-02e7-4c03-b01f-311e55bc7bbf",
@@ -1838,31 +1838,31 @@
                         {
                             "guid": "28a7c800-7119-4dd2-9d08-3a8a75b0a0b0",
                             "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "0"
                         },
                         {
                             "guid": "136969bf-d255-4418-9cdf-16e12749f9d1",
                             "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "1"
                         },
                         {
                             "guid": "30bf36dc-9eb0-4c9f-aa4b-601ba2f8ceef",
                             "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
-                            "Value": 1.25,
+                            "Value": 0.25,
                             "id": "2"
                         },
                         {
                             "guid": "66a86f45-5d15-4aa0-834b-47946d829382",
                             "Key": "88cfff75-d832-4951-9fea-d67c71822210",
-                            "Value": 1.5,
+                            "Value": 0.5,
                             "id": "3"
                         },
                         {
                             "guid": "d6bfabac-14a6-4064-8ee0-d331e87d818a",
                             "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
-                            "Value": 1.5,
+                            "Value": 0.5,
                             "id": "4"
                         }
                     ],
@@ -1870,31 +1870,31 @@
                         {
                             "guid": "479b59ed-a3ca-48e8-8446-24c5345150dc",
                             "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "0"
                         },
                         {
                             "guid": "9f31da09-feaa-4873-9615-f1ebda608649",
                             "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "1"
                         },
                         {
                             "guid": "9e0b8ea1-091e-4799-9cf2-45290f553c5f",
                             "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "2"
                         },
                         {
                             "guid": "125961a5-92e1-4395-9161-7d65d4e65711",
                             "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "3"
                         },
                         {
                             "guid": "c223bce9-fda4-49de-ba3d-37ccf19e0863",
                             "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
-                            "Value": 1.25,
+                            "Value": 0.25,
                             "id": "4"
                         }
                     ],
@@ -1907,31 +1907,31 @@
                         {
                             "guid": "c0902aea-a987-4ab3-b227-134590ad02b9",
                             "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "0"
                         },
                         {
                             "guid": "28f2206a-7871-4883-be0d-9b22c0e10ec6",
                             "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "1"
                         },
                         {
                             "guid": "5925f16c-b727-4323-8d80-66d25b0eb22b",
                             "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
-                            "Value": 0.75,
+                            "Value": -0.25,
                             "id": "2"
                         },
                         {
                             "guid": "d3f38554-0231-42f0-9d4e-bf890590c834",
                             "Key": "88cfff75-d832-4951-9fea-d67c71822210",
-                            "Value": 0.5,
+                            "Value": -0.5,
                             "id": "3"
                         },
                         {
                             "guid": "468a2846-1d1b-47e7-80ee-8627b59e91ca",
                             "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
-                            "Value": 0.5,
+                            "Value": -0.5,
                             "id": "4"
                         }
                     ],
@@ -1939,31 +1939,31 @@
                         {
                             "guid": "37228ae4-6c98-43ba-a018-3abf5acd4d63",
                             "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "0"
                         },
                         {
                             "guid": "19cbc01a-4af7-4625-a427-ac453ce0c8f3",
                             "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "1"
                         },
                         {
                             "guid": "3e7f398b-5023-479e-94d8-3c3a1131532e",
                             "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "2"
                         },
                         {
                             "guid": "13ae4a4c-6f94-413a-a522-9cc4745116cf",
                             "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "3"
                         },
                         {
                             "guid": "4204f42f-ccba-462e-839e-7feedee34533",
                             "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
-                            "Value": 0.75,
+                            "Value": -0.25,
                             "id": "4"
                         }
                     ],
@@ -1976,31 +1976,31 @@
                         {
                             "guid": "11ea371c-3913-4745-9f9c-e508fbef5387",
                             "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "0"
                         },
                         {
                             "guid": "f04ead24-2b6d-4310-88bd-d7241bc897d2",
                             "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "1"
                         },
                         {
                             "guid": "9ea480d6-69b4-41a1-b954-197e4aa0f972",
                             "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
-                            "Value": 1.5,
+                            "Value": 0.5,
                             "id": "2"
                         },
                         {
                             "guid": "9495c2cd-3093-4de4-8394-24e104f48f01",
                             "Key": "88cfff75-d832-4951-9fea-d67c71822210",
-                            "Value": 2,
+                            "Value": 1,
                             "id": "3"
                         },
                         {
                             "guid": "3f2b0dab-a6c6-45d6-9705-f178f35da8cf",
                             "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
-                            "Value": 2,
+                            "Value": 1,
                             "id": "4"
                         }
                     ],
@@ -2008,31 +2008,31 @@
                         {
                             "guid": "784ee87b-c6b5-43fa-91c0-02551bdd6454",
                             "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "0"
                         },
                         {
                             "guid": "5bba3370-2158-4b12-ac2e-4cca9598d444",
                             "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "1"
                         },
                         {
                             "guid": "4ff22a67-b708-4cbb-a2f5-4e97f00a7eec",
                             "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "2"
                         },
                         {
                             "guid": "3e2796a6-0de7-4f09-8191-02b4befbe502",
                             "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "3"
                         },
                         {
                             "guid": "736d4cb7-85a0-4471-ba66-125642532437",
                             "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
-                            "Value": 1.25,
+                            "Value": 0.25,
                             "id": "4"
                         }
                     ],
@@ -2045,31 +2045,31 @@
                         {
                             "guid": "9ceddf22-a87e-41ad-a06f-c391b7acc4bc",
                             "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "0"
                         },
                         {
                             "guid": "f6605274-226a-406b-8fdf-ec7e62505651",
                             "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "1"
                         },
                         {
                             "guid": "c3f64be5-0ad1-458f-a356-0ba2bbf2c724",
                             "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
-                            "Value": 1.25,
+                            "Value": 0.25,
                             "id": "2"
                         },
                         {
                             "guid": "24e0ba3d-ab56-440e-bbbb-987f20673a38",
                             "Key": "88cfff75-d832-4951-9fea-d67c71822210",
-                            "Value": 1.5,
+                            "Value": 0.5,
                             "id": "3"
                         },
                         {
                             "guid": "78aff596-ceb7-4030-b186-5897d9a85bd4",
                             "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
-                            "Value": 1.5,
+                            "Value": 0.5,
                             "id": "4"
                         }
                     ],
@@ -2077,31 +2077,31 @@
                         {
                             "guid": "43cc2561-0a62-48e0-a2a5-a1727eb540af",
                             "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "0"
                         },
                         {
                             "guid": "96a07139-b7bb-4dbb-ae27-0723d69224e8",
                             "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "1"
                         },
                         {
                             "guid": "f5a10f14-637d-4590-8048-8a06789c47f0",
                             "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "2"
                         },
                         {
                             "guid": "85ae7bee-cf83-4186-8605-4a67c55ce953",
                             "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
-                            "Value": 1,
+                            "Value": 0,
                             "id": "3"
                         },
                         {
                             "guid": "65dcda5f-9a94-4b8e-ab67-ef6b3fcded5a",
                             "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
-                            "Value": 1.5,
+                            "Value": 0.5,
                             "id": "4"
                         }
                     ],
@@ -2408,6 +2408,109 @@
             "isProps": false,
             "parentSheetGUID": "f6fd8f0c-3393-44b6-b7fd-48ea1f6f1800",
             "columnGUID": "96f41ef2-3428-4b00-b600-05d5b2f7d229"
+        },
+        {
+            "name": "MoveTypeLand",
+            "description": "MoveTypeLand",
+            "displayColumn": "id",
+            "guid": "f0c06f84-9c2d-4554-aabe-c36d63ba0327",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "684d5499-d028-400d-b739-d0496a29a6ad",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "aa583b60-f3ca-41ec-b57c-70e35bc2cd99",
+                    "id": "0",
+                    "Model": "061cff56-8c94-44bb-9cdd-2ad8d58e0ce5"
+                },
+                {
+                    "guid": "1f6896a3-8331-436e-adb1-80f1b263932c",
+                    "id": "1",
+                    "Model": "8aa468b8-5baa-4ac9-8d77-7e4f3b763383"
+                },
+                {
+                    "guid": "6a8324b3-f843-4886-8575-6e29dba93581",
+                    "id": "2",
+                    "Model": "8608e997-8079-46ca-adc7-4ccefc90ddfb"
+                },
+                {
+                    "guid": "6b4ecf7e-8e3e-49b8-af76-8be8c0c5435b",
+                    "id": "3",
+                    "Model": "4e8b6ff1-3031-4076-800f-bc10a62fd5e0"
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "AttributeTypes",
+            "description": "AttributeTypes",
+            "displayColumn": "id",
+            "guid": "ae56a787-955a-4ea5-8d73-120cc126e596",
+            "columns": [
+                {
+                    "typeStr": "text",
+                    "guid": "ade9be58-40db-4d3f-b8ae-fd9cd24f44c5",
+                    "name": "Name",
+                    "description": "Name",
+                    "defaultValue": "",
+                    "iconName": "newText",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "defaultValue": "text"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "98932dbe-a46d-449c-9e49-bc22078b1533",
+                    "id": "0",
+                    "Name": ""
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
         }
     ]
 }

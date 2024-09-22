@@ -77,8 +77,12 @@ public partial class MobilizeUnitWindow(Unit unit,
                        && regime.IndustrialPoints >= model.IndustrialCost;
         var b = _mobInfoContainer.AddButton("Purchase", () =>
         {
+            if (MobilizerComponent.CanAdd(unit, client.Data) == false)
+            {
+                return;
+            }
             var component = new MobilizerComponent(model.MakeIdRef(client.Data),
-                false, unit.MakeRef());
+                false, unit.MakeRef(), null);
             var proc = new AddEntityComponentProcedure<Unit>(unit.MakeRef(), component);
             var inner = new DoProcedureCommand(proc);
             
@@ -92,10 +96,8 @@ public partial class MobilizeUnitWindow(Unit unit,
             client.SubmitCommand(com);
         });
 
-        var existingMob = unit.Components.OfType<MobilizerComponent>()
-            .SingleOrDefault()?.Mobilizer.Get(client.Data);
-        
-        
+        var existingMob = unit.EntityComponents
+            .Get<MobilizerComponent>()?.Mobilizer.Get(client.Data);
         b.Disabled = canBuild == false || model == existingMob;
     }
 }

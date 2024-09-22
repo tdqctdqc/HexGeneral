@@ -45,10 +45,9 @@ public class UnitAttackAction : MouseAction
         var regime = unit.Regime.Get(_client.Data);
         
         var pos = _client.GetComponent<CameraController>().GetGlobalMousePosition();
-        var mouseHex = MouseOverHandler.FindTwoClosestHexes(pos,
-            _client.Data.Map);
+        var mouseHex = MouseOverHandler.FindMouseOverHex(_client);
         
-        if (mouseHex.closest is null)
+        if (mouseHex is null)
         {
             return;
         }
@@ -57,38 +56,27 @@ public class UnitAttackAction : MouseAction
             .UnitPositions[unit.MakeRef()];
         var unitHex = _client.Data.Map.Hexes[uHex.Coords];
         
-        var hex = mouseHex.closest;
-        if (hex.Regime == regime)
+        if (mouseHex.Regime == regime)
         {
             return;
         }
-        if (hex.GetNeighbors(_client.Data).Contains(unitHex) == false)
+        if (mouseHex.GetNeighbors(_client.Data).Contains(unitHex) == false)
         {
             return;
         }
         
-        var targetUnit = UnitGraphics.GetClosestUnitInHex(hex, pos, _client);
+        var targetUnit = UnitGraphics.GetClosestUnitInHex(mouseHex, pos, _client);
         if (targetUnit is null) return;
         
         _arrowOverlay.Draw(mb =>
         {
-            mb.AddArrow(unitHex.WorldPos(), hex.WorldPos(), .25f, Colors.White);
-            mb.AddArrow(unitHex.WorldPos(), hex.WorldPos(), .2f, Colors.Red);
+            mb.AddArrow(unitHex.WorldPos(), mouseHex.WorldPos(), .25f, Colors.White);
+            mb.AddArrow(unitHex.WorldPos(), mouseHex.WorldPos(), .2f, Colors.Red);
         }, Vector2.Zero);
         
         
-        var damageToTarget = CombatLogic.GetDamageAgainst(unit, targetUnit,
-            hex, true, _client.Data);
-        var damageMultToTarget = targetUnit.UnitModel.Get(_client.Data)
-            .MoveType.GetDamageMult(hex, _client.Data, false);
-        
-        var damageToUnit = CombatLogic.GetDamageAgainst(targetUnit, unit,
-            hex, false, _client.Data);
-        var damageMultToUnit = unit.UnitModel.Get(_client.Data)
-            .MoveType.GetDamageMult(hex, _client.Data, true);
-
         var tt = SceneManager.Instance<AttackTooltip>();
-        tt.DrawInfo(hex, unit, targetUnit, _client.Data);
+        tt.DrawInfo(mouseHex, unit, targetUnit, _client.Data);
         _damageOverlay.AddNode(tt, pos);
     }
 
@@ -105,15 +93,14 @@ public class UnitAttackAction : MouseAction
         var regime = unit.Regime.Get(_client.Data);
 
         var pos = _client.GetComponent<CameraController>().GetGlobalMousePosition();
-        var mouseHex = MouseOverHandler.FindTwoClosestHexes(pos,
-            _client.Data.Map);
-        if (mouseHex.closest is null)
+        var mouseHex = MouseOverHandler.FindMouseOverHex(_client);
+        if (mouseHex is null)
         {
             return;
         }
 
         var unitHex = unit.GetHex(_client.Data);
-        var hex = mouseHex.closest;
+        var hex = mouseHex;
         if (hex.Regime == regime)
         {
             return;

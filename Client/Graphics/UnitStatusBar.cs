@@ -1,4 +1,5 @@
 using Godot;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game.Client.Graphics;
 
@@ -18,7 +19,8 @@ public partial class UnitStatusBar : Node2D
         ammoIcon.Modulate = ColorsExt.GetHealthColor(ammoRatio);
         
         var moveIcon = GetNode<MeshInstance2D>("MoveIcon");
-        moveIcon.Modulate = unit.Moved ? Colors.White.Tint(.25f) : Colors.White;
+        moveIcon.Modulate = unit.EntityComponents.Get<MoveCountComponent>().CanMove()
+            ? Colors.White.Tint(.25f) : Colors.White;
         
         var attackIcon = GetNode<MeshInstance2D>("AttackIcon");
         attackIcon.Modulate = unit.Attacked ? Colors.White.Tint(.25f) : Colors.White;

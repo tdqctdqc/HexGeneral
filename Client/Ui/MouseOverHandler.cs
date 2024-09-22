@@ -1,13 +1,22 @@
 using System;
 using Godot;
 using GodotUtilities.DataStructures.Hex;
+using GodotUtilities.Graphics;
 using HexGeneral.Game;
+using HexGeneral.Game.Client;
 using Microsoft.VisualBasic;
 
 namespace HexGeneral.Client.Ui;
 
-public class MouseOverHandler
+public static class MouseOverHandler
 {
+    public static Hex FindMouseOverHex(HexGeneralClient client)
+    {
+        var pos = client.GetComponent<CameraController>().GetGlobalMousePosition();
+        var mouseHex = MouseOverHandler.FindTwoClosestHexes(pos,
+            client.Data.Map);
+        return mouseHex.closest;
+    }
     public static (Hex closest, Hex close) FindTwoClosestHexes(Vector2 worldPos,
         Map map)
     {

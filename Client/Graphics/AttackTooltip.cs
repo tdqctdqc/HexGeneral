@@ -11,19 +11,22 @@ public partial class AttackTooltip : Node2D
         Scale = Vector2.One * .015f;
     }
 
-    public void DrawInfo(Hex hex, Unit unit, Unit targetUnit, HexGeneralData data)
+    public void DrawInfo(Hex hex, Unit unit, Unit targetUnit, 
+        HexGeneralData data)
     {
-        var damageToTarget = CombatLogic.GetDamageAgainst(unit, targetUnit,
-            hex, true, data);
-        var damageMultToTarget = targetUnit.UnitModel.Get(data)
-            .MoveType.GetDamageMult(hex, data, false);
-        
-        var damageToUnit = CombatLogic.GetDamageAgainst(targetUnit, unit,
-            hex, false, data);
-        var damageMultToUnit = unit.UnitModel.Get(data)
-            .MoveType.GetDamageMult(hex, data, true);
+        var unitModifier = CombatModifier.ConstructVerbose(unit, targetUnit, true, hex, data);
+        var targetModifier = CombatModifier.ConstructVerbose(targetUnit, unit, false, hex, data);
 
-        ((Label)FindChild("Attacker")).Text = $"{damageToUnit} ({damageMultToUnit.RoundTo2Digits()})";
-        ((Label)FindChild("Defender")).Text = $"{damageToTarget} ({damageMultToTarget.RoundTo2Digits()})";
+        var damageToTarget = unitModifier.GetDamageAgainst(targetModifier, data);
+        var damageToUnit = targetModifier.GetDamageAgainst(unitModifier, data);
+        
+
+
+        var atk = ((Label)FindChild("Attacker"));
+        atk.Text = $"Expected Damage Taken: {damageToUnit}";
+        atk.Text += unitModifier.Info();
+        var def = ((Label)FindChild("Defender"));
+        def.Text = $"Expected Damage Dealt: {damageToTarget}";
+        def.Text += targetModifier.Info();
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Godot;
 using GodotUtilities.GameData;
 
 namespace HexGeneral.Game;
@@ -10,7 +11,8 @@ public class TerrainDamageModel : Model
 
     public float GetMult(Hex hex, Data data)
     {
-        return LandformDamageMults[hex.Landform.Get(data)]
-               * VegetationDamageMults[hex.Vegetation.Get(data)];
+        var lfMod = LandformDamageMults[hex.Landform.Get(data)];
+        var vMod = VegetationDamageMults[hex.Vegetation.Get(data)];
+        return lfMod + vMod;
     }
 }

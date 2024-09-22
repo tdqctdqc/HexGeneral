@@ -25,10 +25,7 @@ public class HexSelectAction(
 
     protected override void MouseUp(InputEventMouse m)
     {
-        var mousePos = _client.GetComponent<CameraController>()
-            .GetGlobalMousePosition();
-        var (hex, _) = MouseOverHandler.FindTwoClosestHexes(mousePos,
-            _client.Data.Map);
+        var hex = MouseOverHandler.FindMouseOverHex(_client);
         _selectAction?.Invoke(hex);
     }
 }

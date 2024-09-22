@@ -4,6 +4,7 @@ using GodotUtilities.DataStructures;
 using GodotUtilities.DataStructures.Hex;
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
+using HexGeneral.Game.Components;
 using HexGeneral.Logic.Procedure;
 using HexGeneral.Logic.Procedures;
 
@@ -23,17 +24,16 @@ public static class CombatLogic
         var dist = unitHex.Coords.GetHexDistance(targetHex.Coords);
         if (dist > unitModel.Range) return;
         
-        var startHp = unit.CurrentHitPoints;
         var targetStartHp = targetUnit.CurrentHitPoints;
+        var unitModifier = CombatModifier.Construct(unit, targetUnit, true, targetHex, data);
+        var targetUnitModifier = CombatModifier.Construct(targetUnit, unit, false, targetHex, data);
         
-        var dmgToTarget = GetDamageAgainst(unit,
-            targetUnit, targetHex, true, data);
+        var dmgToTarget = unitModifier.GetDamageAgainst(targetUnitModifier, data);
         
         var dmgToUnit = 0f;
         if (dist <= targetUnitModel.Range)
         {
-            dmgToUnit = GetDamageAgainst(targetUnit,
-                unit,  targetHex, false, data);
+            dmgToUnit = targetUnitModifier.GetDamageAgainst(unitModifier,  data);
         }
 
 
@@ -81,17 +81,19 @@ public static class CombatLogic
     
     public static float
         GetDamageAgainst(Unit damager, 
-        Unit damagee, Hex hex, bool damagerAttacking, HexGeneralData data)
+        Unit damagee, Hex hex, 
+        bool damagerAttacking, 
+        HexGeneralData data)
     {
-        var atkModel = damager.UnitModel.Get(data);
-        var defModel = damagee.UnitModel.Get(data);
-        var soft = atkModel.SoftAttack * (1f - defModel.Hardness);
-        var hard = atkModel.HardAttack * defModel.Hardness;
-        
-        return (soft + hard)
-               * damagee.UnitModel.Get(data).MoveType.GetDamageMult(hex, data, damagerAttacking == false)
-               * GetEffectiveAttackRatio(damager, data);
+        var damagerModifier = CombatModifier.Construct(damager, 
+            damagee, damagerAttacking, hex, data);
+        var damageeModifier = CombatModifier.Construct(damagee, 
+            damager, damagerAttacking == false, hex, data);
+
+        return damagerModifier.GetDamageAgainst(damageeModifier, data);
     }
+    
+    
 
     public static float GetEffectiveAttackRatio(Unit attacker,
         HexGeneralData data)
