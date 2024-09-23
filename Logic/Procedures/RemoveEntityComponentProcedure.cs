@@ -13,7 +13,7 @@ public class RemoveEntityComponentProcedure<TEntity, TComp>(ERef<TEntity> entity
     public override void Handle(ProcedureKey key)
     {
         var e = Entity.Get(key.Data);
-        var comp = e.EntityComponents.Get<TComp>();
-        e.EntityComponents.Remove(comp, key);
+        var comp = e.Components.Get<TComp>();
+        e.Components.Remove(comp, key);
     }
 }

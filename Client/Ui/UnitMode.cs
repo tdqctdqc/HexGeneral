@@ -23,12 +23,12 @@ public class UnitMode : UiMode
         _hexGenClient = client;
 
         var pathOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
-        var damageOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
+        var attackRadiusOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
         var radiusOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
         var attackPathOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
         _overlays = new List<MapOverlayDrawer>
         {
-            pathOverlay, radiusOverlay, attackPathOverlay, damageOverlay
+            pathOverlay, radiusOverlay, attackPathOverlay, attackRadiusOverlay
         };
         
         _mouseMode = new MouseMode(
@@ -39,11 +39,12 @@ public class UnitMode : UiMode
                 new UnitMoveAction(radiusOverlay, pathOverlay,
                     SelectedUnit, _hexGenClient, MouseButtonMask.Right),
                 
-                new UnitAttackAction(MouseButtonMask.Right,
-                    SelectedUnit,
+                new UnitAttackAction(
+                    attackRadiusOverlay,
                     attackPathOverlay,
-                    damageOverlay,
-                    _hexGenClient)
+                    SelectedUnit,
+                    _hexGenClient,
+                    MouseButtonMask.Right)
             ]
         );
 

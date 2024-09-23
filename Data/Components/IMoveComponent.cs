@@ -14,4 +14,5 @@ public interface IMoveComponent : IUnitCombatComponent
     Command GetMoveCommand(Unit unit, Hex dest, HexGeneralClient client);
     float GetMovePoints(HexGeneralData data);
     MoveType GetActiveMoveType(HexGeneralData data);
+    bool AttackBlocked(HexGeneralData data);
 }   

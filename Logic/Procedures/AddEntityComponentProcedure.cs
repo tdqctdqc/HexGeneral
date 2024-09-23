@@ -13,6 +13,6 @@ public class AddEntityComponentProcedure<T>(ERef<T> entity, IEntityComponent ent
 
     public override void Handle(ProcedureKey key)
     {
-        Entity.Get(key.Data).EntityComponents.Add(EntityComponent, key);
+        Entity.Get(key.Data).Components.Add(EntityComponent, key);
     }
 }

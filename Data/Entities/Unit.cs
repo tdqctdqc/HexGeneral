@@ -15,41 +15,39 @@ public class Unit : Entity, IComponentedEntity
     public float CurrentHitPoints { get; private set; }
     public float CurrentOrganization { get; private set; }
     public int CurrentAmmo { get; private set; }
-    public bool Attacked { get; private set; }
     public bool Reinforced { get; private set; }
     public bool RestockedAmmo { get; private set; }
-    public EntityComponentHolder EntityComponents { get; private set; }
+    public EntityComponentHolder Components { get; private set; }
     public static Unit Instantiate(UnitModel model, 
         Regime regime, HexGeneralData data)
     {
         var id = data.IdDispenser.TakeId();
         var moveComp = model.MoveType.MakeNativeMoveComponent(new ERef<Unit>(id));
+        var attacksCount = new AttackCountComponent(0, model.AttackType.NumAttacks);
         var movesTaken = new MoveCountComponent(0, 1, 1f);
         var compHolder = new EntityComponentHolder(
-            new List<IEntityComponent> { moveComp, movesTaken });
+            new List<IEntityComponent> { moveComp, movesTaken, attacksCount });
         var u = new Unit(id,
             regime.MakeRef(), model.HitPoints, model.Organization, model.AmmoCap,
-            model.MakeIdRef(data), model.MovePoints, 
-            false, false, false,
+            model.MakeIdRef(data), false, false,
             compHolder);
         return u;
     }
     [SerializationConstructor] private Unit(int id, ERef<Regime> regime, float currentHitPoints,
         float currentOrganization, int currentAmmo, 
-        ModelIdRef<UnitModel> unitModel, float movePointRatioRemaining, bool attacked,
+        ModelIdRef<UnitModel> unitModel,
         bool reinforced,
         bool restockedAmmo,
-        EntityComponentHolder entityComponents) : base(id)
+        EntityComponentHolder components) : base(id)
     {
         Regime = regime;
         UnitModel = unitModel;
         CurrentHitPoints = currentHitPoints;
         CurrentOrganization = currentOrganization;
         CurrentAmmo = currentAmmo;
-        Attacked = attacked;
         Reinforced = reinforced;
         RestockedAmmo = restockedAmmo;
-        EntityComponents = entityComponents;
+        Components = components;
     }
 
     
@@ -62,12 +60,6 @@ public class Unit : Entity, IComponentedEntity
     public override void CleanUp(Data d)
     {
         d.Data().MapUnitHolder.Remove(this);
-    }
-
-
-    public void MarkHasAttacked(ProcedureKey key)
-    {
-        Attacked = true;
     }
 
     public void Reinforce(float amount, ProcedureKey key)
@@ -132,11 +124,10 @@ public class Unit : Entity, IComponentedEntity
     }
     public void RefreshForTurn(ProcedureKey key)
     {
-        Attacked = false;
         Reinforced = false;
         RestockedAmmo = false;
         RegenerateOrganization(key);
-        EntityComponents.TurnTick(key);
+        Components.TurnTick(key);
     }
 
     public Hex GetHex(HexGeneralData data)
@@ -156,12 +147,12 @@ public class Unit : Entity, IComponentedEntity
 
     public bool CanReinforce()
     {
-        return EntityComponents.Get<MoveCountComponent>().HasMoved() == false 
+        return Components.Get<MoveCountComponent>().HasMoved() == false 
                && Reinforced == false;
     }
     public bool CanRestockAmmo()
     {
-        return EntityComponents.Get<MoveCountComponent>().HasMoved() == false 
+        return Components.Get<MoveCountComponent>().HasMoved() == false 
                && RestockedAmmo == false;
     }
 }

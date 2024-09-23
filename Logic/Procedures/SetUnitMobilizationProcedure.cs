@@ -14,7 +14,7 @@ public class SetUnitMobilizationProcedure(ERef<Unit> unit, bool active) : GodotU
     public override void Handle(ProcedureKey key)
     {
         var unit = Unit.Get(key.Data);
-        var mob = unit.EntityComponents
+        var mob = unit.Components
             .Get<MobilizerComponent>();
         if (Active)
         {

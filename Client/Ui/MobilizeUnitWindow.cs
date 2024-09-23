@@ -33,7 +33,7 @@ public partial class MobilizeUnitWindow(Unit unit,
         
         _mobilizers = new ItemListToken<Mobilizer>(
             client.Data.Models.GetModels<Mobilizer>()
-                .Where(m => m.AllowedMoveTypes.Contains(unitModel.MoveType)),
+                .Where(m => m.AllowedNativeMoveTypes.Contains(unitModel.MoveType)),
             m => m.Name,
             m => m.GetTexture(),
             50, false);
@@ -96,7 +96,7 @@ public partial class MobilizeUnitWindow(Unit unit,
             client.SubmitCommand(com);
         });
 
-        var existingMob = unit.EntityComponents
+        var existingMob = unit.Components
             .Get<MobilizerComponent>()?.Mobilizer.Get(client.Data);
         b.Disabled = canBuild == false || model == existingMob;
     }

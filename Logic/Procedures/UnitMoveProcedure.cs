@@ -19,7 +19,7 @@ public class UnitMoveProcedure(ERef<Unit> unit, List<HexRef> path,
     {
         var hexes = key.Data.Data().Map.Hexes;
         var unit = Unit.Get(key.Data);
-        var moveType = unit.EntityComponents.Get<IMoveComponent>()
+        var moveType = unit.Components.Get<IMoveComponent>()
             .GetActiveMoveType(key.Data.Data());
         foreach (var r in Path)
         {
@@ -28,7 +28,7 @@ public class UnitMoveProcedure(ERef<Unit> unit, List<HexRef> path,
         }
         key.Data.Data().MapUnitHolder.SetUnitPosition(unit,
             Path[^1], key);
-        unit.EntityComponents.Get<MoveCountComponent>()
+        unit.Components.Get<MoveCountComponent>()
             .SpendMove(MoveRatioSpent, key);
         key.Data.Data().Notices.UnitMoved?.Invoke(this);
     }

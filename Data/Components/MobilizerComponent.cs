@@ -29,11 +29,13 @@ public class MobilizerComponent
     public void MarkActive(ProcedureKey key)
     {
         Active = true;
+        key.Data.Data().Notices.UnitAltered?.Invoke(Unit.Get(key.Data));
     }
 
     public void MarkInactive(ProcedureKey key)
     {
         Active = false;
+        key.Data.Data().Notices.UnitAltered?.Invoke(Unit.Get(key.Data));
     }
 
     public Control GetDisplay(HexGeneralClient client)
@@ -45,7 +47,7 @@ public class MobilizerComponent
         texture.Size = Vector2.One * 50f;
         texture.Texture = model.GetTexture();
         texture.StretchMode = TextureRect.StretchModeEnum.Keep;
-        var moveRatio = unit.EntityComponents.Get<MoveCountComponent>().MovePointRatioRemaining;
+        var moveRatio = unit.Components.Get<MoveCountComponent>().MovePointRatioRemaining;
         vbox.AddChild(texture);
         vbox.CreateLabelAsChild("Mobilizer: " + model.Name);
         vbox.CreateLabelAsChild($"Move Points: {model.MovePoints * moveRatio} / {model.MovePoints}");
@@ -109,27 +111,30 @@ public class MobilizerComponent
         {
             throw new Exception();
         }
-        Native = unit.EntityComponents.Get<INativeMoveComponent>();
-        unit.EntityComponents.Remove(Native, key);
+        Native = unit.Components.Get<INativeMoveComponent>();
+        unit.Components.Remove(Native, key);
         key.Data.Data().Notices.UnitAltered?.Invoke(unit);
     }
 
     public void Removed(ProcedureKey key)
     {
         var unit = Unit.Get(key.Data);
-        unit.EntityComponents.Add(Native, key);
+        unit.Components.Add(Native, key);
         key.Data.Data().Notices.UnitAltered?.Invoke(unit);
     }
-
+    
     public void Modify(CombatModifier modifier, 
         HexGeneralData data)
     {
         if (Active)
         {
-            var damageTakenMult = mobilizer.Get(data).MoveType
+            var mob = mobilizer.Get(data);
+            var mobilizerTerrainEffect = mob.MoveType
                 .GetDamageMult(modifier.Hex, data,
                     modifier.OnOffense);
-            modifier.AddDamageTakenMult(damageTakenMult, "Mobilizer Terrain Effect");
+            modifier.AddDamageTakenMult(mobilizerTerrainEffect, "Mobilizer Terrain Effect");
+            var mobilizerEffect = mob.DamageTakenMult;
+            modifier.AddDamageTakenMult(mobilizerEffect, "Mobilizer Damage Mult Effect");
         }
         else
         {
@@ -140,13 +145,14 @@ public class MobilizerComponent
     public bool CanActivate(HexGeneralData data)
     {
         var unit = Unit.Get(data);
-        return unit.EntityComponents.Get<MoveCountComponent>().CanMove() 
-               && unit.Attacked == false;
+        return unit.Components.Get<MoveCountComponent>().CanMove() 
+               && unit.Components.Get<AttackCountComponent>()
+                    .AttacksTaken == 0;
     }
 
     public HashSet<Hex> GetMoveRadius(Unit unit, HexGeneralData data)
     {        
-        var moveCount = unit.EntityComponents.Get<MoveCountComponent>();
+        var moveCount = unit.Components.Get<MoveCountComponent>();
         if (moveCount.CanMove() == false) return new HashSet<Hex>();
         var ratio = moveCount.MovePointRatioRemaining;
         var hex = unit.GetHex(data);
@@ -245,7 +251,7 @@ public class MobilizerComponent
     public Command GetMoveCommand(Unit unit, Hex dest, 
         HexGeneralClient client)
     {
-        var moveCount = unit.EntityComponents.Get<MoveCountComponent>();
+        var moveCount = unit.Components.Get<MoveCountComponent>();
         if (moveCount.CanMove() == false) return null;
         if (Active == false)
         {
@@ -287,8 +293,13 @@ public class MobilizerComponent
         return Native.GetActiveMoveType(data);
     }
 
+    public bool AttackBlocked(HexGeneralData data)
+    {
+        return Active && Mobilizer.Get(data).CanAttack == false;
+    }
+
     public static bool CanAdd(Unit u, HexGeneralData data)
     {
-        return u.EntityComponents.Get<MoveCountComponent>().HasMoved() == false;
+        return u.Components.Get<MoveCountComponent>().HasMoved() == false;
     }
 }

@@ -26,7 +26,7 @@ public class CombatModifier(
         bool onOffense, Hex hex, HexGeneralData data)
     {
         var m = new CombatModifier(unit, target, onOffense, hex);
-        foreach (var c in unit.EntityComponents.Components.OfType<IUnitCombatComponent>())
+        foreach (var c in unit.Components.Components.OfType<IUnitCombatComponent>())
         {
             c.Modify(m, data);
         }
@@ -37,7 +37,7 @@ public class CombatModifier(
     {
         var m = new CombatModifier(unit, target, onOffense, hex);
         m.Infos = new Dictionary<string, List<(string, float)>>();
-        foreach (var c in unit.EntityComponents.Components.OfType<IUnitCombatComponent>())
+        foreach (var c in unit.Components.Components.OfType<IUnitCombatComponent>())
         {
             c.Modify(m, data);
         }

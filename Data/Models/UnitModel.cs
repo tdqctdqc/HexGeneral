@@ -18,6 +18,7 @@ public class UnitModel : Model
     public float AmmoCost { get; private set; }
     public float MovePoints { get; private set; }
     public MoveType MoveType { get; private set; }
+    public AttackType AttackType { get; private set; }
 
     public Unit Instantiate(Regime regime, HexGeneralData data)
     {

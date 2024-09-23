@@ -79,7 +79,7 @@ public partial class UnitPanel : PanelContainer
         vbox.CreateLabelAsChild($"Supply Availability: {supplyAvailability}");
         
         
-        foreach (var unitComponent in unit.EntityComponents.Components)
+        foreach (var unitComponent in unit.Components.Components)
         {
             vbox.AddChild(unitComponent.GetDisplay(_client));
         }

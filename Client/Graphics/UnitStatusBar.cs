@@ -19,11 +19,13 @@ public partial class UnitStatusBar : Node2D
         ammoIcon.Modulate = ColorsExt.GetHealthColor(ammoRatio);
         
         var moveIcon = GetNode<MeshInstance2D>("MoveIcon");
-        moveIcon.Modulate = unit.EntityComponents.Get<MoveCountComponent>().CanMove()
-            ? Colors.White.Tint(.25f) : Colors.White;
+        moveIcon.Modulate = unit.Components.Get<MoveCountComponent>().CanMove()
+            ? Colors.White : Colors.White.Tint(.25f);
         
         var attackIcon = GetNode<MeshInstance2D>("AttackIcon");
-        attackIcon.Modulate = unit.Attacked ? Colors.White.Tint(.25f) : Colors.White;
+        attackIcon.Modulate = unit.Components.Get<AttackCountComponent>()
+            .CanAttack(unit, data)
+                ? Colors.White : Colors.White.Tint(.25f);
         
         var orgIcon = GetNode<MeshInstance2D>("OrgIcon");
         orgIcon.Modulate = ColorsExt.GetHealthColor(orgRatio);

@@ -4,5 +4,5 @@ namespace HexGeneral.Game.Components;
 
 public interface IComponentedEntity 
 {
-    EntityComponentHolder EntityComponents { get; }
+    EntityComponentHolder Components { get; }
 }

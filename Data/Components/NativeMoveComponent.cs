@@ -12,7 +12,7 @@ using HexGeneral.Logic.Procedure;
 
 namespace HexGeneral.Game.Components;
 
-public class LandMoveComponent(ERef<Unit> unit) : INativeMoveComponent
+public class NativeMoveComponent(ERef<Unit> unit) : INativeMoveComponent
 {
     public ERef<Unit> Unit { get; private set; } = unit;
 
@@ -22,7 +22,7 @@ public class LandMoveComponent(ERef<Unit> unit) : INativeMoveComponent
         var unit = Unit.Get(client.Data);
         var model = unit.UnitModel.Get(client.Data);
         
-        var moveRatio = unit.EntityComponents.Get<MoveCountComponent>().MovePointRatioRemaining;
+        var moveRatio = unit.Components.Get<MoveCountComponent>().MovePointRatioRemaining;
 
         l.Text = $"Move Points: {model.MovePoints * moveRatio} / {model.MovePoints}";
 
@@ -54,7 +54,7 @@ public class LandMoveComponent(ERef<Unit> unit) : INativeMoveComponent
 
     public HashSet<Hex> GetMoveRadius(Unit unit, HexGeneralData data)
     {
-        var moveCount = unit.EntityComponents.Get<MoveCountComponent>();
+        var moveCount = unit.Components.Get<MoveCountComponent>();
         if (moveCount.CanMove() == false) return new HashSet<Hex>();
         var hex = unit.GetHex(data);
         var model = unit.UnitModel.Get(data);
@@ -105,7 +105,7 @@ public class LandMoveComponent(ERef<Unit> unit) : INativeMoveComponent
     
     public Command GetMoveCommand(Unit unit, Hex dest, HexGeneralClient client)
     {
-        var moveCountComponent = unit.EntityComponents.Get<MoveCountComponent>();
+        var moveCountComponent = unit.Components.Get<MoveCountComponent>();
         if (moveCountComponent.CanMove() == false) return null;
         
         var model = unit.UnitModel.Get(client.Data);
@@ -133,5 +133,10 @@ public class LandMoveComponent(ERef<Unit> unit) : INativeMoveComponent
     public MoveType GetActiveMoveType(HexGeneralData data)
     {
         return Unit.Get(data).UnitModel.Get(data).MoveType;
+    }
+
+    public bool AttackBlocked(HexGeneralData data)
+    {
+        return false;
     }
 }

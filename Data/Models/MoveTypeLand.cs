@@ -13,6 +13,6 @@ public class MoveTypeLand : MoveType
 
     public override IMoveComponent MakeNativeMoveComponent(ERef<Unit> unit)
     {
-        return new LandMoveComponent(unit);
+        return new NativeMoveComponent(unit);
     }
 }

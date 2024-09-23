@@ -220,6 +220,16 @@
                     "guid": "de3c3760-bda2-4ced-b17c-540e0b2b2236",
                     "id": "39",
                     "Name": "Mobilizer_Truck"
+                },
+                {
+                    "guid": "5c66c75f-d4c2-4fbe-8a6f-ae5e7f9e2e9e",
+                    "id": "40",
+                    "Name": "AttackType_InfantryAttackType"
+                },
+                {
+                    "guid": "f28e60ba-c8c3-4a91-80ca-8470138ea9f9",
+                    "id": "41",
+                    "Name": "AttackType_ArmorAttackType"
                 }
             ],
             "hidden": false,
@@ -1012,6 +1022,21 @@
                         "max": "float",
                         "defaultValue": "float"
                     }
+                },
+                {
+                    "typeStr": "lineReference",
+                    "guid": "30906f0d-8933-4e94-bf89-d55b782355b0",
+                    "name": "AttackType",
+                    "description": "AttackType",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
                 }
             ],
             "lines": [
@@ -1030,7 +1055,8 @@
                     "IndustrialCost": 50,
                     "MovePoints": 10,
                     "MoveType": "061cff56-8c94-44bb-9cdd-2ad8d58e0ce5",
-                    "AmmoCost": 0.1
+                    "AmmoCost": 0.1,
+                    "AttackType": "5c66c75f-d4c2-4fbe-8a6f-ae5e7f9e2e9e"
                 },
                 {
                     "guid": "63ed717a-7d46-46d7-b5fc-5dfc16c288f0",
@@ -1047,7 +1073,8 @@
                     "IndustrialCost": 200,
                     "MovePoints": 10,
                     "MoveType": "8aa468b8-5baa-4ac9-8d77-7e4f3b763383",
-                    "AmmoCost": 0.2
+                    "AmmoCost": 0.2,
+                    "AttackType": "f28e60ba-c8c3-4a91-80ca-8470138ea9f9"
                 }
             ],
             "hidden": false,
@@ -2255,8 +2282,8 @@
                 {
                     "typeStr": "float",
                     "guid": "c17f5d6e-7d68-4058-a782-505242fc89a3",
-                    "description": "DamageMult",
-                    "name": "DamageMult",
+                    "description": "DamageTakenMult",
+                    "name": "DamageTakenMult",
                     "min": -10000,
                     "max": 100000,
                     "defaultValue": 0,
@@ -2334,8 +2361,8 @@
                 {
                     "typeStr": "list",
                     "guid": "96f41ef2-3428-4b00-b600-05d5b2f7d229",
-                    "name": "AllowedMoveTypes",
-                    "description": "AllowedMoveTypes",
+                    "name": "AllowedNativeMoveTypes",
+                    "description": "AllowedNativeMoveTypes",
                     "sheet": "dc8d5109-acbf-4043-9583-41ddbc14d660",
                     "defaultValue": [],
                     "iconName": "newList",
@@ -2351,18 +2378,18 @@
                     "id": "0",
                     "Model": "de3c3760-bda2-4ced-b17c-540e0b2b2236",
                     "MovePoints": 10,
-                    "DamageMult": 3,
                     "RecruitCost": 1,
                     "IndustrialCost": 25,
                     "MoveType": "4e8b6ff1-3031-4076-800f-bc10a62fd5e0",
                     "CanAttack": false,
-                    "AllowedMoveTypes": [
+                    "AllowedNativeMoveTypes": [
                         {
                             "guid": "b3c169e7-2d12-4a5a-ae5b-9227b4718a92",
                             "id": "0",
                             "Value": "061cff56-8c94-44bb-9cdd-2ad8d58e0ce5"
                         }
-                    ]
+                    ],
+                    "DamageTakenMult": 2
                 }
             ],
             "hidden": false,
@@ -2470,30 +2497,106 @@
             }
         },
         {
-            "name": "AttributeTypes",
-            "description": "AttributeTypes",
+            "name": "LandAttackType",
+            "description": "LandAttackType",
             "displayColumn": "id",
-            "guid": "ae56a787-955a-4ea5-8d73-120cc126e596",
+            "guid": "7d9fcf37-453f-4127-ab05-4b6c13c2f182",
             "columns": [
                 {
-                    "typeStr": "text",
-                    "guid": "ade9be58-40db-4d3f-b8ae-fd9cd24f44c5",
-                    "name": "Name",
-                    "description": "Name",
+                    "typeStr": "lineReference",
+                    "guid": "7c468813-3d49-4c2b-9de8-ab0850390a60",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
                     "defaultValue": "",
-                    "iconName": "newText",
+                    "iconName": "newLineLink",
                     "configurable": {
                         "name": "text",
                         "description": "text",
-                        "defaultValue": "text"
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
                     }
                 }
             ],
             "lines": [
                 {
-                    "guid": "98932dbe-a46d-449c-9e49-bc22078b1533",
+                    "guid": "ec176ef4-0d0f-478e-9d55-323bed42584d",
                     "id": "0",
-                    "Name": ""
+                    "Model": "5c66c75f-d4c2-4fbe-8a6f-ae5e7f9e2e9e"
+                },
+                {
+                    "guid": "e1b78154-7179-4b7a-adff-0080f85fb379",
+                    "id": "1",
+                    "Model": "f28e60ba-c8c3-4a91-80ca-8470138ea9f9"
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "AttackType",
+            "description": "AttackType",
+            "displayColumn": "id",
+            "guid": "0b7ca52e-0e9a-4a67-9f7b-72a99fc001bf",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "697d17e2-9697-4368-b86b-eb102a816d69",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                },
+                {
+                    "typeStr": "int",
+                    "guid": "71b6eca5-1ebe-4798-b1c3-435dd78cefca",
+                    "description": "NumAttacks",
+                    "name": "NumAttacks",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newInt",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "int",
+                        "max": "int",
+                        "defaultValue": "int"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "e883c1a2-4b1c-4477-8c6a-05f9edf1c259",
+                    "id": "0",
+                    "Model": "5c66c75f-d4c2-4fbe-8a6f-ae5e7f9e2e9e",
+                    "NumAttacks": 1
+                },
+                {
+                    "guid": "8e315147-4643-49b6-a235-6b3e7973c479",
+                    "id": "1",
+                    "Model": "f28e60ba-c8c3-4a91-80ca-8470138ea9f9",
+                    "NumAttacks": 3
                 }
             ],
             "hidden": false,

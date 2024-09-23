@@ -3,6 +3,7 @@ using GodotUtilities.GameData;
 using GodotUtilities.Logic;
 using GodotUtilities.Server;
 using HexGeneral.Game;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Logic.Procedures;
 
@@ -18,7 +19,8 @@ public class UnitAttackProcedure(ERef<Unit> unit, ERef<Unit> targetUnit, float d
     public override void Handle(ProcedureKey key)
     {
         var unit = Unit.Get(key.Data);
-        unit.MarkHasAttacked(key);
+        unit.Components.Get<AttackCountComponent>()
+            .SpendAttack(key);
         unit.IncrementHitpoints(-DamageToUnit, key);
         var targetUnit = TargetUnit.Get(key.Data);
         targetUnit.IncrementHitpoints(-DamageToTarget, key);
