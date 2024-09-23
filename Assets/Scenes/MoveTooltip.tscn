@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6se5ycbftlqp"]
+
+[ext_resource type="Script" path="res://Client/Graphics/MoveTooltip.cs" id="1_d7aft"]
+
+[node name="MoveTooltip" type="Node2D"]
+script = ExtResource("1_d7aft")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 134.0
+offset_bottom = 64.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Cost" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "xxxxxxxxxxxx"
