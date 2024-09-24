@@ -1,9 +1,12 @@
+using System.Linq;
 using Godot;
 using GodotUtilities.GameClient;
+using GodotUtilities.GameData;
 using GodotUtilities.Graphics;
 using GodotUtilities.Ui;
 using HexGeneral.Game;
 using HexGeneral.Game.Client;
+using HexGeneral.Game.Client.Command;
 using HexGeneral.Game.Client.Graphics;
 using HexGeneral.Game.Components;
 
@@ -35,13 +38,11 @@ public class UnitAttackAction : MouseAction
         _radiusOverlay.Clear();
         _pathOverlay.Clear();
         if (unit is null 
-            || unit.Components.Get<AttackCountComponent>()
-                .CanAttack(unit, _client.Data) == false)
+            || unit.Components.Components.OfType<IUnitCombatComponent>()
+                .Any(c => c.AttackBlocked(_client.Data)))
         {
             return;
         }
-        var attackType = unit.UnitModel.Get(_client.Data).AttackType;
-        attackType.DrawRadius(unit, _radiusOverlay, _client);
     }
     protected override void MouseDown(InputEventMouse m)
     {
@@ -52,8 +53,8 @@ public class UnitAttackAction : MouseAction
     {
         _pathOverlay.Clear();
 
-        var u = _selectedUnit.Value;
-        if (u is null)
+        var unit = _selectedUnit.Value;
+        if (unit is null)
         {
             return;
         }
@@ -61,9 +62,15 @@ public class UnitAttackAction : MouseAction
         var hex = MouseOverHandler.FindMouseOverHex(_client);
         if (hex is null) return;
         
-        var attackType = u.UnitModel.Get(_client.Data).AttackType;
-
-        if (attackType.CanAttack(u, hex, _client.Data) == false)
+        var attackType = unit.UnitModel.Get(_client.Data).AttackType;
+        
+        if (attackType.CanAttack(unit, hex, _client.Data) == false)
+        {
+            return;
+        }
+        
+        if(unit.Components.Components.OfType<IUnitCombatComponent>()
+            .Any(c => c.AttackBlocked(_client.Data)))
         {
             return;
         }
@@ -73,26 +80,33 @@ public class UnitAttackAction : MouseAction
         var targetUnit = UnitGraphics.GetClosestUnitInHex(hex, pos, _client);
         if (targetUnit is null) return;
         
-        attackType.DrawPath(u, targetUnit, _pathOverlay, _client);
+        var unitHex = unit.GetHex(_client.Data);
+        var targetHex = targetUnit.GetHex(_client.Data);
+
+        _pathOverlay.Draw(mb =>
+        {
+            mb.AddArrow(unitHex.WorldPos(), targetHex.WorldPos(), .25f, Colors.White);
+            mb.AddArrow(unitHex.WorldPos(), targetHex.WorldPos(), .2f, Colors.Red);
+        }, Vector2.Zero);
+        var tt = SceneManager.Instance<AttackTooltip>();
+        tt.DrawInfo(targetHex, unit, targetUnit, _client.Data);
+        _pathOverlay.AddNode(tt, pos);
     }
 
     protected override void MouseUp(InputEventMouse m)
     {
         _pathOverlay.Clear();
         var unit = _selectedUnit.Value;
-
         if (unit is null)
         {
             return;
         }
 
-        var attackCount = unit.Components.Get<AttackCountComponent>();
-
-        if (attackCount.CanAttack(unit, _client.Data) == false)
+        if(unit.Components.Components.OfType<IUnitCombatComponent>()
+           .Any(c => c.AttackBlocked(_client.Data)))
         {
             return;
         }
-        
         var mouseHex = MouseOverHandler.FindMouseOverHex(_client);
         if (mouseHex is null)
         {
@@ -103,15 +117,17 @@ public class UnitAttackAction : MouseAction
         var targetUnit = UnitGraphics.GetClosestUnitInHex(mouseHex, pos, _client);
         if (targetUnit is null) return;
         
-        
-        var inner = unit.UnitModel.Get(_client.Data).AttackType
-            .GetAttackCommand(unit, targetUnit, _client);
-        if (inner is not null)
+        var attackType = unit.UnitModel.Get(_client.Data)
+            .AttackType;
+        if (attackType.CanAttack(unit, mouseHex, _client.Data) == false)
         {
-            _radiusOverlay.Clear();
-            var com = CallbackCommand.Construct(inner,
-                () => DrawForSelectedUnit(unit), _client);
-            _client.SubmitCommand(com);
+            return;
         }
+        
+        var inner = new UnitAttackCommand(unit.MakeRef(), targetUnit.MakeRef());
+        _radiusOverlay.Clear();
+        var com = CallbackCommand.Construct(inner,
+            () => DrawForSelectedUnit(unit), _client);
+        _client.SubmitCommand(com);
     }
 }

@@ -1,4 +1,5 @@
 using Godot;
+using GodotUtilities.GameClient;
 using GodotUtilities.Logic;
 using HexGeneral.Game.Client;
 
@@ -10,7 +11,7 @@ public class MoveCountComponent(int movesTaken, int maxMoves, float movePointRat
     public int MovesTaken { get; private set; } = movesTaken;
     public int MaxMoves { get; private set; } = maxMoves;
 
-    public Control GetDisplay(HexGeneralClient client)
+    public Control GetDisplay(GameClient client)
     {
         var l = new Label();
         l.Text = $"Moves left: {MaxMoves - MovesTaken} / {MaxMoves}";

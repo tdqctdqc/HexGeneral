@@ -19,30 +19,23 @@ public static class CombatLogic
         var targetHex = targetUnit.GetHex(data);
         var unitModel = unit.UnitModel.Get(data);
         var targetUnitModel = targetUnit.UnitModel.Get(data);
-
+        
         var unitHex = unit.GetHex(data);
         var dist = unitHex.Coords.GetHexDistance(targetHex.Coords);
         if (dist > unitModel.Range) return;
         
         var targetStartHp = targetUnit.CurrentHitPoints;
-        var unitModifier = CombatModifier.Construct(unit, targetUnit, true, targetHex, data);
-        var targetUnitModifier = CombatModifier.Construct(targetUnit, unit, false, targetHex, data);
-        
-        var dmgToTarget = unitModifier.GetDamageAgainst(targetUnitModifier, data);
-        
-        var dmgToUnit = 0f;
-        if (dist <= targetUnitModel.Range)
-        {
-            dmgToUnit = targetUnitModifier.GetDamageAgainst(unitModifier,  data);
-        }
+        var modifier = new CombatModifier(unit, targetUnit, targetHex,
+            false, data);
 
+        var dmgToTarget = modifier.DamageToDefender.Modify(0f);
+        var dmgToUnit = modifier.DamageToAttacker.Modify(0f);
 
         key.SendMessage(new UnitAttackProcedure(unit.MakeRef(), targetUnit.MakeRef(),
             dmgToUnit, dmgToTarget, dmgToUnit, dmgToTarget));
 
         DoUnitDestroyedCheck(unit, key);
         DoUnitDestroyedCheck(targetUnit, key);
-        
         DoUnitRetreatCheck(targetUnit, dmgToTarget, targetStartHp, key);
     }
 
@@ -77,33 +70,5 @@ public static class CombatLogic
                     unitHex.MakeRef(), retreat.MakeRef(), unit.MakeRef(), distance));
             }
         }
-    }
-    
-    public static float
-        GetDamageAgainst(Unit damager, 
-        Unit damagee, Hex hex, 
-        bool damagerAttacking, 
-        HexGeneralData data)
-    {
-        var damagerModifier = CombatModifier.Construct(damager, 
-            damagee, damagerAttacking, hex, data);
-        var damageeModifier = CombatModifier.Construct(damagee, 
-            damager, damagerAttacking == false, hex, data);
-
-        return damagerModifier.GetDamageAgainst(damageeModifier, data);
-    }
-    
-    
-
-    public static float GetEffectiveAttackRatio(Unit attacker,
-        HexGeneralData data)
-    {
-        var atkModel = attacker.UnitModel.Get(data);
-
-        var atkOrgRatio = attacker.CurrentOrganization / atkModel.Organization;
-        var ammoEffect = atkModel.AmmoCap > 0 && attacker.CurrentAmmo == 0f
-            ? .25f
-            : 1f;
-        return atkOrgRatio * ammoEffect;
     }
 }

@@ -14,19 +14,16 @@ public partial class AttackTooltip : Node2D
     public void DrawInfo(Hex hex, Unit unit, Unit targetUnit, 
         HexGeneralData data)
     {
-        var unitModifier = CombatModifier.ConstructVerbose(unit, targetUnit, true, hex, data);
-        var targetModifier = CombatModifier.ConstructVerbose(targetUnit, unit, false, hex, data);
+        var modifier = new CombatModifier(unit, targetUnit, hex, true, data);
 
-        var damageToTarget = unitModifier.GetDamageAgainst(targetModifier, data);
-        var damageToUnit = targetModifier.GetDamageAgainst(unitModifier, data);
-        
-
+        var damageToTarget = modifier.DamageToDefender.Modify(0f);
+        var damageToUnit = modifier.DamageToAttacker.Modify(0f);
 
         var atk = ((Label)FindChild("Attacker"));
         atk.Text = $"Expected Damage Taken: {damageToUnit}";
-        atk.Text += unitModifier.Info();
+        atk.Text += modifier.DamageToAttacker.Print();
         var def = ((Label)FindChild("Defender"));
         def.Text = $"Expected Damage Dealt: {damageToTarget}";
-        def.Text += targetModifier.Info();
+        def.Text += modifier.DamageToDefender.Print();
     }
 }

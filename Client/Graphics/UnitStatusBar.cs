@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using HexGeneral.Game.Components;
 
@@ -9,26 +10,35 @@ public partial class UnitStatusBar : Node2D
     {
         var model = unit.UnitModel.Get(data);
         var hitPointRatio = unit.CurrentHitPoints / model.HitPoints;
-        var ammoRatio = (float)unit.CurrentAmmo / model.AmmoCap;
-        var orgRatio = unit.CurrentOrganization / model.Organization;
     
         var healthIcon = GetNode<MeshInstance2D>("HealthIcon");
         healthIcon.Modulate = ColorsExt.GetHealthColor(hitPointRatio);
+
+        var org = unit.Components.Get<OrganizationComponent>();
+        var orgRatio = org.Organization / model.Organization;
+        var orgIcon = GetNode<MeshInstance2D>("OrgIcon");
+        orgIcon.Modulate = ColorsExt.GetHealthColor(orgRatio);
         
-        var ammoIcon = GetNode<MeshInstance2D>("AmmoIcon");
-        ammoIcon.Modulate = ColorsExt.GetHealthColor(ammoRatio);
+        if (unit.Components.Get<AmmunitionComponent>()
+            is AmmunitionComponent ac)
+        {
+            var ammoRatio = (float)ac.CurrentAmmo / model.AmmoCap;
+            var ammoIcon = GetNode<MeshInstance2D>("AmmoIcon");
+            ammoIcon.Modulate = ColorsExt.GetHealthColor(ammoRatio);
+        }
         
         var moveIcon = GetNode<MeshInstance2D>("MoveIcon");
         moveIcon.Modulate = unit.Components.Get<MoveCountComponent>().CanMove()
             ? Colors.White : Colors.White.Tint(.25f);
         
         var attackIcon = GetNode<MeshInstance2D>("AttackIcon");
-        attackIcon.Modulate = unit.Components.Get<AttackCountComponent>()
-            .CanAttack(unit, data)
-                ? Colors.White : Colors.White.Tint(.25f);
+        var attackBlocked = unit.Components.Components.OfType<IUnitCombatComponent>()
+            .Any(c => c.AttackBlocked(data));
         
-        var orgIcon = GetNode<MeshInstance2D>("OrgIcon");
-        orgIcon.Modulate = ColorsExt.GetHealthColor(orgRatio);
-
+        attackIcon.Modulate = attackBlocked
+            ? Colors.White.Tint(.25f) 
+            : Colors.White;
+        
+        
     }
 }

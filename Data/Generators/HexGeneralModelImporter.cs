@@ -5,6 +5,7 @@ using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Reflection;
 using GodotUtilities.Serialization.Depot;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game.Generators;
 
@@ -19,7 +20,11 @@ public class HexGeneralModelImporter(ModelPredefs predefs)
         var modelTypes = typeof(Model)
             .GetDerivedTypes(types)
             .Distinct();
-        var importer = new DepotImporter(_path, modelTypes, models);
+        var componentTypes = typeof(IModelComponent)
+            .GetConcreteTypesOfType(types)
+            .Distinct();
+        var importer = new DepotImporter(_path, modelTypes, componentTypes,
+            models);
     }
 
 }

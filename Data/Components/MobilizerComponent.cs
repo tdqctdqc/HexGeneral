@@ -38,11 +38,12 @@ public class MobilizerComponent
         key.Data.Data().Notices.UnitAltered?.Invoke(Unit.Get(key.Data));
     }
 
-    public Control GetDisplay(HexGeneralClient client)
+    public Control GetDisplay(GameClient client)
     {
         var vbox = new VBoxContainer();
-        var unit = Unit.Get(client.Data);
-        var model = mobilizer.Get(client.Data);
+        var data = client.Client().Data;
+        var unit = Unit.Get(data);
+        var model = mobilizer.Get(data);
         var texture = new TextureRect();
         texture.Size = Vector2.One * 50f;
         texture.Texture = model.GetTexture();
@@ -70,7 +71,7 @@ public class MobilizerComponent
                 }, client);
                 client.SubmitCommand(com);
             });
-        activate.Disabled = CanActivate(client.Data) == false;
+        activate.Disabled = CanActivate(data) == false;
 
         Button remove;
         remove = vbox.AddButton("Remove",
@@ -91,7 +92,7 @@ public class MobilizerComponent
                 }, client);
                 client.SubmitCommand(com);
             });
-        remove.Disabled = CanActivate(client.Data) == false;
+        remove.Disabled = CanActivate(data) == false;
         
         return vbox;
     }
@@ -123,23 +124,45 @@ public class MobilizerComponent
         key.Data.Data().Notices.UnitAltered?.Invoke(unit);
     }
     
-    public void Modify(CombatModifier modifier, 
+    public void ModifyAsAttacker(CombatModifier modifier, 
         HexGeneralData data)
     {
         if (Active)
         {
             var mob = mobilizer.Get(data);
             var mobilizerTerrainEffect = mob.MoveType
-                .GetDamageMult(modifier.Hex, data,
-                    modifier.OnOffense);
-            modifier.AddDamageTakenMult(mobilizerTerrainEffect, "Mobilizer Terrain Effect");
+                .GetDamageMult(modifier.Hex, data, true);
+            modifier.DamageToAttacker.AddMult(mobilizerTerrainEffect, "Mobilizer Terrain Effect");
             var mobilizerEffect = mob.DamageTakenMult;
-            modifier.AddDamageTakenMult(mobilizerEffect, "Mobilizer Damage Mult Effect");
+            modifier.DamageToAttacker.AddMult(mobilizerEffect, "Mobilizer Damage Mult Effect");
         }
         else
         {
-            Native.Modify(modifier, data);   
+            Native.ModifyAsAttacker(modifier, data);   
         }
+    }
+
+    public void ModifyAsDefender(CombatModifier modifier, 
+        HexGeneralData data)
+    {
+        if (Active)
+        {
+            var mob = mobilizer.Get(data);
+            var mobilizerTerrainEffect = mob.MoveType
+                .GetDamageMult(modifier.Hex, data, false);
+            modifier.DamageToDefender.AddMult(mobilizerTerrainEffect, "Mobilizer Terrain Effect");
+            var mobilizerEffect = mob.DamageTakenMult;
+            modifier.DamageToDefender.AddMult(mobilizerEffect, "Mobilizer Damage Mult Effect");
+        }
+        else
+        {
+            Native.ModifyAsDefender(modifier, data);   
+        }
+    }
+
+    public void AfterCombat(ProcedureKey key)
+    {
+        
     }
 
     public bool CanActivate(HexGeneralData data)

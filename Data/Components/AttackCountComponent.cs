@@ -1,10 +1,12 @@
 using Godot;
+using GodotUtilities.GameClient;
 using GodotUtilities.Logic;
 using HexGeneral.Game.Client;
+using HexGeneral.Game.Logic;
 
 namespace HexGeneral.Game.Components;
 
-public class AttackCountComponent : IEntityComponent
+public class AttackCountComponent : IUnitCombatComponent
 {
     public AttackCountComponent(int attacksTaken, int maxAttacks)
     {
@@ -14,7 +16,7 @@ public class AttackCountComponent : IEntityComponent
 
     public int MaxAttacks { get; private set; }
     public int AttacksTaken { get; private set; }
-    public Control GetDisplay(HexGeneralClient client)
+    public Control GetDisplay(GameClient client)
     {
         var l = new Label();
         l.Text = $"Attacks remaining: {MaxAttacks - AttacksTaken} / {MaxAttacks}";
@@ -41,12 +43,21 @@ public class AttackCountComponent : IEntityComponent
         AttacksTaken++;
     }
 
-    public bool CanAttack(Unit unit, HexGeneralData data)
+    public void ModifyAsAttacker(CombatModifier modifier, HexGeneralData data)
     {
-        if (unit.Components.Get<IMoveComponent>().AttackBlocked(data))
-        {
-            return false;
-        }
+    }
+
+    public void ModifyAsDefender(CombatModifier modifier, HexGeneralData data)
+    {
+    }
+
+    public void AfterCombat(ProcedureKey key)
+    {
+        
+    }
+
+    public bool AttackBlocked(HexGeneralData data)
+    {
         return AttacksTaken < MaxAttacks;
     }
 }

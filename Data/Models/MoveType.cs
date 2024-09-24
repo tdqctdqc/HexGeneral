@@ -18,6 +18,7 @@ public abstract class MoveType : Model
     public Dictionary<RoadModel, float> RoadCosts { get; private set; }
     public TerrainDamageModel AttackTerrainDamageModel { get; private set; }
     public TerrainDamageModel DefendTerrainDamageModel { get; private set; }
+    public Domain Domain { get; private set; }
     public float GetMoveCost(Hex from, Hex to, 
         Regime movingRegime, HexGeneralData data)
     {

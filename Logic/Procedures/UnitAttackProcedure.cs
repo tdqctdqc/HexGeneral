@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
@@ -24,12 +25,22 @@ public class UnitAttackProcedure(ERef<Unit> unit, ERef<Unit> targetUnit, float d
         unit.IncrementHitpoints(-DamageToUnit, key);
         var targetUnit = TargetUnit.Get(key.Data);
         targetUnit.IncrementHitpoints(-DamageToTarget, key);
+
+        var unitOrg = unit.Components.Get<OrganizationComponent>();
+        unitOrg.IncrementOrganization(-DamageToUnitOrg, key);
+        var targetOrg = targetUnit.Components.Get<OrganizationComponent>();
+        targetOrg.IncrementOrganization(-DamageToTargetOrg, key);
         
-        unit.IncrementOrganization(-DamageToUnitOrg, key);
-        targetUnit.IncrementOrganization(-DamageToTargetOrg, key);
         
-        unit.IncrementAmmo(-1, key);
-        targetUnit.IncrementAmmo(-1, key);
+        foreach (var c in unit.Components.Components.OfType<IUnitCombatComponent>())
+        {
+            c.AfterCombat(key);
+        }
+        foreach (var c in targetUnit.Components.Components.OfType<IUnitCombatComponent>())
+        {
+            c.AfterCombat(key);
+        }
+        
         var notices = key.Data.Data().Notices;
         notices.UnitAltered?.Invoke(unit);
         notices.UnitAltered?.Invoke(targetUnit);

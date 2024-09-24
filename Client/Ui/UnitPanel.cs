@@ -64,12 +64,9 @@ public partial class UnitPanel : PanelContainer
         vbox.AddChild(texture);
         vbox.CreateLabelAsChild(model.Name);
         vbox.CreateLabelAsChild($"Hitpoints: {unit.CurrentHitPoints} / {model.HitPoints}");
-        vbox.CreateLabelAsChild($"Organization: {unit.CurrentOrganization} / {model.Organization}");
-        vbox.CreateLabelAsChild($"Ammunition: {unit.CurrentAmmo} / {model.AmmoCap}");
         vbox.AddChild(new VSeparator());
-        var effective = CombatLogic.GetEffectiveAttackRatio(unit, _client.Data);
-        vbox.CreateLabelAsChild($"Soft Attack: {model.SoftAttack * effective} / {model.SoftAttack}");
-        vbox.CreateLabelAsChild($"Hard Attack: {model.HardAttack * effective} / {model.HardAttack}");
+        vbox.CreateLabelAsChild($"Soft Attack: {model.SoftAttack} / {model.SoftAttack}");
+        vbox.CreateLabelAsChild($"Hard Attack: {model.HardAttack} / {model.HardAttack}");
         vbox.CreateLabelAsChild($"Hardness: {model.Hardness}");
         vbox.CreateLabelAsChild($"Range: {model.Range}");
 
@@ -108,23 +105,7 @@ public partial class UnitPanel : PanelContainer
         });
         reinforce.Disabled = unit.CanReinforce() == false;
         
-        var resupply = vbox.AddButton($"Resupply Ammo", () =>
-        {
-            var missingAmount = model.AmmoCap - unit.CurrentAmmo;
-
-            if (missingAmount == 0) return;
-
-            var industrialCap = Mathf.FloorToInt(regime.IndustrialPoints / model.AmmoCost);
-            var cap = Mathf.Min(missingAmount, industrialCap);
-            cap = Mathf.Min(cap, Mathf.FloorToInt(model.AmmoCap * supplyAvailability));
-            if (cap == 0) return;
-            var proc = new UnitRestockAmmoProcedure(unit.MakeRef(), cap);
-            var inner = new DoProcedureCommand(proc);
-            
-            var com = CallbackCommand.Redraw(inner, this, Draw, _client);
-            _client.SubmitCommand(com);
-        });
-        resupply.Disabled = unit.CanRestockAmmo() == false;
+        
 
 
         var mobilize = vbox.AddButton("Mobilize", () =>

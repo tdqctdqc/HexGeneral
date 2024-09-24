@@ -230,6 +230,21 @@
                     "guid": "f28e60ba-c8c3-4a91-80ca-8470138ea9f9",
                     "id": "41",
                     "Name": "AttackType_ArmorAttackType"
+                },
+                {
+                    "guid": "93513478-2d31-48cf-9b78-48ea8637d6ba",
+                    "id": "42",
+                    "Name": "Domain_AirDomain"
+                },
+                {
+                    "guid": "de341933-a5a0-4c8e-a04f-c3fa6fcc481d",
+                    "id": "43",
+                    "Name": "Domain_LandDomain"
+                },
+                {
+                    "guid": "ed6c1bbc-2656-43e7-8614-a100838e4550",
+                    "id": "44",
+                    "Name": "Domain_SeaDomain"
                 }
             ],
             "hidden": false,
@@ -1037,6 +1052,23 @@
                         "sheet": "sheetSelect",
                         "defaultValue": "lineSelect@sheet"
                     }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "5370e330-8861-49c0-995c-745a04695ef1",
+                    "description": "AntiAir",
+                    "name": "AntiAir",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
                 }
             ],
             "lines": [
@@ -1056,7 +1088,8 @@
                     "MovePoints": 10,
                     "MoveType": "061cff56-8c94-44bb-9cdd-2ad8d58e0ce5",
                     "AmmoCost": 0.1,
-                    "AttackType": "5c66c75f-d4c2-4fbe-8a6f-ae5e7f9e2e9e"
+                    "AttackType": "5c66c75f-d4c2-4fbe-8a6f-ae5e7f9e2e9e",
+                    "AntiAir": 0
                 },
                 {
                     "guid": "63ed717a-7d46-46d7-b5fc-5dfc16c288f0",
@@ -1074,7 +1107,8 @@
                     "MovePoints": 10,
                     "MoveType": "8aa468b8-5baa-4ac9-8d77-7e4f3b763383",
                     "AmmoCost": 0.2,
-                    "AttackType": "f28e60ba-c8c3-4a91-80ca-8470138ea9f9"
+                    "AttackType": "f28e60ba-c8c3-4a91-80ca-8470138ea9f9",
+                    "AntiAir": 1
                 }
             ],
             "hidden": false,
@@ -1263,6 +1297,21 @@
                         "sheet": "sheetSelect",
                         "defaultValue": "lineSelect@sheet"
                     }
+                },
+                {
+                    "typeStr": "lineReference",
+                    "guid": "c0e986d2-e7f9-4053-938d-b8dd77b51010",
+                    "name": "Domain",
+                    "description": "Domain",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
                 }
             ],
             "lines": [
@@ -1343,7 +1392,8 @@
                         }
                     ],
                     "AttackTerrainDamageModel": "c4f6cd0a-1113-4595-9e3d-1f235a09469e",
-                    "DefendTerrainDamageModel": "fad22220-4b10-4fa1-ae2f-141cc3e2c0f8"
+                    "DefendTerrainDamageModel": "fad22220-4b10-4fa1-ae2f-141cc3e2c0f8",
+                    "Domain": "de341933-a5a0-4c8e-a04f-c3fa6fcc481d"
                 },
                 {
                     "guid": "1b32c4e6-5550-498d-8f75-ecebb3cc0d8b",
@@ -1422,7 +1472,8 @@
                         }
                     ],
                     "AttackTerrainDamageModel": "a7e12b7d-5d6e-49f5-8051-ca227ab43f68",
-                    "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6"
+                    "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6",
+                    "Domain": "de341933-a5a0-4c8e-a04f-c3fa6fcc481d"
                 },
                 {
                     "guid": "2a5867f6-b910-41db-8677-2f1c2195757d",
@@ -1501,7 +1552,8 @@
                         }
                     ],
                     "AttackTerrainDamageModel": "a7e12b7d-5d6e-49f5-8051-ca227ab43f68",
-                    "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6"
+                    "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6",
+                    "Domain": "de341933-a5a0-4c8e-a04f-c3fa6fcc481d"
                 },
                 {
                     "guid": "1999567e-cb25-4aac-93c5-9a8dd572a600",
@@ -1580,7 +1632,8 @@
                         }
                     ],
                     "AttackTerrainDamageModel": "a7e12b7d-5d6e-49f5-8051-ca227ab43f68",
-                    "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6"
+                    "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6",
+                    "Domain": "de341933-a5a0-4c8e-a04f-c3fa6fcc481d"
                 }
             ],
             "hidden": false,
@@ -2597,6 +2650,61 @@
                     "id": "1",
                     "Model": "f28e60ba-c8c3-4a91-80ca-8470138ea9f9",
                     "NumAttacks": 3
+                }
+            ],
+            "hidden": false,
+            "isProps": false,
+            "configurable": {
+                "name": "text",
+                "description": "text",
+                "displayColumn": "columnSelect@name",
+                "columnSelect@name@displayColumn": {
+                    "allowedTypes": [
+                        "int",
+                        "float",
+                        "text",
+                        "longtext"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Domain",
+            "description": "Domain",
+            "displayColumn": "id",
+            "guid": "0ae6a4e5-4f21-463d-b02a-aaf70bf5a1f8",
+            "columns": [
+                {
+                    "typeStr": "lineReference",
+                    "guid": "1649ed65-b3d2-4c28-8345-589bb5eebe6d",
+                    "name": "Model",
+                    "description": "Model",
+                    "sheet": "60f2d51a-a825-45b8-a9a9-fbf6ee070a03",
+                    "defaultValue": "",
+                    "iconName": "newLineLink",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "sheet": "sheetSelect",
+                        "defaultValue": "lineSelect@sheet"
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "guid": "95f68016-f2e4-4076-87af-1cd983f5b599",
+                    "id": "0",
+                    "Model": "93513478-2d31-48cf-9b78-48ea8637d6ba"
+                },
+                {
+                    "guid": "969a5b6f-611a-49ee-9005-766c403a7967",
+                    "id": "1",
+                    "Model": "de341933-a5a0-4c8e-a04f-c3fa6fcc481d"
+                },
+                {
+                    "guid": "652f85ef-4e2b-46d2-a2ca-d4c73e3eed5a",
+                    "id": "2",
+                    "Model": "ed6c1bbc-2656-43e7-8614-a100838e4550"
                 }
             ],
             "hidden": false,
