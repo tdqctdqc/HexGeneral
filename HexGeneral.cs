@@ -6,7 +6,7 @@ namespace HexGeneral.Game;
 
 public static class HexGeneral
 {
-    public static HexGeneralData Data(this Data data)
+    public static HexGeneralData Data(this GodotUtilities.GameData.Data data)
     {
         return (HexGeneralData)data;
     }

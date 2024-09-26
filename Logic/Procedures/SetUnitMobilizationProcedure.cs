@@ -15,14 +15,14 @@ public class SetUnitMobilizationProcedure(ERef<Unit> unit, bool active) : GodotU
     {
         var unit = Unit.Get(key.Data);
         var mob = unit.Components
-            .Get<MobilizerComponent>();
+            .Get<MobilizerComponent>(key.Data);
         if (Active)
         {
-            mob.MarkActive(key);
+            mob.Activate(key);
         }
         else
         {
-            mob.MarkInactive(key);
+            mob.Deactivate(key);
         }
 
         key.Data.Data().Notices.UnitAltered?.Invoke(unit);

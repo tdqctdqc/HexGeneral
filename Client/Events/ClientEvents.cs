@@ -31,6 +31,7 @@ public class ClientEvents
         data.Notices.UnitAltered.Subscribe(u =>
         {
             Enqueue(new UnitRedrawEvent(u)); 
+            Enqueue(new HexRedrawEvent(u.GetHex(data).MakeRef()));
         });
         data.Notices.UnitDeployed.Subscribe(u =>
         {
@@ -40,6 +41,10 @@ public class ClientEvents
         {
             Enqueue(new ResourcesAlteredEvent(r));
         };
+        data.Notices.HexAltered.Subscribe(h =>
+        {
+            Enqueue(new HexRedrawEvent(h.MakeRef()));
+        });
     }
 
     private void Enqueue(ClientEvent e)

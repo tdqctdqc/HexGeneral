@@ -12,7 +12,7 @@ public class UnitReinforceProcedure(ERef<Unit> unit, float amount) : GodotUtilit
     public override void Handle(ProcedureKey key)
     {
         var unit = Unit.Get(key.Data);
-        if (unit.CanReinforce() == false) return;
+        if (unit.CanReinforce(key.Data.Data()) == false) return;
         var regime = unit.Regime.Get(key.Data);
         var model = unit.UnitModel.Get(key.Data);
         var ratio = Amount / model.HitPoints;

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Godot;
+using GodotUtilities.GameData;
 using GodotUtilities.Graphics;
 using GodotUtilities.Ui;
 using HexGeneral.Client.Ui;
@@ -33,24 +34,26 @@ public class UnitSelectAction(
         }
         
         var hexWorldPos = hex.WorldPos();
-        if (client.Data.MapUnitHolder.HexLandUnits
-                .TryGetValue(hex.MakeRef(), out var hexUnits)
-            && hexUnits.Count > 0)
+        var unitGraphics = client.GetComponent<MapGraphics>()
+            .Units;
+        foreach (var (domain, node) in unitGraphics.DomainNodes)
         {
-            var unitGraphics = client.GetComponent<MapGraphics>()
-                .Units;
-            var offsets = UnitGraphics.GraphicOffsetsByNumUnits[hexUnits.Count - 1];
+            if (node.Visible
+                && client.Data.MapUnitHolder.HexUnitsByDomain[domain.MakeIdRef(client.Data)]
+                    .TryGetValue(hex.MakeRef(), out var hexUnits)
+                && hexUnits.Count > 0)
+            {
+                var offsets = UnitGraphics.GraphicOffsetsByNumUnits[hexUnits.Count - 1];
 
-            var closest = hexUnits
-                .Select((u, i) => (u, i))
-                .MinBy(v => mousePos.DistanceTo(hexWorldPos + offsets[v.i]))
-                .u.Get(client.Data);
-            selectAction(closest);
+                var closest = hexUnits
+                    .Select((u, i) => (u, i))
+                    .MinBy(v => mousePos.DistanceTo(hexWorldPos + offsets[v.i]))
+                    .u.Get(client.Data);
+                selectAction(closest);
+                return;
+            }
         }
-        else
-        {
-            selectAction(null);
-        }
+        selectAction(null);
         
     }
 }

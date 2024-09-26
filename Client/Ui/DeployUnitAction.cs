@@ -4,6 +4,7 @@ using GodotUtilities.Graphics;
 using GodotUtilities.Ui;
 using HexGeneral.Game.Client;
 using HexGeneral.Game.Client.Command;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Client.Ui;
 
@@ -24,12 +25,14 @@ public class DeployUnitAction(MouseButtonMask button,
     {
         var unit = _mode.SelectedUnit.Value;
         if (unit is null) return;
+        var unitDomain = unit.Components.Get<IMoveComponent>(_client.Data)
+            .GetActiveMoveType(_client.Data).Domain;
         var mousePos = _client.GetComponent<CameraController>()
             .GetGlobalMousePosition();
         var regime = _client.GetPlayer()?.Regime.Get(_client.Data);
         if (regime is null) return;
         var hex = MouseOverHandler.FindMouseOverHex(_client);
-        if (hex.Regime != regime || hex.CanDeploy(_client.Data) == false)
+        if (hex.Regime != regime || hex.CanDeploy(unitDomain, _client.Data) == false)
         {
             return;
         }

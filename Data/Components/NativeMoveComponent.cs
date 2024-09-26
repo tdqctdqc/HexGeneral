@@ -13,7 +13,8 @@ using HexGeneral.Logic.Procedure;
 
 namespace HexGeneral.Game.Components;
 
-public class NativeMoveComponent(ERef<Unit> unit) : INativeMoveComponent
+public class NativeMoveComponent(ERef<Unit> unit) 
+    : INativeMoveComponent
 {
     public ERef<Unit> Unit { get; private set; } = unit;
 
@@ -24,7 +25,7 @@ public class NativeMoveComponent(ERef<Unit> unit) : INativeMoveComponent
         var unit = Unit.Get(data);
         var model = unit.UnitModel.Get(data);
         
-        var moveRatio = unit.Components.Get<MoveCountComponent>().MovePointRatioRemaining;
+        var moveRatio = unit.Components.Get<MoveCountComponent>(data).MovePointRatioRemaining;
 
         l.Text = $"Move Points: {model.MovePoints * moveRatio} / {model.MovePoints}";
 
@@ -33,37 +34,26 @@ public class NativeMoveComponent(ERef<Unit> unit) : INativeMoveComponent
 
     public void TurnTick(ProcedureKey key)
     {
-    }
-
-    public void Added(ProcedureKey key)
-    {
         
     }
 
-    public void Removed(ProcedureKey key)
+    public void Added(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
-        
     }
 
-    private void Modify(CombatModifier modifier, bool attacker,
-        HexGeneralData data)
+    public void Removed(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
-        var effect = Unit.Get(data).UnitModel.Get(data)
-            .MoveType
-            .GetDamageMult(modifier.Hex, data,
-                attacker);
-        var mod = attacker ? modifier.DamageToAttacker : modifier.DamageToDefender;
-        
-        mod.AddMult(effect, "Native Move Type Terrain Effect");
     }
     public void ModifyAsAttacker(CombatModifier modifier, HexGeneralData data)
     {
-        Modify(modifier, true, data);
+        Unit.Get(data).UnitModel.Get(data)
+            .MoveType.ModifyAsAttacker(modifier, data);
     }
 
     public void ModifyAsDefender(CombatModifier modifier, HexGeneralData data)
     {
-        Modify(modifier, false, data);
+        Unit.Get(data).UnitModel.Get(data)
+            .MoveType.ModifyAsDefender(modifier, data);
     }
 
     public void AfterCombat(ProcedureKey key)
@@ -73,7 +63,7 @@ public class NativeMoveComponent(ERef<Unit> unit) : INativeMoveComponent
 
     public HashSet<Hex> GetMoveRadius(Unit unit, HexGeneralData data)
     {
-        var moveCount = unit.Components.Get<MoveCountComponent>();
+        var moveCount = unit.Components.Get<MoveCountComponent>(data);
         if (moveCount.CanMove() == false) return new HashSet<Hex>();
         var hex = unit.GetHex(data);
         var model = unit.UnitModel.Get(data);
@@ -124,7 +114,7 @@ public class NativeMoveComponent(ERef<Unit> unit) : INativeMoveComponent
     
     public Command GetMoveCommand(Unit unit, Hex dest, HexGeneralClient client)
     {
-        var moveCountComponent = unit.Components.Get<MoveCountComponent>();
+        var moveCountComponent = unit.Components.Get<MoveCountComponent>(client.Data);
         if (moveCountComponent.CanMove() == false) return null;
         
         var model = unit.UnitModel.Get(client.Data);
@@ -154,9 +144,12 @@ public class NativeMoveComponent(ERef<Unit> unit) : INativeMoveComponent
         return Unit.Get(data).UnitModel.Get(data).MoveType;
     }
 
-    
-
     public bool AttackBlocked(HexGeneralData data)
+    {
+        return false;
+    }
+
+    public bool DefendBlocked(HexGeneralData data)
     {
         return false;
     }

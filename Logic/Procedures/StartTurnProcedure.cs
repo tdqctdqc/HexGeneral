@@ -20,7 +20,10 @@ public class StartTurnProcedure : Procedure
             foreach (var modelIdRef in loc.Buildings)
             {
                 var building = modelIdRef.Get(data);
-                building.Produce(loc, key);
+                if (building is IProductionBuilding prod)
+                {
+                    prod.Produce(loc, key);
+                }
             }
         }
         

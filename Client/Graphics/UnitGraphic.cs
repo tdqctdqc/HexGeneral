@@ -38,7 +38,7 @@ public partial class UnitGraphic : Node2D
         _unitTexture.Mesh = _unitMesh;
 
 
-        if (u.Components.Get<MobilizerComponent>()
+        if (u.Components.Get<MobilizerComponent>(data)
             is { Active: true } m)
         {
             _unitTexture.Texture = m.Mobilizer.Get(data).GetTexture();
@@ -57,7 +57,7 @@ public partial class UnitGraphic : Node2D
 
     public void Update(Unit u, HexGeneralClient client)
     {
-        if (u.Components.Get<MobilizerComponent>()
+        if (u.Components.Get<MobilizerComponent>(client.Data)
             is { Active: true } m)
         {
             _unitTexture.Texture = m.Mobilizer.Get(client.Data).GetTexture();

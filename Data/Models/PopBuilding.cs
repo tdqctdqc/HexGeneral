@@ -2,10 +2,10 @@ using GodotUtilities.Logic;
 
 namespace HexGeneral.Game;
 
-public class PopBuilding : BuildingModel, ISupplyCenter
+public class PopBuilding : BuildingModel, ISupplyCenter, IProductionBuilding
 {
     public float Pop { get; private set; }
-    public override void Produce(Location location, ProcedureKey key)
+    public void Produce(Location location, ProcedureKey key)
     {
         var data = key.Data.Data();
         var hex = data.Map.Hexes[location.Hex.Coords];

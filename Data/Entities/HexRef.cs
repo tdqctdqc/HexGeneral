@@ -8,7 +8,7 @@ public struct HexRef(Vector3I coords) : IRef<Hex>
 {
     public Vector3I Coords { get; private set; } = coords;
 
-    public Hex Get(Data d)
+    public Hex Get(GodotUtilities.GameData.Data d)
     {
         return d.Data().Map.Hexes[Coords];
     }

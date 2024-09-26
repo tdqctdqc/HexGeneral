@@ -41,13 +41,13 @@ public class TurnManager(int id, int roundNumber, List<ERef<Regime>> regimeOrder
     {
         AcceptingOrders = false;
     }
-    public override void Made(Data d)
+    public override void Made(GodotUtilities.GameData.Data d)
     {
         d.SetEntitySingleton<TurnManager>();
     }
 
     
-    public override void CleanUp(Data d)
+    public override void CleanUp(GodotUtilities.GameData.Data d)
     {
         throw new Exception();
     }

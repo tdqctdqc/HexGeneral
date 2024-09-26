@@ -65,10 +65,7 @@ public partial class UnitPanel : PanelContainer
         vbox.CreateLabelAsChild(model.Name);
         vbox.CreateLabelAsChild($"Hitpoints: {unit.CurrentHitPoints} / {model.HitPoints}");
         vbox.AddChild(new VSeparator());
-        vbox.CreateLabelAsChild($"Soft Attack: {model.SoftAttack} / {model.SoftAttack}");
-        vbox.CreateLabelAsChild($"Hard Attack: {model.HardAttack} / {model.HardAttack}");
         vbox.CreateLabelAsChild($"Hardness: {model.Hardness}");
-        vbox.CreateLabelAsChild($"Range: {model.Range}");
 
         var hex = unit.GetHex(_client.Data);
         var supplyAvailability = SupplyLogic.GetSupplyAvailability(hex,
@@ -76,7 +73,7 @@ public partial class UnitPanel : PanelContainer
         vbox.CreateLabelAsChild($"Supply Availability: {supplyAvailability}");
         
         
-        foreach (var unitComponent in unit.Components.Components)
+        foreach (var unitComponent in unit.Components.All(_client.Data))
         {
             vbox.AddChild(unitComponent.GetDisplay(_client));
         }
@@ -103,7 +100,7 @@ public partial class UnitPanel : PanelContainer
                 Draw, _client);
             _client.SubmitCommand(com);
         });
-        reinforce.Disabled = unit.CanReinforce() == false;
+        reinforce.Disabled = unit.CanReinforce(_client.Data) == false;
         
         
 

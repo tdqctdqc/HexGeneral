@@ -1,5 +1,6 @@
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
+using HexGeneral.Data.Components;
 using HexGeneral.Game;
 using HexGeneral.Game.Components;
 
@@ -13,12 +14,13 @@ public class UnitRestockAmmoProcedure(ERef<Unit> unit, int amount) : GodotUtilit
     public override void Handle(ProcedureKey key)
     {
         var unit = Unit.Get(key.Data);
-        var ammo = unit.Components.Get<AmmunitionComponent>();
-        if (ammo.CanRestock(key.Data.Data()) == false) return;
+        var currAmmo = unit.Components.Get<CurrentAmmunitionComponent>(key.Data);
+        if (currAmmo.CanRestock(key.Data.Data()) == false) return;
         var regime = unit.Regime.Get(key.Data);
         var model = unit.UnitModel.Get(key.Data);
-        var industrialCost = model.AmmoCost * Amount;
-        ammo.IncrementAmmo(Amount, key);
+        var parent = model.Components.Get<AmmunitionComponent>();
+        var industrialCost = parent.AmmoCost * Amount;
+        currAmmo.IncrementAmmo(Amount, key);
         regime.IncrementIndustrialPoints(-industrialCost, key);
         key.Data.Data().Notices.UnitAltered?.Invoke(unit);
     }

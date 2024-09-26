@@ -14,12 +14,12 @@ public class Player(int id, ERef<Regime> regime, Guid guid) : Entity(id)
         Regime = regime;
     }
     
-    public override void Made(Data d)
+    public override void Made(GodotUtilities.GameData.Data d)
     {
         ((HexGeneralData)d).PlayerHolder.PlayerByGuid.Add(Guid, this.MakeRef());
     }
 
-    public override void CleanUp(Data d)
+    public override void CleanUp(GodotUtilities.GameData.Data d)
     {
         ((HexGeneralData)d).PlayerHolder.PlayerByGuid.Remove(Guid);
     }

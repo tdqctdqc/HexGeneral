@@ -8,7 +8,7 @@ namespace HexGeneral.Game.Logic;
 
 public class HexGeneralHostLogic : HostLogic
 {
-    public HexGeneralHostLogic(Data data, Guid hostPlayerGuid) : base(data, hostPlayerGuid)
+    public HexGeneralHostLogic(GodotUtilities.GameData.Data data, Guid hostPlayerGuid) : base(data, hostPlayerGuid)
     {
         HostLogicData = new HostLogicData();
         data.Data().Notices.FinishedTurnStartLogic.Subscribe(HandleAi);

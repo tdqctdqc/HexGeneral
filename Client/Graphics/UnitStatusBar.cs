@@ -1,5 +1,6 @@
 using System.Linq;
 using Godot;
+using HexGeneral.Data.Components;
 using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game.Client.Graphics;
@@ -14,26 +15,28 @@ public partial class UnitStatusBar : Node2D
         var healthIcon = GetNode<MeshInstance2D>("HealthIcon");
         healthIcon.Modulate = ColorsExt.GetHealthColor(hitPointRatio);
 
-        var org = unit.Components.Get<OrganizationComponent>();
+        var org = unit.Components.Get<OrganizationComponent>(data);
         var orgRatio = org.Organization / model.Organization;
         var orgIcon = GetNode<MeshInstance2D>("OrgIcon");
         orgIcon.Modulate = ColorsExt.GetHealthColor(orgRatio);
         
-        if (unit.Components.Get<AmmunitionComponent>()
-            is AmmunitionComponent ac)
+        if (unit.Components.Get<CurrentAmmunitionComponent>(data)
+            is CurrentAmmunitionComponent ac)
         {
-            var ammoRatio = (float)ac.CurrentAmmo / model.AmmoCap;
+            var parent = model.Components.Get<AmmunitionComponent>();
+            var ammoRatio = (float)ac.CurrentAmmo / parent.AmmoCap;
             var ammoIcon = GetNode<MeshInstance2D>("AmmoIcon");
             ammoIcon.Modulate = ColorsExt.GetHealthColor(ammoRatio);
         }
         
         var moveIcon = GetNode<MeshInstance2D>("MoveIcon");
-        moveIcon.Modulate = unit.Components.Get<MoveCountComponent>().CanMove()
+        moveIcon.Modulate = unit.Components.Get<MoveCountComponent>(data).CanMove()
             ? Colors.White : Colors.White.Tint(.25f);
         
         var attackIcon = GetNode<MeshInstance2D>("AttackIcon");
-        var attackBlocked = unit.Components.Components.OfType<IUnitCombatComponent>()
-            .Any(c => c.AttackBlocked(data));
+        var attackBlocked = unit.Components
+            .OfType<IUnitCombatComponent>(data)
+                .Any(c => c.AttackBlocked(data));
         
         attackIcon.Modulate = attackBlocked
             ? Colors.White.Tint(.25f) 

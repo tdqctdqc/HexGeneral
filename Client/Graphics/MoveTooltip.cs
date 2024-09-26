@@ -15,8 +15,8 @@ public partial class MoveTooltip : Node2D
 		HexGeneralData data)
 	{
 		var label = ((Label)FindChild("Cost"));
-		var mp = unit.Components.Get<IMoveComponent>().GetMovePoints(data);
-		var ratio = unit.Components.Get<MoveCountComponent>().MovePointRatioRemaining;
+		var mp = unit.Components.Get<IMoveComponent>(data).GetMovePoints(data);
+		var ratio = unit.Components.Get<MoveCountComponent>(data).MovePointRatioRemaining;
 
 		label.Text = $"{cost} / {mp * ratio}";
 		label.Modulate = cost <= mp * ratio ? Colors.Green : Colors.Red;

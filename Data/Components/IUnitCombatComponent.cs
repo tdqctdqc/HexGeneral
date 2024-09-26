@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GodotUtilities.GameData;
 using GodotUtilities.Logic;
 using HexGeneral.Game.Logic;
 
@@ -13,4 +14,5 @@ public interface IUnitCombatComponent : IEntityComponent
 
     void AfterCombat(ProcedureKey key);
     bool AttackBlocked(HexGeneralData data);
+    bool DefendBlocked(HexGeneralData data);
 }

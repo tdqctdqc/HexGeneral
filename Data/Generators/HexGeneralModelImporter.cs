@@ -10,7 +10,7 @@ using HexGeneral.Game.Components;
 namespace HexGeneral.Game.Generators;
 
 public class HexGeneralModelImporter(ModelPredefs predefs) 
-    : ModelImporter("hexGeneralNew.dpo")
+    : ModelImporter("hexGeneral.dpo")
 {
     private ModelPredefs _predefs = predefs;
 

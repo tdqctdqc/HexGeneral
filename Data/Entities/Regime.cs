@@ -14,11 +14,11 @@ public class Regime(int id, ModelIdRef<RegimeModel> regimeModel, float recruits,
     public float Recruits { get; private set; } = recruits;
     public float IndustrialPoints { get; private set; } = industrialPoints;
     
-    public override void Made(Data d)
+    public override void Made(GodotUtilities.GameData.Data d)
     {
     }
 
-    public override void CleanUp(Data d)
+    public override void CleanUp(GodotUtilities.GameData.Data d)
     {
     }
     

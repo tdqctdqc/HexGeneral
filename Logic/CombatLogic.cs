@@ -22,7 +22,7 @@ public static class CombatLogic
         
         var unitHex = unit.GetHex(data);
         var dist = unitHex.Coords.GetHexDistance(targetHex.Coords);
-        if (dist > unitModel.Range) return;
+        // if (dist > unitModel.Range) return;
         
         var targetStartHp = targetUnit.CurrentHitPoints;
         var modifier = new CombatModifier(unit, targetUnit, targetHex,
@@ -54,11 +54,15 @@ public static class CombatLogic
         var regime = unit.Regime;
         if (damage >= startHp / 2f)
         {
-            var unitHex = unit.GetHex(data); 
+            var unitHex = unit.GetHex(data);
+            var domain = unit.Components.Get<IMoveComponent>(data)
+                .GetActiveMoveType(data).Domain;
+            
+            //todo make floodfill from movetype
             var retreat = FloodFill<Hex>.FloodFillToRadiusTilFirst(
                 unitHex, 3,
                 h => h.GetNeighbors(data).Where(n => n.Regime == regime),
-                h => h.Full(data) == false, out _,
+                h => h.Full(domain, data) == false, out _,
                 out var distance);
             if (retreat is null)
             {

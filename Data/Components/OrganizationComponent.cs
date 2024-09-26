@@ -40,14 +40,7 @@ public class OrganizationComponent(ERef<Unit> unit, float organization) : IUnitC
                             && n.Regime != unit.Regime);
             foreach (var h in hostile)
             {
-                if (h.GetUnitRefs(data).Any())
-                {
-                    regenRatio = .15f;
-                }
-                else
-                {
-                    regenRatio = Mathf.Max(regenRatio, .25f);
-                }
+                regenRatio = Mathf.Max(regenRatio, .2f);
             }
         }
         
@@ -56,16 +49,16 @@ public class OrganizationComponent(ERef<Unit> unit, float organization) : IUnitC
 
     }
 
-    public void Added(ProcedureKey key)
+    public void Added(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
         
     }
 
-    public void Removed(ProcedureKey key)
+    public void Removed(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
         
     }
-    
+
     private float GetEffect(HexGeneralData data)
     {
         return Organization / 
@@ -91,6 +84,12 @@ public class OrganizationComponent(ERef<Unit> unit, float organization) : IUnitC
     {
         return Organization == 0f;
     }
+
+    public bool DefendBlocked(HexGeneralData data)
+    {
+        return false;
+    }
+
     public void IncrementOrganization(float amount, ProcedureKey key)
     {
         Organization += amount;

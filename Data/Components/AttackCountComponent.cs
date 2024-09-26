@@ -1,5 +1,7 @@
+using System;
 using Godot;
 using GodotUtilities.GameClient;
+using GodotUtilities.GameData;
 using GodotUtilities.Logic;
 using HexGeneral.Game.Client;
 using HexGeneral.Game.Logic;
@@ -28,14 +30,12 @@ public class AttackCountComponent : IUnitCombatComponent
         AttacksTaken = 0;
     }
 
-    public void Added(ProcedureKey key)
+    public void Added(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
-        
     }
 
-    public void Removed(ProcedureKey key)
+    public void Removed(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
-        
     }
 
     public void SpendAttack(ProcedureKey key)
@@ -58,6 +58,11 @@ public class AttackCountComponent : IUnitCombatComponent
 
     public bool AttackBlocked(HexGeneralData data)
     {
-        return AttacksTaken < MaxAttacks;
+        return AttacksTaken >= MaxAttacks;
+    }
+
+    public bool DefendBlocked(HexGeneralData data)
+    {
+        return false;
     }
 }

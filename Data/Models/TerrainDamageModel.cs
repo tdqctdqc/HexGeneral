@@ -9,7 +9,7 @@ public class TerrainDamageModel : Model
     public Dictionary<Landform, float> LandformDamageMults { get; private set; }
     public Dictionary<Vegetation, float> VegetationDamageMults { get; private set; }
 
-    public float GetMult(Hex hex, Data data)
+    public float GetMult(Hex hex, GodotUtilities.GameData.Data data)
     {
         var lfMod = LandformDamageMults[hex.Landform.Get(data)];
         var vMod = VegetationDamageMults[hex.Vegetation.Get(data)];

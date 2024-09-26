@@ -25,14 +25,23 @@ public class CombatModifier
         Hex = hex;
 
         foreach (var c in Attacker.Components
-                .Components.OfType<IUnitCombatComponent>())
+                     .OfType<IUnitCombatComponent>(data))
         {
             c.ModifyAsAttacker(this, data);
         }
+
+        var defBlocked = false;
         foreach (var c in Defender.Components
-                .Components.OfType<IUnitCombatComponent>())
+                .OfType<IUnitCombatComponent>(data))
         {
             c.ModifyAsDefender(this, data);
+            defBlocked = defBlocked || c.DefendBlocked(data);
+        }
+
+        if (defBlocked)
+        {
+            DamageToAttacker.AddConst(-DamageToAttacker.Const,
+                "defense blocked");
         }
     }
 }

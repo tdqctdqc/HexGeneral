@@ -27,4 +27,6 @@ public class DataNotices
         = new RefAction<Unit>();
     
     public Action<Regime> ResourcesAltered { get; set; }
+    public RefAction<Hex> HexAltered { get; private set; }
+        = new RefAction<Hex>();
 }

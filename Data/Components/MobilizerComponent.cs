@@ -25,17 +25,37 @@ public class MobilizerComponent
     public INativeMoveComponent Native { get; private set; } = native;
     public bool Active { get; private set; } = active;
     
-
-    public void MarkActive(ProcedureKey key)
+    
+    public void Activate(ProcedureKey key)
     {
+        if (CanToggle(key.Data.Data()) == false) return;
+        if (Active) return;
+        var data = key.Data.Data();
         Active = true;
-        key.Data.Data().Notices.UnitAltered?.Invoke(Unit.Get(key.Data));
+        key.Data.Data().Notices.UnitAltered?.Invoke(Unit.Get(data));
     }
 
-    public void MarkInactive(ProcedureKey key)
+    public void Deactivate(ProcedureKey key)
     {
+        if (Active == false) return;
+        if (CanToggle(key.Data.Data()) == false) return;
         Active = false;
-        key.Data.Data().Notices.UnitAltered?.Invoke(Unit.Get(key.Data));
+        key.Data.Data().Notices.UnitAltered?
+            .Invoke(Unit.Get(key.Data));
+    }
+
+    private void SwitchDomainIfNeeded(HexGeneralData data)
+    {
+        var (nativeDomain, mobDomain)
+            = (Native
+                    .GetActiveMoveType(data).Domain, 
+                Mobilizer.Get(data).MoveType.Domain);
+        if (nativeDomain == mobDomain) return;
+        var (togglingToDomain, togglingFromDomain) = Active 
+            ? (nativeDomain, mobDomain)
+            : (mobDomain, nativeDomain);
+        data.MapUnitHolder.SwitchUnitDomain(Unit.Get(data),
+            togglingToDomain, data);
     }
 
     public Control GetDisplay(GameClient client)
@@ -48,7 +68,7 @@ public class MobilizerComponent
         texture.Size = Vector2.One * 50f;
         texture.Texture = model.GetTexture();
         texture.StretchMode = TextureRect.StretchModeEnum.Keep;
-        var moveRatio = unit.Components.Get<MoveCountComponent>().MovePointRatioRemaining;
+        var moveRatio = unit.Components.Get<MoveCountComponent>(data).MovePointRatioRemaining;
         vbox.AddChild(texture);
         vbox.CreateLabelAsChild("Mobilizer: " + model.Name);
         vbox.CreateLabelAsChild($"Move Points: {model.MovePoints * moveRatio} / {model.MovePoints}");
@@ -67,11 +87,12 @@ public class MobilizerComponent
                     if (GodotObject.IsInstanceValid(activate))
                     {
                         activate.Text = newValue ? "Deactivate" : "Activate";
+                        activate.Disabled = CanToggle(data) == false;
                     }
                 }, client);
                 client.SubmitCommand(com);
             });
-        activate.Disabled = CanActivate(data) == false;
+        activate.Disabled = CanToggle(data) == false;
 
         Button remove;
         remove = vbox.AddButton("Remove",
@@ -92,7 +113,7 @@ public class MobilizerComponent
                 }, client);
                 client.SubmitCommand(com);
             });
-        remove.Disabled = CanActivate(data) == false;
+        remove.Disabled = CanToggle(data) == false;
         
         return vbox;
     }
@@ -101,27 +122,27 @@ public class MobilizerComponent
     {
         if (Mobilizer.Get(key.Data).CanAttack == false)
         {
-            MarkInactive(key);
+            Deactivate(key);
         }
     }
 
-    public void Added(ProcedureKey key)
+    public void Added(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
-        var unit = Unit.Get(key.Data);
-        if (CanAdd(unit, key.Data.Data()) == false)
+        var unit = Unit.Get(data);
+        if (CanAdd(unit, data.Data()) == false)
         {
             throw new Exception();
         }
-        Native = unit.Components.Get<INativeMoveComponent>();
-        unit.Components.Remove(Native, key);
-        key.Data.Data().Notices.UnitAltered?.Invoke(unit);
+        Native = unit.Components.Get<INativeMoveComponent>(data);
+        holder.Remove(Native, data);
+        data.Data().Notices.UnitAltered?.Invoke(unit);
     }
 
-    public void Removed(ProcedureKey key)
+    public void Removed(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
-        var unit = Unit.Get(key.Data);
-        unit.Components.Add(Native, key);
-        key.Data.Data().Notices.UnitAltered?.Invoke(unit);
+        var unit = Unit.Get(data);
+        unit.Components.Add(Native, data);
+        data.Data().Notices.UnitAltered?.Invoke(unit);
     }
     
     public void ModifyAsAttacker(CombatModifier modifier, 
@@ -129,12 +150,7 @@ public class MobilizerComponent
     {
         if (Active)
         {
-            var mob = mobilizer.Get(data);
-            var mobilizerTerrainEffect = mob.MoveType
-                .GetDamageMult(modifier.Hex, data, true);
-            modifier.DamageToAttacker.AddMult(mobilizerTerrainEffect, "Mobilizer Terrain Effect");
-            var mobilizerEffect = mob.DamageTakenMult;
-            modifier.DamageToAttacker.AddMult(mobilizerEffect, "Mobilizer Damage Mult Effect");
+            Mobilizer.Get(data).ModifyAsAttacker(modifier, data);
         }
         else
         {
@@ -147,12 +163,7 @@ public class MobilizerComponent
     {
         if (Active)
         {
-            var mob = mobilizer.Get(data);
-            var mobilizerTerrainEffect = mob.MoveType
-                .GetDamageMult(modifier.Hex, data, false);
-            modifier.DamageToDefender.AddMult(mobilizerTerrainEffect, "Mobilizer Terrain Effect");
-            var mobilizerEffect = mob.DamageTakenMult;
-            modifier.DamageToDefender.AddMult(mobilizerEffect, "Mobilizer Damage Mult Effect");
+            Mobilizer.Get(data).ModifyAsDefender(modifier, data);
         }
         else
         {
@@ -165,46 +176,55 @@ public class MobilizerComponent
         
     }
 
-    public bool CanActivate(HexGeneralData data)
+    public bool CanToggle(HexGeneralData data)
     {
+        var (nativeDomain, mobDomain)
+            = (Native
+                .GetActiveMoveType(data).Domain, 
+                Mobilizer.Get(data).MoveType.Domain);
+        var (togglingToDomain, togglingFromDomain) = Active 
+            ? (nativeDomain, mobDomain)
+            : (mobDomain, nativeDomain);
         var unit = Unit.Get(data);
-        return unit.Components.Get<MoveCountComponent>().CanMove() 
-               && unit.Components.Get<AttackCountComponent>()
+        var hex = unit.GetHex(data);
+
+        if (togglingFromDomain != togglingToDomain)
+        {
+            if (hex.Full(togglingToDomain, data)) return false;
+        }
+        
+        return unit.Components.Get<MoveCountComponent>(data).CanMove() 
+               && unit.Components.Get<AttackCountComponent>(data)
                     .AttacksTaken == 0;
     }
 
     public HashSet<Hex> GetMoveRadius(Unit unit, HexGeneralData data)
     {        
-        var moveCount = unit.Components.Get<MoveCountComponent>();
+        var moveCount = unit.Components.Get<MoveCountComponent>(data);
         if (moveCount.CanMove() == false) return new HashSet<Hex>();
         var ratio = moveCount.MovePointRatioRemaining;
         var hex = unit.GetHex(data);
         var model = unit.UnitModel.Get(data);
         var regime = unit.Regime.Get(data);
-        var selfRadius = Mobilizer.Get(data).MoveType
-            .GetMoveRadius(hex, regime, model.MovePoints * ratio,
-                data);
         if (Active)
         {
-            return selfRadius;
+            return Mobilizer.Get(data).MoveType
+                .GetMoveRadius(hex, regime, model.MovePoints * ratio,
+                    data);
         }
-        var nativeRadius = Native.GetMoveRadius(unit, data);
-
-        if(CanActivate(data))
-        {
-            return selfRadius.Union(nativeRadius).ToHashSet();
-        }
-
-        return nativeRadius;
+        return Native.GetMoveRadius(unit, data);
     }
 
     public void DrawRadius(Unit unit, 
         MapOverlayDrawer mesh, HexGeneralData data)
     {
         var radius = GetMoveRadius(unit, data);
+        var nativeRadius = Native.GetMoveRadius(unit, data);
+
         var hexTris = HexExt.UnitHexTris;
         if (Active)
         {
+            nativeRadius.ExceptWith(radius);
             mesh.Draw(mb =>
             {
                 foreach (var h in radius)
@@ -215,10 +235,19 @@ public class MobilizerComponent
                 }
 
             }, Vector2.Zero);
+            mesh.Draw(mb =>
+            {
+                foreach (var h in nativeRadius)
+                {
+                    mb.AddTris(hexTris
+                            .Select(p => p + h.WorldPos()), 
+                        Colors.Red.Tint(.5f));
+                }
+
+            }, Vector2.Zero);
         }
         else
         {
-            var nativeRadius = Native.GetMoveRadius(unit, data);
             radius.ExceptWith(nativeRadius);
             mesh.Draw(mb =>
             {
@@ -274,7 +303,7 @@ public class MobilizerComponent
     public Command GetMoveCommand(Unit unit, Hex dest, 
         HexGeneralClient client)
     {
-        var moveCount = unit.Components.Get<MoveCountComponent>();
+        var moveCount = unit.Components.Get<MoveCountComponent>(client.Data);
         if (moveCount.CanMove() == false) return null;
         if (Active == false)
         {
@@ -315,14 +344,19 @@ public class MobilizerComponent
 
         return Native.GetActiveMoveType(data);
     }
-
+    
     public bool AttackBlocked(HexGeneralData data)
     {
         return Active && Mobilizer.Get(data).CanAttack == false;
     }
 
+    public bool DefendBlocked(HexGeneralData data)
+    {
+        return Active && Mobilizer.Get(data).CanDefend == false;
+    }
+
     public static bool CanAdd(Unit u, HexGeneralData data)
     {
-        return u.Components.Get<MoveCountComponent>().HasMoved() == false;
+        return u.Components.Get<MoveCountComponent>(data).HasMoved() == false;
     }
 }

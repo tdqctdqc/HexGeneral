@@ -7,7 +7,7 @@ using GodotUtilities.Serialization;
 
 namespace HexGeneral.Game;
 
-public class HexGeneralData : Data
+public class HexGeneralData : GodotUtilities.GameData.Data
 {
     public ModelPredefs ModelPredefs { get; private set; } 
     public Map Map => (Map)Singletons[typeof(Map)];

@@ -3,6 +3,7 @@ using System.Linq;
 using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
+using HexGeneral.Data.Components;
 using HexGeneral.Game.Components;
 using MessagePack;
 
@@ -20,28 +21,27 @@ public class Unit : Entity, IComponentedEntity
     {
         var id = data.IdDispenser.TakeId();
         var uRef = new ERef<Unit>(id);
-        
         var moveComp = model.MoveType
             .MakeNativeMoveComponent(uRef);
         var org = new OrganizationComponent(uRef, model.Organization);
         var attacksCount = new AttackCountComponent(0, 
-            model.AttackType.NumAttacks);
+            1);
         var movesTaken = new MoveCountComponent(0, 
             1, 1f);
-        var ammoComp = new AmmunitionComponent(uRef, model.AmmoCap, false);
         
-        var compHolder = new EntityComponentHolder(
+        var u = new Unit(id,
+            regime.MakeRef(), model.HitPoints, 
+            model.MakeIdRef(data), false,
+            EntityComponentHolder.Construct());
+        
+        u.Components.Initialize(u,
             new List<IEntityComponent> { 
                 moveComp, 
                 movesTaken, 
                 attacksCount,
-                org,
-                ammoComp
-            });
-        var u = new Unit(id,
-            regime.MakeRef(), model.HitPoints, 
-            model.MakeIdRef(data), false,
-            compHolder);
+                org
+            }, data, model);
+        
         return u;
     }
     [SerializationConstructor] private Unit(int id, ERef<Regime> regime, float currentHitPoints,
@@ -58,14 +58,14 @@ public class Unit : Entity, IComponentedEntity
 
     
 
-    public override void Made(Data d)
+    public override void Made(GodotUtilities.GameData.Data d)
     {
         
     }
 
-    public override void CleanUp(Data d)
+    public override void CleanUp(GodotUtilities.GameData.Data d)
     {
-        d.Data().MapUnitHolder.Remove(this);
+        d.Data().MapUnitHolder.Remove(this, d.Data());
     }
 
     public void Reinforce(float amount, ProcedureKey key)
@@ -79,8 +79,6 @@ public class Unit : Entity, IComponentedEntity
         CurrentHitPoints += amount;
         CurrentHitPoints = Mathf.Clamp(CurrentHitPoints, 0f, UnitModel.Get(key.Data).HitPoints);
     }
-
-    
     
     public void RefreshForTurn(ProcedureKey key)
     {
@@ -103,10 +101,9 @@ public class Unit : Entity, IComponentedEntity
         return data.MapUnitHolder.UnitPositions.ContainsKey(this.MakeRef());
     }
 
-    public bool CanReinforce()
+    public bool CanReinforce(HexGeneralData data)
     {
-        return Components.Get<MoveCountComponent>().HasMoved() == false 
+        return Components.Get<MoveCountComponent>(data).HasMoved() == false 
                && Reinforced == false;
     }
-    
 }

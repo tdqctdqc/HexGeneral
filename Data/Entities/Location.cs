@@ -10,12 +10,12 @@ public class Location(int id, HexRef hex, List<ModelIdRef<BuildingModel>> buildi
     public HexRef Hex { get; private set; } = hex;
     public List<ModelIdRef<BuildingModel>> Buildings { get; private set; } = buildings;
 
-    public override void Made(Data d)
+    public override void Made(GodotUtilities.GameData.Data d)
     {
         d.GetSingleton<LocationHolder>().Locations.Add(hex, this.MakeRef());
     }
 
-    public override void CleanUp(Data d)
+    public override void CleanUp(GodotUtilities.GameData.Data d)
     {
         throw new System.Exception();
     }

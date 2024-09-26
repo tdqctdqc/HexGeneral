@@ -33,13 +33,14 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
         Vegetation = v;
     }
 
-    public void SetRegime(ERef<Regime> regime)
+    public void SetRegimeGen(ERef<Regime> regime)
     {
         Regime = regime;
     }
     public void SetRegime(ERef<Regime> regime, ProcedureKey key)
     {
         Regime = regime;
+        key.Data.Data().Notices.HexAltered.Invoke(this);
     }
 
     private Hex[] _neighbors;
@@ -118,15 +119,17 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
         return false;
     }
     
-    public bool Full(HexGeneralData data)
+    public bool Full(Domain domain, HexGeneralData data)
     {
-        return data.MapUnitHolder.HexLandUnits.TryGetValue(MakeRef(), out var units)
-               && units.Count == MapUnitHolder.MaxLandUnitsPerHex;
+        return data.MapUnitHolder
+                   .HexUnitsByDomain[domain.MakeIdRef(data)]
+                   .TryGetValue(MakeRef(), out var units)
+                        && units.Count == MapUnitHolder.MaxUnitsPerHex;
     }
 
-    public bool CanDeploy(HexGeneralData data)
+    public bool CanDeploy(Domain domain, HexGeneralData data)
     {
-        if (Full(data)) return false;
+        if (Full(domain, data)) return false;
         if(
         TryGetLocation(data, out var loc) == false
             || loc.Buildings
@@ -139,9 +142,10 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
         return true;
     }
 
-    public IEnumerable<ERef<Unit>> GetUnitRefs(HexGeneralData data)
+    public IEnumerable<ERef<Unit>> GetUnitRefs(
+        Domain domain, HexGeneralData data)
     {
-        return data.MapUnitHolder.HexLandUnits
+        return data.MapUnitHolder.HexUnitsByDomain[domain.MakeIdRef(data)]
             .TryGetValue(MakeRef(), out var units)
             ? units
             : ImmutableArray<ERef<Unit>>.Empty;

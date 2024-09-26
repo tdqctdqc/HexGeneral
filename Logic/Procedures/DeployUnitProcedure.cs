@@ -12,9 +12,10 @@ public class DeployUnitProcedure(ERef<Unit> unit, HexRef hex) : GodotUtilities.S
 
     public override void Handle(ProcedureKey key)
     {
-        var unit = Unit.Get(key.Data);
-        key.Data.Data().MapUnitHolder
-            .DeployUnit(Unit.Get(key.Data), Hex.Get(key.Data));
-        key.Data.Data().Notices.UnitDeployed.Invoke(unit);
+        var data = key.Data.Data();
+        var unit = Unit.Get(data);
+        data.MapUnitHolder
+            .DeployUnit(Unit.Get(data), Hex.Get(data), data);
+        data.Notices.UnitDeployed.Invoke(unit);
     }
 }

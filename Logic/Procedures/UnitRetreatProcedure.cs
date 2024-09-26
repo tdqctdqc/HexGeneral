@@ -21,7 +21,7 @@ public class UnitRetreatProcedure(HexRef from, HexRef to,
         key.Data.Data().MapUnitHolder.SetUnitPosition(unit,
             To, key);
         var model = unit.UnitModel.Get(data);
-        unit.Components.Get<OrganizationComponent>()
+        unit.Components.Get<OrganizationComponent>(key.Data)
             .IncrementOrganization(-model.Organization * RetreatDistance / 10f, key);
         data.Notices.UnitRetreated?.Invoke(this);
         data.Notices.UnitAltered?.Invoke(unit);

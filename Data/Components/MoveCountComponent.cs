@@ -1,11 +1,13 @@
 using Godot;
 using GodotUtilities.GameClient;
+using GodotUtilities.GameData;
 using GodotUtilities.Logic;
 using HexGeneral.Game.Client;
 
 namespace HexGeneral.Game.Components;
 
-public class MoveCountComponent(int movesTaken, int maxMoves, float movePointRatioRemaining) : IEntityComponent
+public class MoveCountComponent(int movesTaken, int maxMoves, float movePointRatioRemaining) 
+    : IEntityComponent
 {
     public float MovePointRatioRemaining { get; private set; } = movePointRatioRemaining;
     public int MovesTaken { get; private set; } = movesTaken;
@@ -24,14 +26,16 @@ public class MoveCountComponent(int movesTaken, int maxMoves, float movePointRat
         MovesTaken = 0;
     }
 
-    public void Added(ProcedureKey key)
-    {
-    }
-
-    public void Removed(ProcedureKey key)
+    public void Added(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
         
     }
+
+    public void Removed(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
+    {
+        
+    }
+
 
     public void SpendMove(float ratioSpent, ProcedureKey key)
     {

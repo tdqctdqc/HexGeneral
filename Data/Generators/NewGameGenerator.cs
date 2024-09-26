@@ -15,7 +15,7 @@ public static class NewGameGenerator
         var gameSettings = new GameSettings();
         var data = new HexGeneralData(gameSettings, generationSettings);
         
-        Data.SetupForHost(data, 
+        GodotUtilities.GameData.Data.SetupForHost(data, 
             new HexGeneralModelImporter(data.ModelPredefs));
         var playerHolder = new PlayerHolder(data.IdDispenser.TakeId(), new Dictionary<Guid, ERef<Player>>());
         data.Entities.AddEntity(playerHolder, data);

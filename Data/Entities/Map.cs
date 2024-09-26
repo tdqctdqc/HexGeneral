@@ -11,7 +11,7 @@ public class Map : Entity
     public Dictionary<Vector3I, Hex> Hexes { get; private set; }
     public Dictionary<int, Vector3I> CoordsById { get; private set; }
     public Vector2I GridBounds { get; private set; }
-    public static Map Create(Vector2I gridBounds, Data d)
+    public static Map Create(Vector2I gridBounds, GodotUtilities.GameData.Data d)
     {
         var map = new Map(d.IdDispenser.TakeId(),
             new Dictionary<Vector3I, Hex>(),
@@ -35,12 +35,12 @@ public class Map : Entity
         GridBounds = gridBounds;
     }
     
-    public override void Made(Data d)
+    public override void Made(GodotUtilities.GameData.Data d)
     {
         d.SetEntitySingleton<Map>();
     }
 
-    public override void CleanUp(Data d)
+    public override void CleanUp(GodotUtilities.GameData.Data d)
     {
         throw new Exception();
     }

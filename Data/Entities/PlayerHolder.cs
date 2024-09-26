@@ -13,12 +13,12 @@ public class PlayerHolder : Entity
         PlayerByGuid = playerByGuid;
     }
 
-    public override void Made(Data d)
+    public override void Made(GodotUtilities.GameData.Data d)
     {
         d.SetEntitySingleton<PlayerHolder>();
     }
 
-    public override void CleanUp(Data d)
+    public override void CleanUp(GodotUtilities.GameData.Data d)
     {
         throw new System.Exception();
     }

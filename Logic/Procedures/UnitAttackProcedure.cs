@@ -20,23 +20,23 @@ public class UnitAttackProcedure(ERef<Unit> unit, ERef<Unit> targetUnit, float d
     public override void Handle(ProcedureKey key)
     {
         var unit = Unit.Get(key.Data);
-        unit.Components.Get<AttackCountComponent>()
+        unit.Components.Get<AttackCountComponent>(key.Data)
             .SpendAttack(key);
         unit.IncrementHitpoints(-DamageToUnit, key);
         var targetUnit = TargetUnit.Get(key.Data);
         targetUnit.IncrementHitpoints(-DamageToTarget, key);
 
-        var unitOrg = unit.Components.Get<OrganizationComponent>();
+        var unitOrg = unit.Components.Get<OrganizationComponent>(key.Data);
         unitOrg.IncrementOrganization(-DamageToUnitOrg, key);
-        var targetOrg = targetUnit.Components.Get<OrganizationComponent>();
+        var targetOrg = targetUnit.Components.Get<OrganizationComponent>(key.Data);
         targetOrg.IncrementOrganization(-DamageToTargetOrg, key);
         
         
-        foreach (var c in unit.Components.Components.OfType<IUnitCombatComponent>())
+        foreach (var c in unit.Components.OfType<IUnitCombatComponent>(key.Data))
         {
             c.AfterCombat(key);
         }
-        foreach (var c in targetUnit.Components.Components.OfType<IUnitCombatComponent>())
+        foreach (var c in targetUnit.Components.OfType<IUnitCombatComponent>(key.Data))
         {
             c.AfterCombat(key);
         }

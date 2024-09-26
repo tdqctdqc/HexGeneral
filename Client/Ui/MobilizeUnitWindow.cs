@@ -97,7 +97,7 @@ public partial class MobilizeUnitWindow(Unit unit,
         });
 
         var existingMob = unit.Components
-            .Get<MobilizerComponent>()?.Mobilizer.Get(client.Data);
+            .Get<MobilizerComponent>(client.Data)?.Mobilizer.Get(client.Data);
         b.Disabled = canBuild == false || model == existingMob;
     }
 }

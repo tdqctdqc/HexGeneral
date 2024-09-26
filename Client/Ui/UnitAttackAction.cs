@@ -38,7 +38,7 @@ public class UnitAttackAction : MouseAction
         _radiusOverlay.Clear();
         _pathOverlay.Clear();
         if (unit is null 
-            || unit.Components.Components.OfType<IUnitCombatComponent>()
+            || unit.Components.OfType<IUnitCombatComponent>(_client.Data)
                 .Any(c => c.AttackBlocked(_client.Data)))
         {
             return;
@@ -49,39 +49,58 @@ public class UnitAttackAction : MouseAction
         
     }
 
+    private bool Valid()
+    {
+        var unit = _selectedUnit.Value;
+        if (unit is null)
+        {
+            return false;
+        }
+
+        var targetHex = MouseOverHandler.FindMouseOverHex(_client);
+        if (targetHex is null) return false;
+        var pos = _client.GetComponent<CameraController>().GetGlobalMousePosition();
+        var unitGraphics = _client.GetComponent<MapGraphics>()
+            .Units;
+        var targetUnit = unitGraphics.GetClosestUnitInHex(targetHex, 
+            pos, _client);
+        if (targetUnit is null) return false;
+        if (targetUnit.Regime == unit.Regime) return false;
+
+        if (unit.Components.OfType<AttackComponent>(_client.Data)
+                .Any(a => a.CanAttack(targetUnit, targetHex, _client.Data))
+            == false)
+        {
+            return false;
+        }
+        
+        if(unit.Components.OfType<IUnitCombatComponent>(_client.Data)
+               .FirstOrDefault(c => c.AttackBlocked(_client.Data))
+           is IUnitCombatComponent cc)
+        {
+            // GD.Print("blocked by " + cc.GetType().Name);
+            return false;
+        }
+
+
+
+        return true;
+    }
     protected override void MouseHeld(InputEventMouse m)
     {
         _pathOverlay.Clear();
 
+        if (Valid() == false) return;
+        
         var unit = _selectedUnit.Value;
-        if (unit is null)
-        {
-            return;
-        }
-
-        var hex = MouseOverHandler.FindMouseOverHex(_client);
-        if (hex is null) return;
-        
-        var attackType = unit.UnitModel.Get(_client.Data).AttackType;
-        
-        if (attackType.CanAttack(unit, hex, _client.Data) == false)
-        {
-            return;
-        }
-        
-        if(unit.Components.Components.OfType<IUnitCombatComponent>()
-            .Any(c => c.AttackBlocked(_client.Data)))
-        {
-            return;
-        }
-        
+        var targetHex = MouseOverHandler.FindMouseOverHex(_client);
         var pos = _client.GetComponent<CameraController>().GetGlobalMousePosition();
-
-        var targetUnit = UnitGraphics.GetClosestUnitInHex(hex, pos, _client);
-        if (targetUnit is null) return;
+        var unitGraphics = _client.GetComponent<MapGraphics>()
+            .Units;
         
+        var targetUnit = unitGraphics.GetClosestUnitInHex(targetHex, 
+            pos, _client);
         var unitHex = unit.GetHex(_client.Data);
-        var targetHex = targetUnit.GetHex(_client.Data);
 
         _pathOverlay.Draw(mb =>
         {
@@ -96,35 +115,18 @@ public class UnitAttackAction : MouseAction
     protected override void MouseUp(InputEventMouse m)
     {
         _pathOverlay.Clear();
+
+        if (Valid() == false) return;
+        
         var unit = _selectedUnit.Value;
-        if (unit is null)
-        {
-            return;
-        }
-
-        if(unit.Components.Components.OfType<IUnitCombatComponent>()
-           .Any(c => c.AttackBlocked(_client.Data)))
-        {
-            return;
-        }
-        var mouseHex = MouseOverHandler.FindMouseOverHex(_client);
-        if (mouseHex is null)
-        {
-            return;
-        }
+        var targetHex = MouseOverHandler.FindMouseOverHex(_client);
         var pos = _client.GetComponent<CameraController>().GetGlobalMousePosition();
-
-        var targetUnit = UnitGraphics.GetClosestUnitInHex(mouseHex, pos, _client);
-        if (targetUnit is null) return;
-        
-        var attackType = unit.UnitModel.Get(_client.Data)
-            .AttackType;
-        if (attackType.CanAttack(unit, mouseHex, _client.Data) == false)
-        {
-            return;
-        }
-        
-        var inner = new UnitAttackCommand(unit.MakeRef(), targetUnit.MakeRef());
+        var unitGraphics = _client.GetComponent<MapGraphics>()
+            .Units;
+        var targetUnit = unitGraphics.GetClosestUnitInHex(targetHex, 
+            pos, _client);
+        var inner = new UnitAttackCommand(unit.MakeRef(), 
+            targetUnit.MakeRef());
         _radiusOverlay.Clear();
         var com = CallbackCommand.Construct(inner,
             () => DrawForSelectedUnit(unit), _client);

@@ -35,11 +35,11 @@ public class UnitMoveAction : MouseAction
         _radiusOverlay.Clear();
         _pathOverlay.Clear();
         if (unit is null 
-            || unit.Components.Get<MoveCountComponent>().CanMove() == false)
+            || unit.Components.Get<MoveCountComponent>(_client.Data).CanMove() == false)
         {
             return;
         }
-        var comp = unit.Components.Get<IMoveComponent>();
+        var comp = unit.Components.Get<IMoveComponent>(_client.Data);
         comp.DrawRadius(unit, _radiusOverlay, _client.Data);
     }
     protected override void MouseDown(InputEventMouse m)
@@ -60,7 +60,7 @@ public class UnitMoveAction : MouseAction
         var hex = MouseOverHandler.FindMouseOverHex(_client);
         if (hex is null) return;
 
-        var comp = u.Components.Get<IMoveComponent>();
+        var comp = u.Components.Get<IMoveComponent>(_client.Data);
         comp.DrawPath(u, hex, _pathOverlay, _client.Data);
     }
 
@@ -74,8 +74,8 @@ public class UnitMoveAction : MouseAction
             return;
         }
 
-        var moveComp = unit.Components.Get<IMoveComponent>();
-        var moveCountComp = unit.Components.Get<MoveCountComponent>();
+        var moveComp = unit.Components.Get<IMoveComponent>(_client.Data);
+        var moveCountComp = unit.Components.Get<MoveCountComponent>(_client.Data);
 
         if (moveCountComp.CanMove() == false)
         {

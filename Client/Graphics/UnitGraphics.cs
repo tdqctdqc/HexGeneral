@@ -5,18 +5,28 @@ using GodotUtilities.DataStructures.Hex;
 using GodotUtilities.GameData;
 using GodotUtilities.Graphics;
 using HexGeneral.Client.Ui;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game.Client.Graphics;
 
 public partial class UnitGraphics : Node2D
 {
     public Dictionary<ERef<Unit>, UnitGraphic> Graphics { get; private set; }
+    public Dictionary<Domain, Node2D> DomainNodes { get; private set; }
     public static Vector2[][] GraphicOffsetsByNumUnits { get; private set; } = new Vector2[][] { new[] { Vector2.Zero }, new[] { Vector2.Left / 2f, Vector2.Right / 2f }, new[] { Vector2.Up * HexExt.HexHeight / 2f, Vector2.Up.Rotated(2f * Mathf.Pi / 3f)  * HexExt.HexHeight / 2f, Vector2.Up.Rotated(4f * Mathf.Pi / 3f)  * HexExt.HexHeight / 2f, }, };
     public UnitGraphics(HexGeneralClient client)
     {
         ZIndex = (int)GraphicsLayers.Units;
         ZAsRelative = false;
         Graphics = new Dictionary<ERef<Unit>, UnitGraphic>();
+        DomainNodes = new Dictionary<Domain, Node2D>();
+        foreach (var domain in client.Data.Models.GetModels<Domain>())
+        {
+            var n = new Node2D();
+            AddChild(n);
+            DomainNodes.Add(domain, n);
+        }
+        
         Update(client);
 
         var unitMode = client.UiController.ModeOption.Options.OfType<UnitMode>().First();
@@ -40,8 +50,6 @@ public partial class UnitGraphics : Node2D
                 graphic.SetHighlight(false);
             }
         };
-        
-        
     }
     
     public void Update(HexGeneralClient client)
@@ -61,13 +69,17 @@ public partial class UnitGraphics : Node2D
         {
             var unit = eRef.Get(client.Data);
             var graphic = new UnitGraphic(unit, client.Data);
-            AddChild(graphic);
+            var domain = unit.Components.Get<IMoveComponent>(client.Data)
+                .GetActiveMoveType(client.Data).Domain;
+            DomainNodes[domain].AddChild(graphic);
             Graphics.Add(eRef, graphic);
         }
-        
-        foreach (var (r, hexUnits) in holder.HexLandUnits)
+        foreach (var (key, value) in holder.HexUnitsByDomain)
         {
-            DrawHex(r, client);
+            foreach (var (r, hexUnits) in value)
+            {
+                DrawHex(r, client);
+            }
         }
     }
 
@@ -77,24 +89,32 @@ public partial class UnitGraphics : Node2D
     }
     public void DrawHex(HexRef hex, HexGeneralClient client)
     {
-        var hexUnits = client.Data.MapUnitHolder
-            .HexLandUnits[hex];
-        
-        if (hexUnits.Count == 0) return;
-        var hexPos = hex.GetWorldPos();
-        var offsets = GraphicOffsetsByNumUnits[hexUnits.Count - 1];
-        for (var i = 0; i < hexUnits.Count; i++)
+        foreach (var (domain, dic) in client.Data.MapUnitHolder.HexUnitsByDomain)
         {
-            var unit = hexUnits[i];
-            if (Graphics.ContainsKey(unit) == false)
+            var node = DomainNodes[domain.Get(client.Data)];
+            if (dic.ContainsKey(hex) == false) continue;
+            var hexUnits = dic[hex];
+            if (hexUnits.Count == 0) continue;
+            var hexPos = hex.GetWorldPos();
+            var offsets = GraphicOffsetsByNumUnits[hexUnits.Count - 1];
+            for (var i = 0; i < hexUnits.Count; i++)
             {
-                var g = new UnitGraphic(unit.Get(client.Data), client.Data);
-                AddChild(g);
-                Graphics.Add(unit, g);
+                var unit = hexUnits[i];
+                if (Graphics.ContainsKey(unit) == false)
+                {
+                    var g = new UnitGraphic(unit.Get(client.Data), client.Data);
+                    node.AddChild(g);
+                    Graphics.Add(unit, g);
+                }
+                else if (Graphics[unit].GetParent() != node)
+                {
+                    
+                }
+                
+                var graphic = Graphics[unit];
+                graphic.Position = offsets[i] + hexPos;
+                graphic.Update(unit.Get(client.Data), client);
             }
-            var graphic = Graphics[unit];
-            graphic.Position = offsets[i] + hexPos;
-            graphic.Update(unit.Get(client.Data), client);
         }
     }
 
@@ -109,22 +129,31 @@ public partial class UnitGraphics : Node2D
         DrawHex(hex.MakeRef(), client);
     }
 
-    public static Unit GetClosestUnitInHex(Hex hex, Vector2 worldPos, HexGeneralClient client)
+    public Unit GetClosestUnitInHex(Hex hex,
+        Vector2 worldPos, HexGeneralClient client)
     {
-        if (client.Data.MapUnitHolder.HexLandUnits.ContainsKey(hex.MakeRef()) == false) return null;
-        var unitsInTargetHex = client.Data.MapUnitHolder.HexLandUnits[hex.MakeRef()];
-        
-        if (unitsInTargetHex.Count == 0)
+        foreach (var (domain, node) in DomainNodes)
         {
-            return null;
+            if (node.Visible == false) continue;
+            var dic = client.Data.MapUnitHolder.HexUnitsByDomain[domain.MakeIdRef(client.Data)];
+        
+            if (dic.ContainsKey(hex.MakeRef()) == false) continue;
+            var unitsInTargetHex = dic[hex.MakeRef()];
+        
+            if (unitsInTargetHex.Count == 0)
+            {
+                continue;
+            }
+
+            var offsets = GraphicOffsetsByNumUnits[unitsInTargetHex.Count - 1];
+            var close = offsets.IndexOf(offsets.MinBy(o =>
+            {
+                return (o + hex.WorldPos()).DistanceSquaredTo(worldPos);
+            }));
+            var targetUnit = unitsInTargetHex[close];
+            return targetUnit.Get(client.Data);
         }
 
-        var offsets = GraphicOffsetsByNumUnits[unitsInTargetHex.Count - 1];
-        var close = offsets.IndexOf(offsets.MinBy(o =>
-        {
-            return (o + hex.WorldPos()).DistanceSquaredTo(worldPos);
-        }));
-        var targetUnit = unitsInTargetHex[close];
-        return targetUnit.Get(client.Data);
+        return null;
     }
 }

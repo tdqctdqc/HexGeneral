@@ -50,7 +50,7 @@ public static class RegimeGenerator
         
         var urban = data.ModelPredefs.Landforms.Urban;
         var barren = data.ModelPredefs.Vegetations.Barren;
-        
+        var airbase = data.ModelPredefs.Buildings.Airbase;
         var atDepth = setupData
             .TopBranches.GetAtDepth(UrbanGenDepth);
         
@@ -77,7 +77,9 @@ public static class RegimeGenerator
                 seedHex.MakeRef(), new List<ModelIdRef<BuildingModel>>());
             data.Entities.AddEntity(loc, data);
             
-            var moreUrban = extraUrbanHexes[data.Random.RandiRange(0, extraUrbanHexes.Length - 1)];
+            var moreUrban 
+                = extraUrbanHexes[data.Random.RandiRange(0, 
+                    extraUrbanHexes.Length - 1)];
             if (moreUrban == 0)
             {
                 var popBuilding = popBuildings[data.Random.RandiRange(0, 1)];
@@ -96,6 +98,7 @@ public static class RegimeGenerator
                 industryMax = Mathf.Clamp(industryMax, 0, industryBuildings.Length - 1);
                 
                 loc.Buildings.Add(industryBuildings[industryMax].MakeIdRef<BuildingModel>(data));
+                loc.Buildings.Add(airbase.MakeIdRef<BuildingModel>(data));
                 
                 var index = data.Random.RandiRange(0, 5);
                 for (var i = 0; i < moreUrban; i++)
@@ -263,7 +266,7 @@ public static class RegimeGenerator
             foreach (var hex in hexes)
             {
                 if (hex.Regime.Fulfilled()) throw new Exception();
-                hex.SetRegime(regime.MakeRef());
+                hex.SetRegimeGen(regime.MakeRef());
                 regime.Hexes.Add(hex.Coords);
             }
         }
@@ -285,7 +288,7 @@ public static class RegimeGenerator
             {
                 foreach (var hex in branch.GetLeaves())
                 {
-                    hex.SetRegime(closeRegime.MakeRef());
+                    hex.SetRegimeGen(closeRegime.MakeRef());
                     closeRegime.Hexes.Add(hex.Coords);
                 }
             }
@@ -294,9 +297,8 @@ public static class RegimeGenerator
     
     private static void GenerateUnits(HexGeneralData data, GenerationData setupData)
     {
-        var unitHolder = new MapUnitHolder(data.IdDispenser.TakeId(),
-            new Dictionary<ERef<Unit>, HexRef>(),
-            new Dictionary<HexRef, List<ERef<Unit>>>());
+        var unitHolder = MapUnitHolder.Construct(data);
+        
         data.Entities.AddEntity(unitHolder, data);
         var urban = data.ModelPredefs.Landforms.Urban;
         var infantry = data.ModelPredefs.UnitModelPredefs.Infantry;
@@ -310,7 +312,7 @@ public static class RegimeGenerator
                 {
                     var unit = infantry.Instantiate(regime, data);
                     data.Entities.AddEntity(unit, data);
-                    unitHolder.DeployUnit(unit, hex);
+                    unitHolder.DeployUnit(unit, hex, data);
                 }
             }
         }

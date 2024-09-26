@@ -7,6 +7,7 @@ using GodotUtilities.Graphics;
 using GodotUtilities.Ui;
 using HexGeneral.Client.Ui;
 using HexGeneral.Game.Client.Graphics;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game.Client;
 
@@ -53,18 +54,23 @@ public class DeploymentMode : UiMode
     private void DrawDeploySpots()
     {
         _deploySpots.Clear();
+        var data = _client.Client().Data;
+
         var clientPlayer = _client.Client().GetPlayer();
         if (clientPlayer is null) return;
 
-        var regime = clientPlayer.Regime.Get(_client.Client().Data);
-
+        var regime = clientPlayer.Regime.Get(data);
+        var unit = SelectedUnit.Value;
+        if (unit is null) return;
+        var unitDomain = unit.Components.Get<IMoveComponent>(data)
+            .GetActiveMoveType(data).Domain;
 
         _deploySpots.Draw(mb =>
         {
             var deployableHexes = regime.Hexes
-                .Select(c => _client.Client().Data.Map.Hexes[c])
+                .Select(c => data.Map.Hexes[c])
                 .Where(h => h.Regime == regime
-                            && h.CanDeploy(_client.Client().Data));
+                            && h.CanDeploy(unitDomain, data));
             foreach (var deployableHex in deployableHexes)
             {
                 mb.DrawHex(deployableHex.WorldPos(),
