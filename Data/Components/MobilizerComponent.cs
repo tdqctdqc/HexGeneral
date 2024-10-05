@@ -5,6 +5,7 @@ using Godot;
 using GodotUtilities.DataStructures.Hex;
 using GodotUtilities.GameClient;
 using GodotUtilities.GameData;
+using GodotUtilities.Graphics;
 using GodotUtilities.Logic;
 using GodotUtilities.Server;
 using GodotUtilities.Ui;
@@ -44,19 +45,6 @@ public class MobilizerComponent
             .Invoke(Unit.Get(key.Data));
     }
 
-    private void SwitchDomainIfNeeded(HexGeneralData data)
-    {
-        var (nativeDomain, mobDomain)
-            = (Native
-                    .GetActiveMoveType(data).Domain, 
-                Mobilizer.Get(data).MoveType.Domain);
-        if (nativeDomain == mobDomain) return;
-        var (togglingToDomain, togglingFromDomain) = Active 
-            ? (nativeDomain, mobDomain)
-            : (mobDomain, nativeDomain);
-        data.MapUnitHolder.SwitchUnitDomain(Unit.Get(data),
-            togglingToDomain, data);
-    }
 
     public Control GetDisplay(GameClient client)
     {
@@ -129,7 +117,7 @@ public class MobilizerComponent
     public void Added(EntityComponentHolder holder, GodotUtilities.GameData.Data data)
     {
         var unit = Unit.Get(data);
-        if (CanAdd(unit, data.Data()) == false)
+        if (CanAddRightNow(unit, data.Data()) == false)
         {
             throw new Exception();
         }
@@ -200,14 +188,14 @@ public class MobilizerComponent
 
     public HashSet<Hex> GetMoveRadius(Unit unit, HexGeneralData data)
     {        
-        var moveCount = unit.Components.Get<MoveCountComponent>(data);
-        if (moveCount.CanMove() == false) return new HashSet<Hex>();
-        var ratio = moveCount.MovePointRatioRemaining;
-        var hex = unit.GetHex(data);
-        var model = unit.UnitModel.Get(data);
-        var regime = unit.Regime.Get(data);
         if (Active)
         {
+            var moveCount = unit.Components.Get<MoveCountComponent>(data);
+            if (moveCount.CanMove() == false) return new HashSet<Hex>();
+            var ratio = moveCount.MovePointRatioRemaining;
+            var hex = unit.GetHex(data);
+            var model = unit.UnitModel.Get(data);
+            var regime = unit.Regime.Get(data);
             return Mobilizer.Get(data).MoveType
                 .GetMoveRadius(hex, regime, model.MovePoints * ratio,
                     data);
@@ -220,8 +208,7 @@ public class MobilizerComponent
     {
         var radius = GetMoveRadius(unit, data);
         var nativeRadius = Native.GetMoveRadius(unit, data);
-
-        var hexTris = HexExt.UnitHexTris;
+        
         if (Active)
         {
             nativeRadius.ExceptWith(radius);
@@ -229,8 +216,7 @@ public class MobilizerComponent
             {
                 foreach (var h in radius)
                 {
-                    mb.AddTris(hexTris
-                            .Select(p => p + h.WorldPos()), 
+                    mb.DrawHex(h.WorldPos(), 1f,
                         Colors.White.Tint(.5f));
                 }
 
@@ -239,8 +225,7 @@ public class MobilizerComponent
             {
                 foreach (var h in nativeRadius)
                 {
-                    mb.AddTris(hexTris
-                            .Select(p => p + h.WorldPos()), 
+                    mb.DrawHex(h.WorldPos(), 1f,
                         Colors.Red.Tint(.5f));
                 }
 
@@ -253,8 +238,7 @@ public class MobilizerComponent
             {
                 foreach (var h in nativeRadius)
                 {
-                    mb.AddTris(hexTris
-                            .Select(p => p + h.WorldPos()), 
+                    mb.DrawHex(h.WorldPos(), 1f,
                         Colors.White.Tint(.5f));
                 }
 
@@ -263,8 +247,7 @@ public class MobilizerComponent
             {
                 foreach (var h in radius)
                 {
-                    mb.AddTris(hexTris
-                            .Select(p => p + h.WorldPos()), 
+                    mb.DrawHex(h.WorldPos(), 1f,
                         Colors.Red.Tint(.5f));
                 }
 
@@ -272,57 +255,19 @@ public class MobilizerComponent
         }
     }
 
-    public void DrawPath(Unit unit, Hex dest, 
-        MapOverlayDrawer mesh, HexGeneralData data)
+    
+
+    public void TryMoveCommand(Unit unit, Hex dest, 
+        Action<Command> submit, HexGeneralClient client)
     {
         if (Active == false)
         {
-            Native.DrawPath(unit, dest, mesh, data);
+            Native.TryMoveCommand(unit, dest, submit, client);
             return;
         }
-        var path = Mobilizer.Get(data).MoveType
-            .GetPath(unit.GetHex(data), dest, unit.Regime.Get(data),
-                data, out var cost);
-        if (path is null) return;
-        mesh.Draw(mb =>
-        {
-            for (var i = 0; i < path.Count - 1; i++)
-            {
-                var from = path[i];
-                var to = path[i + 1];
-                mb.AddArrow(from.WorldPos(), to.WorldPos(), .25f, Colors.Black);
-                mb.AddArrow(from.WorldPos(), to.WorldPos(), .2f, Colors.White);
-            }
-        }, Vector2.Zero);
-        var tt = SceneManager.Instance<MoveTooltip>();
-
-        tt.DrawInfo(unit, cost, data);
-        mesh.AddNode(tt, dest.WorldPos());
-    }
-
-    public Command GetMoveCommand(Unit unit, Hex dest, 
-        HexGeneralClient client)
-    {
-        var moveCount = unit.Components.Get<MoveCountComponent>(client.Data);
-        if (moveCount.CanMove() == false) return null;
-        if (Active == false)
-        {
-            return Native.GetMoveCommand(unit, dest, client);
-        }
-
         var mob = Mobilizer.Get(client.Data);
-        var path = mob.MoveType
-            .GetPath(unit.GetHex(client.Data), dest, unit.Regime.Get(client.Data),
-                client.Data, out var c);
-        var costRatio = c / mob.MovePoints;
-
-        if (path is null || costRatio > moveCount.MovePointRatioRemaining)
-        {
-            return null;
-        }
-        
-        return new UnitMoveCommand(unit.MakeRef(), 
-            path.Select(h => h.MakeRef()).ToList(), costRatio);
+        mob.MoveType.TryMoveCommand(unit, mob.MovePoints, dest, 
+            submit, client);
     }
 
     public float GetMovePoints(HexGeneralData data)
@@ -354,8 +299,8 @@ public class MobilizerComponent
     {
         return Active && Mobilizer.Get(data).CanDefend == false;
     }
-
-    public static bool CanAdd(Unit u, HexGeneralData data)
+    
+    public static bool CanAddRightNow(Unit u, HexGeneralData data)
     {
         return u.Components.Get<MoveCountComponent>(data).HasMoved() == false;
     }

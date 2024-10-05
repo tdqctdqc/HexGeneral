@@ -37,6 +37,12 @@ public class DeploymentMode : UiMode
                 SelectedUnit.Set(null);
             }
         });
+        
+        SelectedUnit.SettingChanged.Subscribe(v =>
+        {
+            DrawDeploySpots();
+        });
+        DrawDeploySpots();
     }
 
     public override void Process(float delta)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using GodotUtilities.GameData;
 
@@ -18,5 +19,11 @@ public class Location(int id, HexRef hex, List<ModelIdRef<BuildingModel>> buildi
     public override void CleanUp(GodotUtilities.GameData.Data d)
     {
         throw new System.Exception();
+    }
+
+    public bool HasBuilding<T>(HexGeneralData data)
+        where T : BuildingModel
+    {
+        return Buildings.Any(b => b.Get(data) is T);
     }
 }

@@ -14,6 +14,9 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
     public HexGeneralClient Client { get; private set; } = client;
     public UnitGraphics Units { get; private set; }
     public RegimeGraphics RegimeGraphics { get; private set; }
+    public RoadGraphics RoadGraphics { get; private set; }
+    public LocationGraphics LocationGraphics { get; private set; }
+    public ConstructionGraphics ConstructionGraphics { get; private set; }
     public MapInputCatcher Input { get; private set; }
     public Action Disconnect { get; set; }
 
@@ -39,18 +42,27 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
         RegimeGraphics = new RegimeGraphics(Client);
         AddChild(RegimeGraphics);
         
-        AddChild(new RoadGraphics(Client.Data));
+        RoadGraphics = new RoadGraphics(Client.Data);
+        AddChild(RoadGraphics);
         
         Units = new UnitGraphics(Client);
         AddChild(Units);
-        
-        
+
+        LocationGraphics = new LocationGraphics(Client);
+        AddChild(LocationGraphics);
+        ConstructionGraphics = new ConstructionGraphics(Client);
+        AddChild(ConstructionGraphics);
     }
 
     public void RedrawHex(HexRef h, HexGeneralClient client)
     {
         Units.DrawHex(h, client);
         RegimeGraphics.UpdateHex(h.Get(client.Data), client);
+        if (h.Get(client.Data).TryGetLocation(client.Data, out var loc))
+        {
+            LocationGraphics.UpdateLocation(loc);
+        }
+        ConstructionGraphics.DrawConstructions(client);
     }
 
     public void Process(float delta)

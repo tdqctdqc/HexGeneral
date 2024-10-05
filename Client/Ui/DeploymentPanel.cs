@@ -16,13 +16,12 @@ public partial class DeploymentPanel : PanelContainer
         _mode = mode;
         _client = client;
         
-        client.Data.Notices.UnitDeployed.Blank.Subscribe(Draw);
+        client.Data.Notices.UnitDeployed.Blank.SubscribeForNode(Draw, this);
         Draw();
     }
 
     private void Draw()
     {
-        
         this.ClearChildren();
         var clientPlayer = _client.GetPlayer();
         if (clientPlayer is null) return;
@@ -42,6 +41,10 @@ public partial class DeploymentPanel : PanelContainer
             var unit = unitScroll.Selected.Single();
             _mode.SelectedUnit.Set(unit);
         };
+        if (deployableUnits.Any())
+        {
+            unitScroll.SelectAt(0);
+        }
         AddChild(unitScroll.ItemList);
     }
 }

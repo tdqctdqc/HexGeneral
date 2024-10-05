@@ -16,5 +16,7 @@ public class BuildingPredefs(HexGeneralData data) : IPredefHolder<BuildingModel>
         => (IndustryBuilding)_data.Models.ModelsByName[nameof(Factory)];
     public AirbaseBuilding Airbase
         => (AirbaseBuilding)_data.Models.ModelsByName[nameof(Airbase)];
+    public PortBuilding Port
+        => (PortBuilding)_data.Models.ModelsByName[nameof(Port)];
 
 }

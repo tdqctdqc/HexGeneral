@@ -1,18 +1,23 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using GodotUtilities.GameClient;
 using GodotUtilities.GameData;
 using GodotUtilities.Ui;
 using HexGeneral.Client.Ui;
+using HexGeneral.Data.Components;
 using HexGeneral.Game.Components;
 using HexGeneral.Game.Logic;
 using HexGeneral.Logic.Procedures;
 
 namespace HexGeneral.Game.Client;
 
-public partial class UnitPanel : PanelContainer
+public partial class UnitPanel : TabContainer
 {
     private UnitMode _mode;
     private HexGeneralClient _client;
+    private VBoxContainer _combatInfo, _engineeringInfo;
     public UnitPanel(UnitMode mode, HexGeneralClient client)
     {
         _client = client;
@@ -35,6 +40,16 @@ public partial class UnitPanel : PanelContainer
             Draw();
         }, this);
         _client.Data.Notices.FinishedTurnStartLogic.SubscribeForNode(Draw, this);
+
+        _combatInfo = new VBoxContainer();
+        _combatInfo.Name = "Combat";
+        AddChild(_combatInfo);
+        _engineeringInfo = new VBoxContainer();
+        _engineeringInfo.Name = "Engineering";
+        AddChild(_engineeringInfo);
+        
+        
+        TabSelected += v => SelectMouseMode();
     }
 
 
@@ -42,18 +57,41 @@ public partial class UnitPanel : PanelContainer
 
     private void Draw()
     {
-        this.ClearChildren();
-        var vbox = new VBoxContainer();
-        AddChild(vbox);
         var unit = _mode.SelectedUnit.Value;
         if (unit is not null)
         {
-            DrawUnitInfo(unit, vbox);
+            DrawCombatInfo();
+            DrawEngineeringInfo();
         }
+        
+        SelectMouseMode();
     }
 
-    private void DrawUnitInfo(Unit unit, VBoxContainer vbox)
+    private void SelectMouseMode()
     {
+        if (CurrentTab == -1) return;
+        var tab = GetChild(CurrentTab);
+        if (tab == _combatInfo)
+        {
+            _mode.MouseMode.Set(_mode.MoveAttackMouseMode);
+        }
+        else if (tab == _engineeringInfo)
+        {
+            _mode.MouseMode.Set(_mode.EngineerMouseMode);
+        }
+        else throw new Exception();
+    }
+    private void DrawCombatInfo()
+    {
+        _combatInfo.ClearChildren();
+        var unit = _mode.SelectedUnit.Value;
+        SetTabDisabled(_combatInfo.GetIndex(), unit is null);
+
+        if (unit is null)
+        {
+            return;
+        }
+
         var regime = unit.Regime.Get(_client.Data);
         var model = unit.UnitModel.Get(_client.Data);
         var texture = new TextureRect();
@@ -61,25 +99,24 @@ public partial class UnitPanel : PanelContainer
         texture.Texture = model.GetTexture();
         texture.Size = Vector2.One * 20f;
         texture.CustomMinimumSize = texture.Size;
-        vbox.AddChild(texture);
-        vbox.CreateLabelAsChild(model.Name);
-        vbox.CreateLabelAsChild($"Hitpoints: {unit.CurrentHitPoints} / {model.HitPoints}");
-        vbox.AddChild(new VSeparator());
-        vbox.CreateLabelAsChild($"Hardness: {model.Hardness}");
+        _combatInfo.AddChild(texture);
+        _combatInfo.CreateLabelAsChild(model.Name);
+        _combatInfo.CreateLabelAsChild($"Hitpoints: {unit.CurrentHitPoints} / {model.HitPoints}");
+        _combatInfo.AddChild(new VSeparator());
+        _combatInfo.CreateLabelAsChild($"Hardness: {model.Hardness}");
 
         var hex = unit.GetHex(_client.Data);
         var supplyAvailability = SupplyLogic.GetSupplyAvailability(hex,
             _client.Data);
-        vbox.CreateLabelAsChild($"Supply Availability: {supplyAvailability}");
-        
+        _combatInfo.CreateLabelAsChild($"Supply Availability: {supplyAvailability}");
         
         foreach (var unitComponent in unit.Components.All(_client.Data))
         {
-            vbox.AddChild(unitComponent.GetDisplay(_client));
+            _combatInfo.AddChild(unitComponent.GetDisplay(_client));
         }
         
         
-        var reinforce = vbox.AddButton($"Reinforce", () =>
+        var reinforce = _combatInfo.AddButton($"Reinforce", () =>
         {
             var missingRatio = 1f - unit.CurrentHitPoints / model.HitPoints;
             if (missingRatio == 0f) return;
@@ -102,13 +139,87 @@ public partial class UnitPanel : PanelContainer
         });
         reinforce.Disabled = unit.CanReinforce(_client.Data) == false;
         
-        
-
-
-        var mobilize = vbox.AddButton("Mobilize", () =>
+        var mobilize = _combatInfo.AddButton("Mobilize", () =>
         {
             MobilizeUnitWindow.Open(unit, _client);
         });
-        mobilize.Disabled = MobilizerComponent.CanAdd(unit, _client.Data) == false;
+        mobilize.Disabled = MobilizerComponent.CanAddRightNow(unit, _client.Data) == false;
+    }
+
+    private void DrawEngineeringInfo()
+    {
+        _engineeringInfo.ClearChildren();
+        var unit = _mode.SelectedUnit.Value;
+        var e = unit.Components.Get<EngineerEntityComponent>(_client.Data);
+        SetTabDisabled(_engineeringInfo.GetIndex(), e is null);
+
+        if (e is null)
+        {
+            return;
+        }
+
+        var hex = unit.GetHex(_client.Data);
+        var airbase = _client.Data.ModelPredefs.Buildings.Airbase;
+        
+        var hasLoc = hex.TryGetLocation(_client.Data, out var loc);
+        var bs = _client.Data.Models.GetModels<ConstructableBuildingModel>()
+            .Where(b => b.AllowedLandforms.Contains(hex.Landform.Get(_client.Data)));
+        var hexBuildingProjects = _client.Data.EngineerProjects
+            .BuildingConstructionProgresses;
+        
+        addBuildingButton(airbase);
+
+
+        void addBuildingButton(ConstructableBuildingModel building)
+        {
+            if (building.AllowedLandforms.Contains(hex.Landform.Get(_client.Data)) == false)
+            {
+                return;
+            }
+
+            if (hasLoc && loc.Buildings
+                    .Any(b => b.Get(_client.Data)
+                              == building))
+            {
+                return;
+            }
+            
+            
+            string text;
+            if (hexBuildingProjects.TryGetValue(hex.MakeRef(), out var progresses)
+                && progresses.TryGetValue(building.MakeIdRef(_client.Data), out var progress))
+            {
+                text = $"Work on {building.Name} {progress} / {building.EngineerPointCost}";
+            }
+            else
+            {
+                text = $"Build {building.Name}";
+            }
+            
+            
+            _engineeringInfo.AddButton(text,
+                () =>
+                {
+                    if (hasLoc == false)
+                    {
+                        var loc = new Location(0,
+                            hex.MakeRef(), new List<ModelIdRef<BuildingModel>>());
+                        var locCom = new EntityCreationCommand<Location>(loc);
+                        _client.SubmitCommand(locCom);
+                    }
+
+                    var progress = Mathf.Min(building.EngineerPointCost, 
+                        e.CurrentEngineerPoints);
+                    var proc = new WorkOnBuildingProcedure(hex.MakeRef(),
+                        unit.MakeRef(), progress,
+                        building.MakeIdRef<ConstructableBuildingModel>(_client.Data));
+                    var inner = new DoProcedureCommand(proc);
+                    var callback = CallbackCommand.Construct(inner, () =>
+                    {
+                        if(IsInstanceValid(this)) DrawEngineeringInfo();
+                    }, _client);
+                    _client.SubmitCommand(callback);
+                });
+        }
     }
 }

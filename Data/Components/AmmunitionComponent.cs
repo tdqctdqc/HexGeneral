@@ -1,3 +1,5 @@
+using Godot;
+using GodotUtilities.GameClient;
 using GodotUtilities.GameData;
 using HexGeneral.Game;
 using HexGeneral.Game.Components;
@@ -15,5 +17,10 @@ public class AmmunitionComponent : IInheritedModelComponent
         var curr = new CurrentAmmunitionComponent(new ERef<Unit>(entity.Id),
             AmmoCap, false);
         entity.Components.Add(curr, data);
+    }
+
+    public Control GetDisplay(GameClient client)
+    {
+        return new Control();
     }
 }

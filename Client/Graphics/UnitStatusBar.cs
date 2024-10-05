@@ -20,13 +20,17 @@ public partial class UnitStatusBar : Node2D
         var orgIcon = GetNode<MeshInstance2D>("OrgIcon");
         orgIcon.Modulate = ColorsExt.GetHealthColor(orgRatio);
         
+        var ammoIcon = GetNode<MeshInstance2D>("AmmoIcon");
         if (unit.Components.Get<CurrentAmmunitionComponent>(data)
             is CurrentAmmunitionComponent ac)
         {
             var parent = model.Components.Get<AmmunitionComponent>();
             var ammoRatio = (float)ac.CurrentAmmo / parent.AmmoCap;
-            var ammoIcon = GetNode<MeshInstance2D>("AmmoIcon");
             ammoIcon.Modulate = ColorsExt.GetHealthColor(ammoRatio);
+        }
+        else
+        {
+            ammoIcon.Visible = false;
         }
         
         var moveIcon = GetNode<MeshInstance2D>("MoveIcon");

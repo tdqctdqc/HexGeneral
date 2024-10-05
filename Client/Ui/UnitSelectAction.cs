@@ -36,24 +36,11 @@ public class UnitSelectAction(
         var hexWorldPos = hex.WorldPos();
         var unitGraphics = client.GetComponent<MapGraphics>()
             .Units;
-        foreach (var (domain, node) in unitGraphics.DomainNodes)
-        {
-            if (node.Visible
-                && client.Data.MapUnitHolder.HexUnitsByDomain[domain.MakeIdRef(client.Data)]
-                    .TryGetValue(hex.MakeRef(), out var hexUnits)
-                && hexUnits.Count > 0)
-            {
-                var offsets = UnitGraphics.GraphicOffsetsByNumUnits[hexUnits.Count - 1];
+        var closest = unitGraphics.GetClosestUnitInHex(hex, mousePos, client);
+        selectAction(closest);
+    }
 
-                var closest = hexUnits
-                    .Select((u, i) => (u, i))
-                    .MinBy(v => mousePos.DistanceTo(hexWorldPos + offsets[v.i]))
-                    .u.Get(client.Data);
-                selectAction(closest);
-                return;
-            }
-        }
-        selectAction(null);
-        
+    public override void Clear()
+    {
     }
 }

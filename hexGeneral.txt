@@ -2,8 +2,10 @@ unit graphic facing
 
 mobilizers as toggleable or not, canDefend or not 
 problem of, unit has cargoShip mobilizer, deactivates, can go on land with it still attached 
-attack component handles attack from attackCommand
-
-mobilizerComponent can have inner as also mobComp not just native move comp
 
 for road build gen can only build roads from cell to cell in those 2 cells 
+
+engineers
+
+rail, sea mobilizer
+constr graphics

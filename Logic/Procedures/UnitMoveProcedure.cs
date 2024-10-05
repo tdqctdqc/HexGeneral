@@ -30,6 +30,7 @@ public class UnitMoveProcedure(ERef<Unit> unit, List<HexRef> path,
             Path[^1], key);
         unit.Components.Get<MoveCountComponent>(key.Data)
             .SpendMove(MoveRatioSpent, key);
-        key.Data.Data().Notices.UnitMoved?.Invoke(this);
+        
+        key.Data.Data().Notices.UnitMoved?.Invoke((Unit.Get(key.Data), Path));
     }
 }

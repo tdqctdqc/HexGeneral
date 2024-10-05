@@ -7,6 +7,7 @@ public enum GraphicsLayers
     RegimeBorders,
     SubRoads,
     Roads,
+    Locations,
     Units, 
     Debug
 }

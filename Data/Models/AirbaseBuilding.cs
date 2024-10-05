@@ -2,6 +2,6 @@ using GodotUtilities.Logic;
 
 namespace HexGeneral.Game;
 
-public class AirbaseBuilding : BuildingModel
+public class AirbaseBuilding : ConstructableBuildingModel
 {
 }

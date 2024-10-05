@@ -68,8 +68,10 @@ public static class RegimeGenerator
                 5, 5,
                 6 };
         var colIter = 0;
+        var port = data.ModelPredefs.Buildings.Port;
         foreach (var urbanTrunk in urbanTrunks)
         {
+            var needPort = true;
             var seedHex = urbanTrunk.TrunkSeed.GetTwigSeed();
             seedHex.SetLandform(urban.MakeIdRef(data));
             seedHex.SetVegetation(barren.MakeIdRef(data));
@@ -85,6 +87,13 @@ public static class RegimeGenerator
                 var popBuilding = popBuildings[data.Random.RandiRange(0, 1)];
                 loc.Buildings.Add(popBuilding.MakeIdRef<BuildingModel>(data));
                 loc.Buildings.Add(industryBuildings[0].MakeIdRef<BuildingModel>(data));
+                if (seedHex.GetNeighbors(data)
+                        .FirstOrDefault(n => n.Landform.Get(data).IsLand == false)
+                            is Hex seaN)
+                {
+                    needPort = false;
+                    addPort(seaN);
+                }
             }
             else
             {
@@ -128,6 +137,14 @@ public static class RegimeGenerator
                         
                         nHex.SetLandform(urban.MakeIdRef(data));
                         nHex.SetVegetation(barren.MakeIdRef(data));
+                        
+                        if (needPort && nHex.GetNeighbors(data)
+                                .FirstOrDefault(n => n.Landform.Get(data).IsLand == false)
+                            is Hex seaN)
+                        {
+                            needPort = false;
+                            addPort(seaN);
+                        }
                     }
                 }
             }
@@ -146,6 +163,14 @@ public static class RegimeGenerator
                 }
             }
             setupData.UrbanTrunks.Add(urbanTrunk);
+        }
+
+        void addPort(Hex seaHex)
+        {
+            var location = new Location(data.IdDispenser.TakeId(),
+                seaHex.MakeRef(), new List<ModelIdRef<BuildingModel>>());
+            data.Entities.AddEntity(location, data);
+            location.Buildings.Add(port.MakeIdRef<BuildingModel>(data));
         }
     }
     private static void MakeRoadNetwork(HexGeneralData data, GenerationData setupData)
@@ -302,6 +327,7 @@ public static class RegimeGenerator
         data.Entities.AddEntity(unitHolder, data);
         var urban = data.ModelPredefs.Landforms.Urban;
         var infantry = data.ModelPredefs.UnitModelPredefs.Infantry;
+        var engineer = data.ModelPredefs.UnitModelPredefs.Engineer;
         foreach (var hex in data.Map.Hexes.Values)
         {
             if (hex.Landform.Get(data) == urban)
@@ -310,7 +336,9 @@ public static class RegimeGenerator
                 var rand = data.Random.RandiRange(1, 3);
                 for (var i = 0; i < rand; i++)
                 {
-                    var unit = infantry.Instantiate(regime, data);
+                    var unit = i == 0
+                        ? engineer.Instantiate(regime, data)
+                        : infantry.Instantiate(regime, data);
                     data.Entities.AddEntity(unit, data);
                     unitHolder.DeployUnit(unit, hex, data);
                 }

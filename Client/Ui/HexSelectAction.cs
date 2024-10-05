@@ -28,4 +28,9 @@ public class HexSelectAction(
         var hex = MouseOverHandler.FindMouseOverHex(_client);
         _selectAction?.Invoke(hex);
     }
+
+    public override void Clear()
+    {
+        
+    }
 }

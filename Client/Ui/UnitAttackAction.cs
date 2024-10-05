@@ -17,16 +17,15 @@ public class UnitAttackAction : MouseAction
     private SettingsOption<Unit> _selectedUnit;
     private MapOverlayDrawer _radiusOverlay, _pathOverlay;
     private HexGeneralClient _client;
-    public UnitAttackAction(MapOverlayDrawer radiusOverlay,
-        MapOverlayDrawer pathOverlay,
+    public UnitAttackAction(
         SettingsOption<Unit> selectedUnit,
         HexGeneralClient client,
         MouseButtonMask button) : base(button)
     {
-        _selectedUnit = selectedUnit;
-        _radiusOverlay = radiusOverlay;
-        _pathOverlay = pathOverlay;
         _client = client;
+        _selectedUnit = selectedUnit;
+        _radiusOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
+        _pathOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
         _selectedUnit.SettingChanged.Subscribe(v =>
         {
             DrawForSelectedUnit(v.newVal);
@@ -101,12 +100,14 @@ public class UnitAttackAction : MouseAction
         var targetUnit = unitGraphics.GetClosestUnitInHex(targetHex, 
             pos, _client);
         var unitHex = unit.GetHex(_client.Data);
-
+        
         _pathOverlay.Draw(mb =>
         {
             mb.AddArrow(unitHex.WorldPos(), targetHex.WorldPos(), .25f, Colors.White);
             mb.AddArrow(unitHex.WorldPos(), targetHex.WorldPos(), .2f, Colors.Red);
         }, Vector2.Zero);
+        _pathOverlay.DrawUnitHighlightBox(targetUnit, Colors.Red, _client);
+        
         var tt = SceneManager.Instance<AttackTooltip>();
         tt.DrawInfo(targetHex, unit, targetUnit, _client.Data);
         _pathOverlay.AddNode(tt, pos);
@@ -131,5 +132,11 @@ public class UnitAttackAction : MouseAction
         var com = CallbackCommand.Construct(inner,
             () => DrawForSelectedUnit(unit), _client);
         _client.SubmitCommand(com);
+    }
+
+    public override void Clear()
+    {
+        _radiusOverlay.Clear();
+        _pathOverlay.Clear();
     }
 }

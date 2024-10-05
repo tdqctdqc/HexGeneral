@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using GodotUtilities.GameData;
+using GodotUtilities.Logic;
 
 namespace HexGeneral.Game;
 
@@ -20,5 +21,11 @@ public class RoadNetwork(
     public override void CleanUp(GodotUtilities.GameData.Data d)
     {
         throw new Exception();
+    }
+
+    public void AddRoad(Vector2I edge, RoadModel r, ProcedureKey key)
+    {
+        Roads[edge] = r.MakeIdRef(key.Data);
+        key.Data.Data().Notices.NewRoad.Invoke(edge);
     }
 }

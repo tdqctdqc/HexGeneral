@@ -13,7 +13,7 @@ public class ClientEvents
         QueuedEvents = new Queue<ClientEvent>();
         data.Notices.UnitMoved.Subscribe(p =>
         {
-            Enqueue(new UnitMoveEvent(p));
+            Enqueue(new UnitMoveEvent(p.Item1, p.Item2));
         });
         data.Notices.UnitDestroyed += (u, h) =>
         {
@@ -44,6 +44,10 @@ public class ClientEvents
         data.Notices.HexAltered.Subscribe(h =>
         {
             Enqueue(new HexRedrawEvent(h.MakeRef()));
+        });
+        data.Notices.NewRoad.Subscribe(e =>
+        {
+            Enqueue(new NewRoadEvent(e));
         });
     }
 

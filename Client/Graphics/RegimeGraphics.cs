@@ -43,7 +43,9 @@ public partial class RegimeGraphics : Node2D
     }
     public void UpdateHex(Hex hex, HexGeneralClient client)
     {
-        var color = hex.Regime.Get(client.Data).RegimeModel.Get(client.Data).Color;
+        if (hex.Regime.IsEmpty()) return;
+        var color = hex.Regime.Get(client.Data).RegimeModel
+            .Get(client.Data).Color;
         RegimeColor.SetColor(hex, color);
         RegimeBorder.UpdateHex(hex, client);
     }

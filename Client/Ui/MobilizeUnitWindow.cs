@@ -33,7 +33,7 @@ public partial class MobilizeUnitWindow(Unit unit,
         
         _mobilizers = new ItemListToken<Mobilizer>(
             client.Data.Models.GetModels<Mobilizer>()
-                .Where(m => m.AllowedNativeMoveTypes.Contains(unitModel.MoveType)),
+                .Where(m => m.CanMobilize(unit, client.Data)),
             m => m.Name,
             m => m.GetTexture(),
             50, false);
@@ -77,7 +77,7 @@ public partial class MobilizeUnitWindow(Unit unit,
                        && regime.IndustrialPoints >= model.IndustrialCost;
         var b = _mobInfoContainer.AddButton("Purchase", () =>
         {
-            if (MobilizerComponent.CanAdd(unit, client.Data) == false)
+            if (MobilizerComponent.CanAddRightNow(unit, client.Data) == false)
             {
                 return;
             }

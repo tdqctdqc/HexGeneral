@@ -2,17 +2,22 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using GodotUtilities.GameClient;
+using GodotUtilities.GameData;
 using GodotUtilities.Graphics;
 using GodotUtilities.Ui;
 using HexGeneral.Client.Ui;
 using HexGeneral.Game.Client.Graphics;
+using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game.Client;
 
 public class UnitMode : UiMode
 {
     private HexGeneralClient _hexGenClient;
-    private MouseMode _mouseMode;
+    public MouseMode MoveAttackMouseMode { get; private set; }
+    public MouseMode EngineerMouseMode { get; private set; }
+    public ListSettingsOption<MouseMode> MouseMode { get; private set; }
+    private KeyboardInputMode _keyboardMode;
     private List<MapOverlayDrawer> _overlays;
     public Action Exited { get; set; }
     public DefaultSettingsOption<Unit> SelectedUnit { get; private set; }
@@ -22,32 +27,59 @@ public class UnitMode : UiMode
             null);
         _hexGenClient = client;
 
-        var pathOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
-        var attackRadiusOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
-        var radiusOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
-        var attackPathOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
+        var selectedOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
+        SelectedUnit.SettingChanged.Subscribe(v =>
+        {
+            selectedOverlay.Clear();
+            if (v.newVal is not null)
+            {
+                selectedOverlay.DrawUnitHighlightBox(v.newVal, Colors.White,
+                    client);
+            }
+        });
+        
         _overlays = new List<MapOverlayDrawer>
         {
-            pathOverlay, radiusOverlay, attackPathOverlay, attackRadiusOverlay
+            selectedOverlay
         };
         
-        _mouseMode = new MouseMode(
+        MoveAttackMouseMode = new MouseMode(
             [
-                new UnitSelectAction(MouseButtonMask.Left,
-                    _hexGenClient, SelectedUnit.Set),
-
-                new UnitMoveAction(radiusOverlay, pathOverlay,
-                    SelectedUnit, _hexGenClient, MouseButtonMask.Right),
-                
-                new UnitAttackAction(
-                    attackRadiusOverlay,
-                    attackPathOverlay,
-                    SelectedUnit,
-                    _hexGenClient,
-                    MouseButtonMask.Right)
+                new UnitSelectAction(MouseButtonMask.Left, _hexGenClient, SelectedUnit.Set),
+                new UnitMoveAction(SelectedUnit, _hexGenClient, MouseButtonMask.Right),
+                new UnitAttackAction(SelectedUnit, _hexGenClient, MouseButtonMask.Right),
+                new EmbarkShipAction(SelectedUnit, _hexGenClient, MouseButtonMask.Right),
+                new DisembarkShipAction(SelectedUnit, _hexGenClient, MouseButtonMask.Right),
             ]
         );
 
+        EngineerMouseMode = new MouseMode(
+            [
+                new UnitSelectAction(MouseButtonMask.Left, _hexGenClient, SelectedUnit.Set),
+                new UnitBuildRoadAction(MouseButtonMask.Right, SelectedUnit, _hexGenClient),
+                new UnitBuildPortAction(MouseButtonMask.Right, SelectedUnit, _hexGenClient),
+            ]
+        );
+        
+        
+        MouseMode = new ListSettingsOption<MouseMode>("Mouse Mode", 
+            new List<MouseMode>
+            {
+                MoveAttackMouseMode
+            }, new List<string>
+            {
+                "MoveAttack"
+            });
+        MouseMode.SettingChanged.Subscribe(v =>
+        {
+            if (v.oldVal != v.newVal)
+            {
+                v.oldVal?.Clear();
+            }
+        });
+        MouseMode.Set(MoveAttackMouseMode);
+        
+        _keyboardMode = new UnitKeyboardMode(client);
     }
 
     public override void Process(float delta)
@@ -59,7 +91,11 @@ public class UnitMode : UiMode
     {
         if (e is InputEventMouse mb)
         {
-            _mouseMode.HandleInput(mb);
+            MouseMode.Value.HandleInput(mb);
+        }
+        if (e is InputEventKey k)
+        {
+            _keyboardMode.Handle(k);
         }
     }
 
@@ -74,7 +110,7 @@ public class UnitMode : UiMode
         {
             overlay.Clear();
         }
-
+        MouseMode.Value?.Clear();
         Exited?.Invoke();
     }
 

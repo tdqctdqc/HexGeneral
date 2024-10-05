@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GodotUtilities.Logic;
 using GodotUtilities.Server;
@@ -10,8 +11,10 @@ public interface IMoveComponent : IUnitCombatComponent
 {
     HashSet<Hex> GetMoveRadius(Unit unit, HexGeneralData data);
     void DrawRadius(Unit unit, MapOverlayDrawer mesh, HexGeneralData data);
-    void DrawPath(Unit unit, Hex dest, MapOverlayDrawer mesh, HexGeneralData data);
-    Command GetMoveCommand(Unit unit, Hex dest, HexGeneralClient client);
+    void TryMoveCommand(Unit unit, Hex dest, 
+        Action<Command> submit,
+        HexGeneralClient client);
+    
     float GetMovePoints(HexGeneralData data);
     MoveType GetActiveMoveType(HexGeneralData data);
 }   

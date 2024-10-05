@@ -17,6 +17,7 @@ public class HexGeneralData : GodotUtilities.GameData.Data
     public LocationHolder LocationHolder => (LocationHolder)Singletons[typeof(LocationHolder)];
     public PlayerHolder PlayerHolder => (PlayerHolder)Singletons[typeof(PlayerHolder)];
     public TurnManager TurnManager => (TurnManager)Singletons[typeof(TurnManager)];
+    public EngineerProjects EngineerProjects => (EngineerProjects)Singletons[typeof(EngineerProjects)];
     public GameSettings Settings { get; private set; }
     public GenerationSettings GenerationSettings { get; private set; }
     public DataNotices Notices { get; private set; }

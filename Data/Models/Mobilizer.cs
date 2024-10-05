@@ -29,4 +29,11 @@ public class Mobilizer : Model
         if (CanAttack == false) throw new Exception();
         MoveType.ModifyAsAttacker(modifier, data);
     }
+
+    public bool CanMobilize(Unit unit, HexGeneralData data)
+    {
+        var uMoveType = unit.UnitModel.Get(data).MoveType;
+        return uMoveType.Domain == MoveType.Domain
+               && AllowedNativeMoveTypes.Contains(uMoveType);
+    }
 }

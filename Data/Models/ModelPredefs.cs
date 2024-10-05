@@ -9,6 +9,7 @@ public class ModelPredefs
     public MoveTypePredefs MoveTypes { get; private set; }
     public DomainPredefs Domains { get; private set; }
     public BuildingPredefs Buildings { get; private set; }
+    public MobilizerPredefs Mobilizers { get; private set; }
     public ModelPredefs(HexGeneralData data)
     {
         Vegetations = new VegetationPredefs(data);
@@ -18,5 +19,6 @@ public class ModelPredefs
         MoveTypes = new MoveTypePredefs(data);
         Domains = new DomainPredefs(data);
         Buildings = new BuildingPredefs(data);
+        Mobilizers = new MobilizerPredefs(data);
     }
 }

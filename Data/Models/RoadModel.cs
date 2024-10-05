@@ -5,9 +5,7 @@ namespace HexGeneral.Game;
 
 public class RoadModel : Model
 {
+    public float EngineerPointCost { get; private set; }
     public Color Color { get; private set; }
-    public RoadModel() 
-    {
-        
-    }
+    public int Level { get; private set; }
 }

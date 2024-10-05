@@ -141,14 +141,22 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
 
         return true;
     }
-
-    public IEnumerable<ERef<Unit>> GetUnitRefs(
+    public IEnumerable<Unit> GetAllUnits(HexGeneralData data)
+    {
+        var hRef = MakeRef();
+        return data.MapUnitHolder
+            .HexUnitsByDomain
+            .Where(kvp => kvp.Value.ContainsKey(hRef))
+            .SelectMany(kvp => kvp.Value[hRef])
+            .Select(u => u.Get(data));
+    }
+    public IEnumerable<Unit> GetDomainUnits(
         Domain domain, HexGeneralData data)
     {
         return data.MapUnitHolder.HexUnitsByDomain[domain.MakeIdRef(data)]
             .TryGetValue(MakeRef(), out var units)
-            ? units
-            : ImmutableArray<ERef<Unit>>.Empty;
+            ? units.Select(u => u.Get(data))
+            : ImmutableArray<Unit>.Empty;
     }
 
     public HexRef MakeRef()

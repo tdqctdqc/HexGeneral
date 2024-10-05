@@ -45,5 +45,11 @@ public partial class HexPanel : PanelContainer
             }
         }
         AddChild(vbox);
+
+        var projects = _client.Data.EngineerProjects.GetDescrForHex(hex, _client.Data);
+        if (projects is not null)
+        {
+            vbox.AddChild(projects);
+        }
     }
 }

@@ -23,6 +23,7 @@ public class LandAttackComponent : AttackComponent
     public override bool CanAttack(Unit targetUnit, Hex targetHex, 
         HexGeneralData data)
     {
+        if (targetHex.Landform.Get(data).IsLand == false) return false;
         var targetMoveType = targetUnit.Components.Get<IMoveComponent>(data)
             .GetActiveMoveType(data);
         if (targetMoveType.Domain != data.ModelPredefs.Domains.LandDomain
@@ -116,4 +117,6 @@ public class LandAttackComponent : AttackComponent
     {
         return false;
     }
+
+    
 }

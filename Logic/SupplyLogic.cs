@@ -23,6 +23,7 @@ public class SupplyLogic
             h => h.TryGetLocation(data, out var loc) 
                  && loc.Buildings.Any(b => b.Get(data) is ISupplyCenter),
             out var cost);
+        if (closestSupply == null) return 0f;
         return GetSupplyAvailabilityFromMoveCost(cost);
     }
 }

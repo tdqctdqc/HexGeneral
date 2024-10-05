@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
@@ -95,13 +96,13 @@ public class MapUnitHolder : Entity
         }
     }
 
-    public void SwitchUnitDomain(Unit unit, Domain newDomain, HexGeneralData data)
+    public void SwitchUnitDomain(Unit unit, 
+        Domain oldDomain,
+        Domain newDomain, HexGeneralData data)
     {
         var uRef = unit.MakeRef();
-        var oldDomain = unit.Components.Get<IMoveComponent>(data)
-            .GetActiveMoveType(data).Domain.MakeIdRef(data);
         var hex = UnitPositions[uRef];
-        if (HexUnitsByDomain[oldDomain][hex].Remove(uRef)
+        if (HexUnitsByDomain[oldDomain.MakeIdRef(data)][hex].Remove(uRef)
             == false)
         {
             throw new Exception();
@@ -114,5 +115,18 @@ public class MapUnitHolder : Entity
 
         HexUnitsByDomain[newDomain.MakeIdRef(data)].AddOrUpdate(hex, uRef);
         
+    }
+
+    public IEnumerable<Unit> GetDomainUnitsInHex(Domain domain,
+        Hex hex, HexGeneralData data)
+    {
+        var dRef = domain.MakeIdRef(data);
+        var dic = HexUnitsByDomain[dRef];
+        if (dic.TryGetValue(hex.MakeRef(), out var us))
+        {
+            return us.Select(u => u.Get(data));
+        }
+
+        return null;
     }
 }

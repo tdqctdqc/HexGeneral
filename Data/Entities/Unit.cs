@@ -21,8 +21,7 @@ public class Unit : Entity, IComponentedEntity
     {
         var id = data.IdDispenser.TakeId();
         var uRef = new ERef<Unit>(id);
-        var moveComp = model.MoveType
-            .MakeNativeMoveComponent(uRef);
+        var moveComp = new NativeMoveComponent(uRef);
         var org = new OrganizationComponent(uRef, model.Organization);
         var attacksCount = new AttackCountComponent(0, 
             1);

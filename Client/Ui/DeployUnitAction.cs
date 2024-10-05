@@ -40,4 +40,9 @@ public class DeployUnitAction(MouseButtonMask button,
         var com = new DeployUnitCommand(unit.MakeRef(), hex.MakeRef());
         _client.SubmitCommand(com);
     }
+
+    public override void Clear()
+    {
+        
+    }
 }

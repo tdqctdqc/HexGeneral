@@ -30,7 +30,7 @@ public class CurrentAmmunitionComponent(ERef<Unit> unit, int currentAmmo, bool r
             var data = client.Client().Data;
             var ammo = Unit.Get(data).UnitModel.Get(data)
                 .Components.Get<AmmunitionComponent>();
-
+            
             var ammoCap = ammo.AmmoCap;
             var ammoCost = ammo.AmmoCost;
 

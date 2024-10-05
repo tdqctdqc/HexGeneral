@@ -1,6 +1,7 @@
 using System.Linq;
 using Godot;
 using GodotUtilities.Graphics;
+using HexGeneral.Data.Components;
 using HexGeneral.Game.Components;
 
 namespace HexGeneral.Game.Client.Graphics;
@@ -11,17 +12,10 @@ public partial class UnitGraphic : Node2D
     private static Mesh _unitMesh, _iconMesh;
     private MeshInstance2D _unitTexture;
     private UnitStatusBar _statusBar;
-    private MeshInstance2D _highlight;
     private static float _dim = 1f;
     public UnitGraphic(Unit u, HexGeneralData data)
     {
-        var mb = new MeshBuilder();
-        mb.DrawBox((Vector2.Left + Vector2.Up) * _dim / 2f,
-            (Vector2.Right + Vector2.Down) * _dim / 2f,
-            Colors.White, .1f);
-        _highlight = mb.GetMeshInstance();
-        AddChild(_highlight);
-        _highlight.Visible = false;
+        
         
         if (_unitMesh is null)
         {
@@ -62,6 +56,11 @@ public partial class UnitGraphic : Node2D
         {
             _unitTexture.Texture = m.Mobilizer.Get(client.Data).GetTexture();
         }
+        else if (u.Components.Get<EmbarkedComponent>(client.Data) 
+                 is EmbarkedComponent e)
+        {
+            _unitTexture.Texture = e.Mobilizer.Get(client.Data).GetTexture();
+        }
         else
         {
             _unitTexture.Texture = u.UnitModel.Get(client.Data).GetTexture();
@@ -69,10 +68,6 @@ public partial class UnitGraphic : Node2D
         _statusBar.Update(u, client.Data);
     }
 
-    public void SetHighlight(bool highlight)
-    {
-        _highlight.Visible = highlight;
-    }
 
     private static LabelSettings GetLabelSettings()
     {

@@ -25,15 +25,17 @@ public class MoveTypeLand : MoveType
         Regime movingRegime, HexGeneralData data)
     {
         var mult = 1f;
+        var lfCost = LandformCosts[to.Landform.Get(data)];
+        if(lfCost < 0) return Single.PositiveInfinity;
+        var vCost = VegetationCosts[to.Vegetation.Get(data)];
+        if(vCost < 0) return Single.PositiveInfinity;
         if (to.Regime != movingRegime)
         {
-            if(to.GetUnitRefs(Domain, data).Any()) return Single.PositiveInfinity;
+            if(to.GetDomainUnits(Domain, data).Any()) return Single.PositiveInfinity;
             mult = HostileHexCostMult;
         }
-        var lfCost = LandformCosts[to.Landform.Get(data)];
-        if(lfCost < 0) lfCost = Single.PositiveInfinity;
-        var vCost = VegetationCosts[to.Vegetation.Get(data)];
-        if(vCost < 0) vCost = Single.PositiveInfinity;
+        
+        
         var cost = lfCost + vCost;
         if (data.RoadNetwork.Roads.TryGetValue(from.GetIdEdgeKey(to), out var road))
         {
@@ -46,12 +48,6 @@ public class MoveTypeLand : MoveType
     {
         hex.SetRegime(unit.Regime, key);
     }
-
-    public override IMoveComponent MakeNativeMoveComponent(ERef<Unit> unit)
-    {
-        return new NativeMoveComponent(unit);
-    }
-
     
     private void ModifyForCombat(CombatModifier modifier, bool attacker,
         HexGeneralData data)
@@ -75,7 +71,24 @@ public class MoveTypeLand : MoveType
     {
         ModifyForCombat(modifier, false, data);
     }
-    
+
+    public override bool ValidDest(Hex hex, Regime movingRegime, HexGeneralData data)
+    {
+        var land = data.ModelPredefs.Domains.LandDomain;
+        if (hex.Landform.Get(data).IsLand == false) return false;
+        if (hex.Full(land, data))
+        {
+            return false;
+        }
+
+        if (hex.Regime != movingRegime && hex.GetDomainUnits(land, data).Any())
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public float GetDamageMult(Hex hex, HexGeneralData data, bool attacking)
     {
         if (attacking)
@@ -85,6 +98,7 @@ public class MoveTypeLand : MoveType
 
         return DefendTerrainDamageModel.GetMult(hex, data);
     }
+    
     public override HashSet<Hex> GetMoveRadius(Hex start, Regime movingRegime, 
         float maxCost,
         HexGeneralData data)
@@ -93,6 +107,7 @@ public class MoveTypeLand : MoveType
             start, h => h.GetNeighbors(data),
             (h, g) => GetMoveCost(h, g, movingRegime, data),
             maxCost);
-        return radius.Where(h => h.Full(Domain, data) == false).ToHashSet();
+        return radius.Where(h => ValidDest(h, movingRegime, data))
+            .ToHashSet();
     }
 }
