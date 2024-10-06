@@ -19,6 +19,7 @@ public partial class LocationGraphics : Node2D
     public void Update()
     {
         this.ClearChildren();
+        Graphics.Clear();
         foreach (var location in _client.Data.Entities.GetAll<Location>())
         {
             UpdateLocation(location);

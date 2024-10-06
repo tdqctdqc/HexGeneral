@@ -9,6 +9,6 @@ public class NewRoadEvent(Vector2I edge) : ClientEvent
 
     public override void Handle(HexGeneralClient client)
     {
-        client.GetComponent<MapGraphics>().RoadGraphics.DrawRoads();
+        client.GetComponent<MapGraphics>().RoadGraphics.Update();
     }
 }

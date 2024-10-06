@@ -6,6 +6,7 @@ using GodotUtilities.GameData;
 using GodotUtilities.Graphics;
 using GodotUtilities.Ui;
 using HexGeneral.Client.Ui;
+using HexGeneral.Data.Components;
 using HexGeneral.Game.Client.Graphics;
 using HexGeneral.Game.Components;
 
@@ -16,7 +17,8 @@ public class UnitMode : UiMode
     private HexGeneralClient _hexGenClient;
     public MouseMode MoveAttackMouseMode { get; private set; }
     public MouseMode EngineerMouseMode { get; private set; }
-    public ListSettingsOption<MouseMode> MouseMode { get; private set; }
+    public MouseMode SelectUnitMouseMode { get; private set; }
+    public DefaultSettingsOption<MouseMode> MouseMode { get; private set; }
     private KeyboardInputMode _keyboardMode;
     private List<MapOverlayDrawer> _overlays;
     public Action Exited { get; set; }
@@ -26,15 +28,30 @@ public class UnitMode : UiMode
         SelectedUnit = new DefaultSettingsOption<Unit>("Selected Unit",
             null);
         _hexGenClient = client;
+        MouseMode = new DefaultSettingsOption<MouseMode>("Mouse Mode", SelectUnitMouseMode);
 
         var selectedOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
         SelectedUnit.SettingChanged.Subscribe(v =>
         {
             selectedOverlay.Clear();
-            if (v.newVal is not null)
+            var unit = v.newVal;
+            if (unit is null)
             {
-                selectedOverlay.DrawUnitHighlightBox(v.newVal, Colors.White,
-                    client);
+                MouseMode.Set(SelectUnitMouseMode);
+                return;
+            }
+            selectedOverlay.DrawUnitHighlightBox(unit, Colors.White,
+                client);
+
+            if (MouseMode.Value == EngineerMouseMode
+                && unit.Components.Get<EngineerEntityComponent>(client.Data) is null)
+            {
+                MouseMode.Set(MoveAttackMouseMode);
+            }
+
+            if (MouseMode.Value == SelectUnitMouseMode)
+            {
+                MouseMode.Set(MoveAttackMouseMode);
             }
         });
         
@@ -42,6 +59,12 @@ public class UnitMode : UiMode
         {
             selectedOverlay
         };
+
+        SelectUnitMouseMode = new MouseMode(
+            [
+                new UnitSelectAction(MouseButtonMask.Left, _hexGenClient, SelectedUnit.Set),
+            ]
+        );
         
         MoveAttackMouseMode = new MouseMode(
             [
@@ -62,14 +85,6 @@ public class UnitMode : UiMode
         );
         
         
-        MouseMode = new ListSettingsOption<MouseMode>("Mouse Mode", 
-            new List<MouseMode>
-            {
-                MoveAttackMouseMode
-            }, new List<string>
-            {
-                "MoveAttack"
-            });
         MouseMode.SettingChanged.Subscribe(v =>
         {
             if (v.oldVal != v.newVal)
@@ -77,7 +92,7 @@ public class UnitMode : UiMode
                 v.oldVal?.Clear();
             }
         });
-        MouseMode.Set(MoveAttackMouseMode);
+        MouseMode.Set(SelectUnitMouseMode);
         
         _keyboardMode = new UnitKeyboardMode(client);
     }
@@ -91,7 +106,7 @@ public class UnitMode : UiMode
     {
         if (e is InputEventMouse mb)
         {
-            MouseMode.Value.HandleInput(mb);
+            MouseMode.Value?.HandleInput(mb);
         }
         if (e is InputEventKey k)
         {

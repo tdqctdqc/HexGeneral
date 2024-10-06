@@ -18,28 +18,38 @@ public partial class UnitPanel : TabContainer
     private UnitMode _mode;
     private HexGeneralClient _client;
     private VBoxContainer _combatInfo, _engineeringInfo;
+    private List<Control> _tabs;
+    private List<MouseMode> _tabModes;
+    private List<Func<bool>> _tabEnable;
+    private List<Action> _tabDraw;
+    
     public UnitPanel(UnitMode mode, HexGeneralClient client)
     {
         _client = client;
         _mode = mode;
         _mode.SelectedUnit.SettingChanged.SubscribeForNode(v =>
         {
-            Draw();
+            DrawTabs();
         }, this);
-        TreeEntered += Draw;
+        _mode.MouseMode.SettingChanged.SubscribeForNode(v =>
+        {
+            DrawTabs();
+        }, this);
+        
+        TreeEntered += DrawTabs;
         VisibilityChanged += () =>
         {
-            if (Visible) Draw();
+            if (Visible) DrawTabs();
         };
         _client.Data.Notices.UnitAltered.SubscribeForNode(u =>
         {
-            Draw();
+            DrawTabs();
         }, this);
         _client.Data.Notices.UnitMoved.SubscribeForNode(u =>
         {
-            Draw();
+            DrawTabs();
         }, this);
-        _client.Data.Notices.FinishedTurnStartLogic.SubscribeForNode(Draw, this);
+        _client.Data.Notices.FinishedTurnStartLogic.SubscribeForNode(DrawTabs, this);
 
         _combatInfo = new VBoxContainer();
         _combatInfo.Name = "Combat";
@@ -47,40 +57,64 @@ public partial class UnitPanel : TabContainer
         _engineeringInfo = new VBoxContainer();
         _engineeringInfo.Name = "Engineering";
         AddChild(_engineeringInfo);
+
+        _tabs = new List<Control>();
+        _tabEnable = new List<Func<bool>>();
+        _tabDraw = new List<Action>();
+        _tabModes = new List<MouseMode>();
         
-        
-        TabSelected += v => SelectMouseMode();
+        AddTab(_combatInfo, 
+            _mode.MoveAttackMouseMode,
+            () => true,
+            DrawCombatInfo);
+        AddTab(_engineeringInfo, 
+            _mode.EngineerMouseMode,
+            () => _mode.SelectedUnit.Value?.Components.Get<EngineerEntityComponent>(_client.Data)
+                    is not null,
+            DrawEngineeringInfo);
+        TabSelected += v =>
+        {
+            var index = _tabs.IndexOf((Control)GetChildren()[(int)v]);
+            if (_mode.MouseMode.Value != _tabModes[index])
+            {
+                _mode.MouseMode.Set(_tabModes[index]);
+            }
+        };
     }
 
-
-
-
-    private void Draw()
+    private void AddTab(Control tab, MouseMode mode, Func<bool> enable, 
+        Action draw)
     {
-        var unit = _mode.SelectedUnit.Value;
-        if (unit is not null)
+        _tabs.Add(tab);
+        _tabModes.Add(mode);
+        _tabEnable.Add(enable);
+        _tabDraw.Add(draw);
+    }
+    private void DrawTabs()
+    {
+        if (_mode.MouseMode.Value == _mode.SelectUnitMouseMode)
         {
-            DrawCombatInfo();
-            DrawEngineeringInfo();
+            for (var i = 0; i < _tabs.Count; i++)
+            {
+                SetTabDisabled(i, true);
+            }
+
+            return;
         }
-        
-        SelectMouseMode();
+
+        for (var i = 0; i < _tabs.Count; i++)
+        {
+            var mode = _tabModes[i];
+            var index = _tabs[i].GetIndex();
+            if (mode == _mode.MouseMode.Value)
+            {
+                CurrentTab = index;
+                _tabDraw[i]();
+            }
+            SetTabDisabled(index, _tabEnable[i]() == false);
+        }
     }
 
-    private void SelectMouseMode()
-    {
-        if (CurrentTab == -1) return;
-        var tab = GetChild(CurrentTab);
-        if (tab == _combatInfo)
-        {
-            _mode.MouseMode.Set(_mode.MoveAttackMouseMode);
-        }
-        else if (tab == _engineeringInfo)
-        {
-            _mode.MouseMode.Set(_mode.EngineerMouseMode);
-        }
-        else throw new Exception();
-    }
     private void DrawCombatInfo()
     {
         _combatInfo.ClearChildren();
@@ -134,7 +168,7 @@ public partial class UnitPanel : TabContainer
             var proc = new UnitReinforceProcedure(unit.MakeRef(), amount);
             var inner = new DoProcedureCommand(proc);
             var com = CallbackCommand.Redraw(inner, this,
-                Draw, _client);
+                DrawTabs, _client);
             _client.SubmitCommand(com);
         });
         reinforce.Disabled = unit.CanReinforce(_client.Data) == false;
@@ -149,7 +183,14 @@ public partial class UnitPanel : TabContainer
     private void DrawEngineeringInfo()
     {
         _engineeringInfo.ClearChildren();
+        
         var unit = _mode.SelectedUnit.Value;
+        SetTabDisabled(_engineeringInfo.GetIndex(), unit is null);
+        if (unit is null)
+        {
+            return;
+        }
+        
         var e = unit.Components.Get<EngineerEntityComponent>(_client.Data);
         SetTabDisabled(_engineeringInfo.GetIndex(), e is null);
 

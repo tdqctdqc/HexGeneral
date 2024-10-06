@@ -55,10 +55,12 @@ public partial class HexGeneralClient : GameClient
             {
                 uiFrame.LeftBar.ShowPanel(a.newVal.GetControl(this));
             }, this);
-        var settingsButtons = new HBoxContainer();
-        uiFrame.TopBars.AddChild(settingsButtons);
-        settingsButtons.AddButton("Map Graphics Settings",
+        var topButtons = new HBoxContainer();
+        uiFrame.TopBars.AddChild(topButtons);
+        topButtons.AddButton("Map Graphics Settings",
             () => GraphicsSettingsWindow.Open(this));
+        topButtons.AddButton("Logger",
+            () => LoggerWindow.Open(this, Data));
         AddComponent(new TurnBar());
         AddComponent(new RegimeInfoBar());
         AddComponent(new RegimeControlBar());

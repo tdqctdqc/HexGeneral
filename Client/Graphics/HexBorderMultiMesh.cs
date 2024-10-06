@@ -66,6 +66,13 @@ public partial class HexBorderMultiMesh<TElement> : MultiMeshInstance2D
         }
     }
 
+    public void Update(HexGeneralClient client)
+    {
+        foreach (var hex in client.Data.Map.Hexes.Values)
+        {
+            UpdateHex(hex, client);
+        }
+    }
     public void UpdateHex(Hex hex, HexGeneralClient client)
     {
         var element = _getElement(hex);

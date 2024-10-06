@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Godot;
 using GodotUtilities.DataStructures;
 using GodotUtilities.GameData;
+using GodotUtilities.Logger;
 using GodotUtilities.Serialization;
 
 namespace HexGeneral.Game;
@@ -33,5 +34,6 @@ public class HexGeneralData : GodotUtilities.GameData.Data
         Settings = settings;
         GenerationSettings = generationSettings;
         ModelPredefs = new ModelPredefs(this);
+        Logger = new Logger(this, d => d.Data().TurnManager.RoundNumber);
     }
 }

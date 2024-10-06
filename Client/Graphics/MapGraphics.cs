@@ -23,6 +23,16 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
     public void Connect(GameClient client)
     {
         client.GraphicsLayer.AddChild(this);
+        client.Client().Data.Notices.FinishedTurnStartLogic.SubscribeForNode(
+        () =>
+        {
+            var curr = Client.Data.TurnManager.GetCurrentPlayer(Client.Data);
+            var local = Client.GetPlayer();
+            if (curr == local)
+            {
+                Update();
+            }
+        }, this);
         Input = new MapInputCatcher(Client.Data.Map.GridBounds);
         AddChild(Input);
         
@@ -54,6 +64,15 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
         AddChild(ConstructionGraphics);
     }
 
+    public void Update()
+    {
+        Units.Update(Client);
+        RegimeGraphics.Update(Client);
+        RoadGraphics.Update();
+        LocationGraphics.Update();
+        ConstructionGraphics.Update(Client);
+    }
+
     public void RedrawHex(HexRef h, HexGeneralClient client)
     {
         Units.DrawHex(h, client);
@@ -62,7 +81,7 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
         {
             LocationGraphics.UpdateLocation(loc);
         }
-        ConstructionGraphics.DrawConstructions(client);
+        ConstructionGraphics.Update(client);
     }
 
     public void Process(float delta)

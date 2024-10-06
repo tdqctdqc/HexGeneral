@@ -1,5 +1,6 @@
 using System.Linq;
 using Godot;
+using GodotUtilities.GameClient;
 using GodotUtilities.GameData;
 using GodotUtilities.Graphics;
 using GodotUtilities.Ui;
@@ -24,17 +25,29 @@ public partial class RegimeGraphics : Node2D
         RegimeColor.ZAsRelative = false;
 
         RegimeBorder = new HexBorderMultiMesh<Regime>(
-            r =>
-            {
-                if (r is null) return Colors.Transparent;
-                return r.RegimeModel.Get(client.Client().Data).Color.Inverted();
-            }, h => h.Regime.Get(client.Client().Data), client.Client());
+            r => GetRegimeBorderColor(r, client), h => h.Regime.Get(client.Client().Data), client.Client());
         AddChild(RegimeBorder);
         RegimeBorder.ZIndex = (int)GraphicsLayers.RegimeBorders;
         RegimeBorder.ZAsRelative = false;
         MakeSettings(client);
     }
 
+    public void Update(HexGeneralClient client)
+    {
+        RegimeBorder.Update(client);
+        RegimeColor.SetColors(h => GetRegimeColor(h, client));
+    }
+    private Color GetRegimeColor(Hex hex, HexGeneralClient client)
+    {
+        var r = hex.Regime.Get(client.Data);
+        if (r is null) return Colors.Transparent;
+        return r.RegimeModel.Get(client.Client().Data).Color.Inverted();
+    }
+    private Color GetRegimeBorderColor(Regime r, HexGeneralClient client)
+    {
+        if (r is null) return Colors.Transparent;
+        return r.RegimeModel.Get(client.Client().Data).Color.Inverted();
+    }
     private void MakeSettings(HexGeneralClient client)
     {
         var colorTransparency = RegimeColor.MakeTransparencySetting("Regime Color Transparency");

@@ -12,10 +12,10 @@ public partial class ConstructionGraphics : MultiMeshInstance2D
         Multimesh = new MultiMesh();
         Multimesh.Mesh = mesh;
         Texture = TextureManager.GetTexture("Construction");
-        DrawConstructions(client);
+        Update(client);
     }
 
-    public void DrawConstructions(HexGeneralClient client)
+    public void Update(HexGeneralClient client)
     {
         var projs = client.Data.EngineerProjects;
         var hexes = projs

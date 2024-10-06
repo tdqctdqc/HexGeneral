@@ -14,10 +14,10 @@ public partial class RoadGraphics : Node2D
         ZAsRelative = false; 
         _data = data;
         _data = data;
-        DrawRoads();
+        Update();
     }
 
-    public void DrawRoads()
+    public void Update()
     {
         this.ClearChildren();
         var map = _data.Map;
