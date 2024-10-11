@@ -13,7 +13,8 @@ namespace HexGeneral.Game.Generators;
 
 public static class RegimeGenerator
 {
-    public static int UrbanGenDepth => MapGenerator.BranchTreeDepth - 2;
+    public static int UrbanGenDepth 
+        => MapGenerator.BranchTreeDepth - 2;
 
     public static void Generate(HexGeneralData data, GenerationData setupData)
     {
@@ -73,8 +74,8 @@ public static class RegimeGenerator
         {
             var needPort = true;
             var seedHex = urbanTrunk.TrunkSeed.GetTwigSeed();
-            seedHex.SetLandform(urban.MakeIdRef(data));
-            seedHex.SetVegetation(barren.MakeIdRef(data));
+            seedHex.SetLandformGen(urban.MakeIdRef(data));
+            seedHex.SetVegetationGen(barren.MakeIdRef(data));
             var loc = new Location(data.IdDispenser.TakeId(),
                 seedHex.MakeRef(), new List<ModelIdRef<BuildingModel>>());
             data.Entities.AddEntity(loc, data);
@@ -135,8 +136,8 @@ public static class RegimeGenerator
                         var industryBuilding = industryBuildings[industrySample];
                         extraLoc.Buildings.Add(industryBuilding.MakeIdRef<BuildingModel>(data));
                         
-                        nHex.SetLandform(urban.MakeIdRef(data));
-                        nHex.SetVegetation(barren.MakeIdRef(data));
+                        nHex.SetLandformGen(urban.MakeIdRef(data));
+                        nHex.SetVegetationGen(barren.MakeIdRef(data));
                         
                         if (needPort && nHex.GetNeighbors(data)
                                 .FirstOrDefault(n => n.Landform.Get(data).IsLand == false)
@@ -181,7 +182,7 @@ public static class RegimeGenerator
         var landHexes = data.Map.Hexes.Values
             .Where(h => h.Landform.Get(data).IsLand)
             .ToHashSet();
-        var pathFindDepth = 1;
+        var pathFindDepth = 0;
 
         float getHexEdgeCost(Hex h, Hex n)
         {

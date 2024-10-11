@@ -4,7 +4,7 @@ using GodotUtilities.GameData;
 
 namespace HexGeneral.Game;
 
-public class PlayerHolder : Entity
+public class PlayerHolder : Entity, ISingletonEntity
 {
     public Dictionary<Guid, ERef<Player>> PlayerByGuid { get; private set; }
     
@@ -15,7 +15,6 @@ public class PlayerHolder : Entity
 
     public override void Made(GodotUtilities.GameData.Data d)
     {
-        d.SetEntitySingleton<PlayerHolder>();
     }
 
     public override void CleanUp(GodotUtilities.GameData.Data d)

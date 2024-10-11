@@ -51,6 +51,10 @@ public partial class HexBaseColorGraphics : Node2D
         }
     }
 
+    public void UpdateHex(Hex hex)
+    {
+        _baseHexColors.SetColor(hex, hex.GetTerrainColor(_data));
+    }
     public static Color GetDebugColor(int i, Hex hex)
     {
         return i > 0 && hex.DebugColors.Count > i - 1 ? hex.DebugColors[i - 1] : Colors.Transparent;

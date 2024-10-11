@@ -6,7 +6,7 @@ using MessagePack;
 
 namespace HexGeneral.Game;
 
-public class Map : Entity
+public class Map : Entity, ISingletonEntity
 {
     public Dictionary<Vector3I, Hex> Hexes { get; private set; }
     public Dictionary<int, Vector3I> CoordsById { get; private set; }
@@ -37,7 +37,6 @@ public class Map : Entity
     
     public override void Made(GodotUtilities.GameData.Data d)
     {
-        d.SetEntitySingleton<Map>();
     }
 
     public override void CleanUp(GodotUtilities.GameData.Data d)

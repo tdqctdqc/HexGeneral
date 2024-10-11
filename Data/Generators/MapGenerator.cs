@@ -19,8 +19,10 @@ namespace HexGeneral.Game.Generators;
 
 public static class MapGenerator
 {
-    private static int _chunkSize = 30;
+    private static int _chunkSize = 20;
     public static int BranchTreeDepth = 5;
+    private static int _chunkConsolidateNumToPick = 2;
+
     public static void Generate(HexGeneralData data, 
         GenerationData setupData)
     {
@@ -80,7 +82,7 @@ public static class MapGenerator
                 lf = data.ModelPredefs.Landforms.Sea;
             }
                 
-            hex.SetLandform(lf.MakeIdRef(data));
+            hex.SetLandformGen(lf.MakeIdRef(data));
         }
     }
 
@@ -117,7 +119,7 @@ public static class MapGenerator
             var roughnessSample = roughnessNoise.GetSample2D(worldPos);
             roughnessSample = Mathf.Clamp(roughnessSample, 0f, 1f);
             Landform lf = lfsByRoughness.First(r => roughnessSample >= r.MinRoughness);
-            hex.SetLandform(lf.MakeIdRef(data));
+            hex.SetLandformGen(lf.MakeIdRef(data));
         }
     }
 
@@ -148,7 +150,7 @@ public static class MapGenerator
             var lf = hex.Landform.Get(data);
             if (lf.IsLand == false)
             {
-                hex.SetVegetation(barren.MakeIdRef(data));
+                hex.SetVegetationGen(barren.MakeIdRef(data));
                 continue;
             }
             var worldPos = coord.CubeToGridCoords().GetWorldPos();
@@ -167,7 +169,7 @@ public static class MapGenerator
                     v = grassland;
                 }
             }
-            hex.SetVegetation(v.MakeIdRef(data));
+            hex.SetVegetationGen(v.MakeIdRef(data));
         }
     }
 
@@ -184,8 +186,6 @@ public static class MapGenerator
         var landHexes = data.Map.Hexes
             .Values
             .Where(h => h.Landform.Get(data).IsLand).ToHashSet();
-
-        
         
         Func<Branch<Hex>, Branch<Hex>, bool> canShare 
             = (b, c) => 
@@ -206,7 +206,7 @@ public static class MapGenerator
         IPickerAgent<Branch<Hex>> agentFactory(Branch<Hex> seed, Picker<Branch<Hex>> picker)
         {
             return new AdjacencyCountPickerAgent<Branch<Hex>>(seed, picker,
-                3,
+                _chunkConsolidateNumToPick,
                 x => canShare(seed, x));
         }
 

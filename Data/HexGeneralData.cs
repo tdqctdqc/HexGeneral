@@ -20,9 +20,9 @@ public class HexGeneralData : GodotUtilities.GameData.Data
     public TurnManager TurnManager => (TurnManager)Singletons[typeof(TurnManager)];
     public EngineerProjects EngineerProjects => (EngineerProjects)Singletons[typeof(EngineerProjects)];
     public GameSettings Settings { get; private set; }
-    public GenerationSettings GenerationSettings { get; private set; }
     public DataNotices Notices { get; private set; }
-    public HexGeneralData(GameSettings settings, GenerationSettings generationSettings) 
+    
+    public HexGeneralData(GameSettings settings) 
         : base(new(0),
         new(new Dictionary<int, Entity>()),
         new(),
@@ -32,7 +32,6 @@ public class HexGeneralData : GodotUtilities.GameData.Data
     {
         Notices = new DataNotices();
         Settings = settings;
-        GenerationSettings = generationSettings;
         ModelPredefs = new ModelPredefs(this);
         Logger = new Logger(this, d => d.Data().TurnManager.RoundNumber);
     }

@@ -15,18 +15,18 @@ public class DeploymentMode : UiMode
 {
     public DefaultSettingsOption<Unit> SelectedUnit { get; private set; }
     private MapOverlayDrawer _deploySpots;
-    private MouseMode _mouseMode;
     public DeploymentMode(HexGeneralClient client) 
         : base(client, "Deployment")
     {
         SelectedUnit = new DefaultSettingsOption<Unit>("Selected Unit", null);
         
-        _mouseMode = new MouseMode(
+        var deployMouseMode = new MouseMode(
             new List<MouseAction>
             {
                 new DeployUnitAction(MouseButtonMask.Right, 
                     this, client)
             });
+        MouseMode.Set(deployMouseMode);
         _deploySpots = new MapOverlayDrawer((int)GraphicsLayers.Debug,
             client.GetComponent<MapGraphics>);
         _client.Client().Data.Notices.UnitDeployed.Subscribe(u =>
@@ -53,7 +53,7 @@ public class DeploymentMode : UiMode
     {
         if (e is InputEventMouse m)
         {
-            _mouseMode.HandleInput(m);
+            MouseMode.Value?.HandleInput(m);
         }
     }
 

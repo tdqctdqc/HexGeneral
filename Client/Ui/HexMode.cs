@@ -9,17 +9,17 @@ namespace HexGeneral.Game.Client;
 public class HexMode : UiMode
 {
     public SettingsOption<Hex> SelectedHex { get; private set; }
-    private MouseMode _mouseMode;
     public HexMode(HexGeneralClient client, string name) : base(client, name)
     {
         SelectedHex = new DefaultSettingsOption<Hex>("Selected Hex", null);
-        _mouseMode = new MouseMode(
+        var hexSelectMode = new MouseMode(
             new List<MouseAction>
             {
                 new HexSelectAction(MouseButtonMask.Left, 
                     client, 
                     SelectedHex.Set)
             });
+        MouseMode.Set(hexSelectMode);
     }
 
     public override void Process(float delta)
@@ -30,7 +30,7 @@ public class HexMode : UiMode
     {
         if (e is InputEventMouse m)
         {
-            _mouseMode.HandleInput(m);
+            MouseMode.Value?.HandleInput(m);
         }
     }
 

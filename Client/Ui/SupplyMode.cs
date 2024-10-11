@@ -15,7 +15,6 @@ public class SupplyMode : UiMode
 {
     public SettingsOption<Hex> SelectedHex { get; private set; }
     public SettingsOption<Regime> SelectedRegime { get; private set; }
-    private MouseMode _mouseMode;
     private MapOverlayDrawer _supplyOverlay;
     private static float _tint = 1f;
 
@@ -25,13 +24,14 @@ public class SupplyMode : UiMode
         SelectedRegime = new DefaultSettingsOption<Regime>("Selected Regime", null);
         _supplyOverlay = new MapOverlayDrawer((int)GraphicsLayers.SubRoads,
             client.GetComponent<MapGraphics>);
-        _mouseMode = new MouseMode(
+        var hexSelectMouseMode = new MouseMode(
             new List<MouseAction>
             {
                 new HexSelectAction(MouseButtonMask.Left, 
                     client, 
                     SelectedHex.Set)
             });
+        MouseMode.Set(hexSelectMouseMode);
         
         SelectedHex.SettingChanged.Subscribe(v =>
         {
@@ -121,7 +121,7 @@ public class SupplyMode : UiMode
     {
         if (e is InputEventMouse m)
         {
-            _mouseMode.HandleInput(m);
+            MouseMode.Value?.HandleInput(m);
         }
     }
 

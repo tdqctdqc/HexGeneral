@@ -14,7 +14,7 @@ public static class NewGameGenerator
         
         var setupData = new GenerationData(generationSettings);
         var gameSettings = new GameSettings();
-        var data = new HexGeneralData(gameSettings, generationSettings);
+        var data = new HexGeneralData(gameSettings);
         
         GodotUtilities.GameData.Data.SetupForHost(data, 
             new HexGeneralModelImporter(data.ModelPredefs));

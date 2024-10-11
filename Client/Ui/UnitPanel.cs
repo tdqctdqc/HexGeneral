@@ -13,17 +13,14 @@ using HexGeneral.Logic.Procedures;
 
 namespace HexGeneral.Game.Client;
 
-public partial class UnitPanel : TabContainer
+public partial class UnitPanel : UiModeTabPanel
 {
     private UnitMode _mode;
     private HexGeneralClient _client;
     private VBoxContainer _combatInfo, _engineeringInfo;
-    private List<Control> _tabs;
-    private List<MouseMode> _tabModes;
-    private List<Func<bool>> _tabEnable;
-    private List<Action> _tabDraw;
     
     public UnitPanel(UnitMode mode, HexGeneralClient client)
+        : base(mode, mode.SelectUnitMouseMode)
     {
         _client = client;
         _mode = mode;
@@ -31,16 +28,7 @@ public partial class UnitPanel : TabContainer
         {
             DrawTabs();
         }, this);
-        _mode.MouseMode.SettingChanged.SubscribeForNode(v =>
-        {
-            DrawTabs();
-        }, this);
         
-        TreeEntered += DrawTabs;
-        VisibilityChanged += () =>
-        {
-            if (Visible) DrawTabs();
-        };
         _client.Data.Notices.UnitAltered.SubscribeForNode(u =>
         {
             DrawTabs();
@@ -53,79 +41,23 @@ public partial class UnitPanel : TabContainer
 
         _combatInfo = new VBoxContainer();
         _combatInfo.Name = "Combat";
-        AddChild(_combatInfo);
         _engineeringInfo = new VBoxContainer();
         _engineeringInfo.Name = "Engineering";
-        AddChild(_engineeringInfo);
 
-        _tabs = new List<Control>();
-        _tabEnable = new List<Func<bool>>();
-        _tabDraw = new List<Action>();
-        _tabModes = new List<MouseMode>();
-        
         AddTab(_combatInfo, 
             _mode.MoveAttackMouseMode,
-            () => true,
+            () => _mode.SelectedUnit.Value is not null,
             DrawCombatInfo);
         AddTab(_engineeringInfo, 
             _mode.EngineerMouseMode,
             () => _mode.SelectedUnit.Value?.Components.Get<EngineerEntityComponent>(_client.Data)
                     is not null,
             DrawEngineeringInfo);
-        TabSelected += v =>
-        {
-            var index = _tabs.IndexOf((Control)GetChildren()[(int)v]);
-            if (_mode.MouseMode.Value != _tabModes[index])
-            {
-                _mode.MouseMode.Set(_tabModes[index]);
-            }
-        };
     }
-
-    private void AddTab(Control tab, MouseMode mode, Func<bool> enable, 
-        Action draw)
-    {
-        _tabs.Add(tab);
-        _tabModes.Add(mode);
-        _tabEnable.Add(enable);
-        _tabDraw.Add(draw);
-    }
-    private void DrawTabs()
-    {
-        if (_mode.MouseMode.Value == _mode.SelectUnitMouseMode)
-        {
-            for (var i = 0; i < _tabs.Count; i++)
-            {
-                SetTabDisabled(i, true);
-            }
-
-            return;
-        }
-
-        for (var i = 0; i < _tabs.Count; i++)
-        {
-            var mode = _tabModes[i];
-            var index = _tabs[i].GetIndex();
-            if (mode == _mode.MouseMode.Value)
-            {
-                CurrentTab = index;
-                _tabDraw[i]();
-            }
-            SetTabDisabled(index, _tabEnable[i]() == false);
-        }
-    }
-
     private void DrawCombatInfo()
     {
         _combatInfo.ClearChildren();
         var unit = _mode.SelectedUnit.Value;
-        SetTabDisabled(_combatInfo.GetIndex(), unit is null);
-
-        if (unit is null)
-        {
-            return;
-        }
-
         var regime = unit.Regime.Get(_client.Data);
         var model = unit.UnitModel.Get(_client.Data);
         var texture = new TextureRect();
@@ -185,19 +117,7 @@ public partial class UnitPanel : TabContainer
         _engineeringInfo.ClearChildren();
         
         var unit = _mode.SelectedUnit.Value;
-        SetTabDisabled(_engineeringInfo.GetIndex(), unit is null);
-        if (unit is null)
-        {
-            return;
-        }
-        
         var e = unit.Components.Get<EngineerEntityComponent>(_client.Data);
-        SetTabDisabled(_engineeringInfo.GetIndex(), e is null);
-
-        if (e is null)
-        {
-            return;
-        }
 
         var hex = unit.GetHex(_client.Data);
         var airbase = _client.Data.ModelPredefs.Buildings.Airbase;
@@ -224,7 +144,6 @@ public partial class UnitPanel : TabContainer
             {
                 return;
             }
-            
             
             string text;
             if (hexBuildingProjects.TryGetValue(hex.MakeRef(), out var progresses)

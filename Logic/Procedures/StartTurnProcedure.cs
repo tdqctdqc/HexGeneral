@@ -34,10 +34,6 @@ public class StartTurnProcedure : Procedure
             unit.RefreshForTurn(key);
         }
         
-        
-        
-        
         data.Notices.FinishedTurnStartLogic?.Invoke();
-        turnManager.AcceptCommands(key);
     }
 }

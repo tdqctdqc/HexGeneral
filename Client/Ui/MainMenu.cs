@@ -1,5 +1,6 @@
 using Godot;
 using GodotUtilities.Ui;
+using HexGeneral.Game;
 
 namespace HexGeneral.Client.Ui;
 
@@ -15,6 +16,14 @@ public partial class MainMenu : PanelContainer
                 var newGame = new NewGameGenerationPanel();
                 GetParent().AddChild(newGame);
                 this.QueueFree();
+            });
+        vbox.AddButton("Load",
+            () =>
+            {
+                var l = new LoaderWindow();
+                Root.I.AddChild(l);
+                l.Size = Vector2I.One * 700; 
+                l.PopupCentered();
             });
         AddChild(vbox);
         this.Center();

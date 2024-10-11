@@ -5,10 +5,11 @@ using Godot;
 using GodotUtilities.GameData;
 using GodotUtilities.Logic;
 using HexGeneral.Game.Components;
+using MessagePack;
 
 namespace HexGeneral.Game;
 
-public class MapUnitHolder : Entity
+public class MapUnitHolder : Entity, ISingletonEntity
 {
 
     public static MapUnitHolder Construct(HexGeneralData data)
@@ -25,7 +26,7 @@ public class MapUnitHolder : Entity
 
         return h;
     }
-    private MapUnitHolder(int id, 
+    [SerializationConstructor] private MapUnitHolder(int id, 
         Dictionary<ERef<Unit>, HexRef> unitPositions, 
         Dictionary<ModelIdRef<Domain>,
             Dictionary<HexRef, List<ERef<Unit>>>> hexUnitsByDomain) : base(id)
@@ -74,7 +75,6 @@ public class MapUnitHolder : Entity
     }
     public override void Made(GodotUtilities.GameData.Data d)
     {
-        d.SetEntitySingleton<MapUnitHolder>();
     }
 
     public override void CleanUp(GodotUtilities.GameData.Data d)

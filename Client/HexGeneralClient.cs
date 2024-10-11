@@ -33,7 +33,8 @@ public partial class HexGeneralClient : GameClient
             new SupplyMode(this), "Supply");
         UiController.ModeOption.AddOption(
             new DeploymentMode(this), "Deployment");
-
+        UiController.ModeOption.AddOption(
+            new MapEditorMode(this), "Map Editor");
 
         var mapGraphics = new MapGraphics(this);
         AddComponent(mapGraphics);
@@ -61,6 +62,10 @@ public partial class HexGeneralClient : GameClient
             () => GraphicsSettingsWindow.Open(this));
         topButtons.AddButton("Logger",
             () => LoggerWindow.Open(this, Data));
+        topButtons.AddButton("Save",
+            () => SaverWindow.Open(this));
+        topButtons.AddButton("Load",
+            () => LoaderWindow.Open(this));
         AddComponent(new TurnBar());
         AddComponent(new RegimeInfoBar());
         AddComponent(new RegimeControlBar());

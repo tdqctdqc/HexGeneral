@@ -18,7 +18,6 @@ public class UnitMode : UiMode
     public MouseMode MoveAttackMouseMode { get; private set; }
     public MouseMode EngineerMouseMode { get; private set; }
     public MouseMode SelectUnitMouseMode { get; private set; }
-    public DefaultSettingsOption<MouseMode> MouseMode { get; private set; }
     private KeyboardInputMode _keyboardMode;
     private List<MapOverlayDrawer> _overlays;
     public Action Exited { get; set; }
@@ -28,7 +27,6 @@ public class UnitMode : UiMode
         SelectedUnit = new DefaultSettingsOption<Unit>("Selected Unit",
             null);
         _hexGenClient = client;
-        MouseMode = new DefaultSettingsOption<MouseMode>("Mouse Mode", SelectUnitMouseMode);
 
         var selectedOverlay = new MapOverlayDrawer((int)GraphicsLayers.Debug, _client.GetComponent<MapGraphics>);
         SelectedUnit.SettingChanged.Subscribe(v =>

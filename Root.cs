@@ -25,7 +25,9 @@ public partial class Root : Node
 
 	public void SetClient(GameClient c)
 	{
+		this.ClearChildren();
 		_client = c;
+		AddChild(_client);
 	}
 
 	public override void _Input(InputEvent @event)

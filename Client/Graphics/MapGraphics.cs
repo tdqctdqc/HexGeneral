@@ -17,6 +17,7 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
     public RoadGraphics RoadGraphics { get; private set; }
     public LocationGraphics LocationGraphics { get; private set; }
     public ConstructionGraphics ConstructionGraphics { get; private set; }
+    public HexBaseColorGraphics TerrainGraphics { get; private set; }
     public MapInputCatcher Input { get; private set; }
     public Action Disconnect { get; set; }
 
@@ -30,13 +31,13 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
             var local = Client.GetPlayer();
             if (curr == local)
             {
-                Update();
+                UpdateForTurn();
             }
         }, this);
         Input = new MapInputCatcher(Client.Data.Map.GridBounds);
         AddChild(Input);
-        
-        AddChild(new HexBaseColorGraphics(Client.Data));
+        TerrainGraphics = new HexBaseColorGraphics(Client.Data);
+        AddChild(TerrainGraphics);
         // AddChild(new HexFilterGraphics<Landform>(
         //     Client.Data, h => h.Landform.Get(Client.Data),
         //     lf => lf.GetTexture(),
@@ -64,7 +65,7 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
         AddChild(ConstructionGraphics);
     }
 
-    public void Update()
+    public void UpdateForTurn()
     {
         Units.Update(Client);
         RegimeGraphics.Update(Client);
@@ -82,6 +83,7 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
             LocationGraphics.UpdateLocation(loc);
         }
         ConstructionGraphics.Update(client);
+        TerrainGraphics.UpdateHex(h.Get(client.Data));
     }
 
     public void Process(float delta)

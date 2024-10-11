@@ -5,7 +5,7 @@ using GodotUtilities.GameData;
 
 namespace HexGeneral.Game;
 
-public class EngineerProjects : Entity
+public class EngineerProjects : Entity, ISingletonEntity
 {
     
     public Dictionary<Vector2I, (ModelIdRef<RoadModel>, float)> RoadConstructionProgresses { get; private set; }
@@ -23,7 +23,6 @@ public class EngineerProjects : Entity
 
     public override void Made(GodotUtilities.GameData.Data d)
     {
-        d.SetEntitySingleton<EngineerProjects>();
     }
 
     public override void CleanUp(GodotUtilities.GameData.Data d)

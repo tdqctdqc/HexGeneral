@@ -6,12 +6,12 @@ using GodotUtilities.Logic;
 
 namespace HexGeneral.Game;
 
-public class TurnManager(int id, int roundNumber, List<ERef<Regime>> regimeOrder, int regimeIter) : Entity(id)
+public class TurnManager(int id, int roundNumber, List<ERef<Regime>> regimeOrder, int regimeIter) 
+    : Entity(id), ISingletonEntity
 {
     public int RoundNumber { get; private set; } = roundNumber;
     public int RegimeIter { get; private set; } = regimeIter;
     public List<ERef<Regime>> RegimeOrder { get; private set; } = regimeOrder;
-    public bool AcceptingOrders { get; private set; }
 
     public ERef<Regime> GetCurrentRegime()
     {
@@ -33,17 +33,8 @@ public class TurnManager(int id, int roundNumber, List<ERef<Regime>> regimeOrder
         }
     }
 
-    public void AcceptCommands(ProcedureKey key)
-    {
-        AcceptingOrders = true;
-    }
-    public void RejectCommands(ProcedureKey key)
-    {
-        AcceptingOrders = false;
-    }
     public override void Made(GodotUtilities.GameData.Data d)
     {
-        d.SetEntitySingleton<TurnManager>();
     }
 
     

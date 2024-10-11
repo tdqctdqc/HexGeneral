@@ -24,15 +24,26 @@ public class Hex(Vector3I coords, ModelIdRef<Landform> landform,
     public List<Color> DebugColors { get; set; } = new List<Color>();
     
     
-    public void SetLandform(ModelIdRef<Landform> lf)
+    public void SetLandformGen(ModelIdRef<Landform> lf)
     {
         Landform = lf;
     }
-    public void SetVegetation(ModelIdRef<Vegetation> v)
+
+    public void SetLandform(Landform lf, ProcedureKey key)
+    {
+        Landform = lf.MakeIdRef(key.Data);
+        key.Data.Data().Notices.HexAltered?.Invoke(this);
+    }
+    
+    public void SetVegetationGen(ModelIdRef<Vegetation> v)
     {
         Vegetation = v;
     }
-
+    public void SetVegetation(Vegetation v, ProcedureKey key)
+    {
+        Vegetation = v.MakeIdRef(key.Data);
+        key.Data.Data().Notices.HexAltered?.Invoke(this);
+    }
     public void SetRegimeGen(ERef<Regime> regime)
     {
         Regime = regime;
