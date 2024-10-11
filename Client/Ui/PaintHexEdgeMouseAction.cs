@@ -55,17 +55,17 @@ public class PaintHexEdgeMouseAction<T> : MouseAction
 
             if (_borderNotPath)
             {
-                mb.AddLine(h1.WorldPos(), h2.WorldPos(),
-                    Colors.White.Tint(.25f), .25f);
-            }
-            else
-            {
                 var mid = (h1.WorldPos() + h2.WorldPos()) / 2f;
                 var axis = h1.WorldPos() - h2.WorldPos();
                 var perp = axis.Orthogonal().Normalized();
                 var p1 = mid + perp / 2f;
                 var p2 = mid - perp / 2f;
                 mb.AddLine(p1, p2,
+                    Colors.White.Tint(.25f), .25f);
+            }
+            else
+            {
+                mb.AddLine(h1.WorldPos(), h2.WorldPos(),
                     Colors.White.Tint(.25f), .25f);
             }
             

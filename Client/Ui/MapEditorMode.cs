@@ -58,6 +58,14 @@ public class MapEditorMode : UiMode
             (r, h) => ChangeRegimeAction.Construct(h, r, client.Data), 
             client,
             DoEditorAction)]);
+
+        DrawRoadMode = new MouseMode([new PaintHexEdgeMouseAction<RoadModel>(
+            MouseButtonMask.Right, SelectedRoadModel,
+            (r, v2i) => ChangeRoadAction.Construct(v2i, r, client.Data),
+            client, DoEditorAction, false
+        )]);
+        
+        
         
         MouseMode.Set(DrawLandformMode);
     }

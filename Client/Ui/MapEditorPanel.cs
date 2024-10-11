@@ -24,7 +24,9 @@ public partial class MapEditorPanel : PanelContainer
             undo.Disabled = mode.EditorActions.Count == 0;
         };
         undo.Disabled = mode.EditorActions.Count == 0;
-        vbox.AddChild(new MapEditorTabPanel(mode, data));
+        var p = new MapEditorTabPanel(mode, data);
+        p.ExpandFill();
+        vbox.AddChild(p);
     }
 
 }

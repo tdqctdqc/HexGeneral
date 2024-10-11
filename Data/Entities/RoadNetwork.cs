@@ -27,4 +27,9 @@ public class RoadNetwork(
         Roads[edge] = r.MakeIdRef(key.Data);
         key.Data.Data().Notices.NewRoad.Invoke(edge);
     }
+    public void RemoveRoad(Vector2I edge, ProcedureKey key)
+    {
+        Roads[edge] = new ModelIdRef<RoadModel>();
+        key.Data.Data().Notices.NewRoad.Invoke(edge);
+    }
 }
