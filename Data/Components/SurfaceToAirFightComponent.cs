@@ -12,7 +12,7 @@ using HexGeneral.Game.Logic;
 
 namespace HexGeneral.Data.Components;
 
-public class SurfaceToAirAttackComponent : AttackComponent
+public class SurfaceToAirFightComponent : FightComponent
 {
     public float AntiAirAttack { get; private set; }
     public int Range { get; private set; }

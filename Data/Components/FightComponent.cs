@@ -10,7 +10,7 @@ using HexGeneral.Game.Logic;
 
 namespace HexGeneral.Game;
 
-public abstract class AttackComponent 
+public abstract class FightComponent 
     : IModelComponent, IUnitCombatComponent
 {
     public abstract bool CanAttack(Unit targetUnit, Hex targetHex, HexGeneralData data);

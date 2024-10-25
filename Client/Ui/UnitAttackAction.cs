@@ -66,7 +66,7 @@ public class UnitAttackAction : MouseAction
         if (targetUnit is null) return false;
         if (targetUnit.Regime == unit.Regime) return false;
 
-        if (unit.Components.OfType<AttackComponent>(_client.Data)
+        if (unit.Components.OfType<FightComponent>(_client.Data)
                 .Any(a => a.CanAttack(targetUnit, targetHex, _client.Data))
             == false)
         {

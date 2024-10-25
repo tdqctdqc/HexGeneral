@@ -275,6 +275,16 @@
                     "guid": "7523ad9d-6793-4139-985b-a8b75118e41d",
                     "id": "50",
                     "Name": "MoveType_SeaMoveType"
+                },
+                {
+                    "guid": "4fe78fba-a852-48fa-b28c-8060a5446e41",
+                    "id": "51",
+                    "Name": "UnitModel_Artillery"
+                },
+                {
+                    "guid": "8f397dbd-381d-4f91-8d6b-5e5ad8bae35f",
+                    "id": "52",
+                    "Name": "MoveType_ArtilleryMoveType"
                 }
             ],
             "hidden": false,
@@ -1076,6 +1086,18 @@
                     "IndustrialCost": 100,
                     "MovePoints": 10,
                     "MoveType": "4e8b6ff1-3031-4076-800f-bc10a62fd5e0"
+                },
+                {
+                    "guid": "17fd56b9-71eb-4594-88cf-f9c5f65c4fe0",
+                    "id": "4",
+                    "Model": "4fe78fba-a852-48fa-b28c-8060a5446e41",
+                    "HitPoints": 25,
+                    "Organization": 25,
+                    "Hardness": 0.2,
+                    "RecruitCost": 10,
+                    "IndustrialCost": 100,
+                    "MovePoints": 5,
+                    "MoveType": "8f397dbd-381d-4f91-8d6b-5e5ad8bae35f"
                 }
             ],
             "hidden": false,
@@ -1606,6 +1628,91 @@
                     ],
                     "AttackTerrainDamageModel": "a7e12b7d-5d6e-49f5-8051-ca227ab43f68",
                     "DefendTerrainDamageModel": "270764a8-ed88-48e4-92a5-a5fb867356b6"
+                },
+                {
+                    "guid": "fb8a5082-4728-42a0-bc78-f6e875478e50",
+                    "id": "4",
+                    "Model": "8f397dbd-381d-4f91-8d6b-5e5ad8bae35f",
+                    "VegetationCosts": [
+                        {
+                            "guid": "8e80b1da-7e79-43da-880c-3c5c0b3f1560",
+                            "id": "0",
+                            "Key": "12bf64cd-529a-4994-9192-a63d25c9875b",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "9222d219-95b6-4d57-b34f-4338a9f77220",
+                            "id": "1",
+                            "Key": "eef90443-2102-4218-8e90-0f27b9a9ada8",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "37e0e4ce-0582-4138-a99c-6b5511580219",
+                            "id": "2",
+                            "Key": "ee0eb251-454c-4b7b-b65a-314f892ca98d",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "925dfecf-0e6a-40bf-b38a-b1ba88ac2a79",
+                            "id": "3",
+                            "Key": "e3aea46a-01e7-405c-8376-145fbe28c943",
+                            "Value": 0
+                        },
+                        {
+                            "guid": "9dc8c195-4d08-4bce-b64f-d0dcfc7110f7",
+                            "id": "4",
+                            "Key": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
+                            "Value": 0.5
+                        }
+                    ],
+                    "LandformCosts": [
+                        {
+                            "guid": "44fab98c-3e80-4fd9-9fc3-fc0aaf3146a6",
+                            "id": "0",
+                            "Key": "1299a3a2-4299-4960-b673-cf11b8d5aa93",
+                            "Value": 1
+                        },
+                        {
+                            "guid": "fa29a9ae-6e4e-44d1-81cb-be58e1ae16d0",
+                            "id": "1",
+                            "Key": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6",
+                            "Value": -1
+                        },
+                        {
+                            "guid": "ff62f4e4-7bc0-4fbe-89d2-6f4c7c8350e1",
+                            "id": "2",
+                            "Key": "28f79882-fd71-40d2-866d-434a48038a6b",
+                            "Value": 2
+                        },
+                        {
+                            "guid": "6fa783b5-9417-4753-804d-f56f72e01ba9",
+                            "id": "3",
+                            "Key": "88cfff75-d832-4951-9fea-d67c71822210",
+                            "Value": 4
+                        },
+                        {
+                            "guid": "a7520bad-5218-452e-a4d9-de622182ad4e",
+                            "id": "4",
+                            "Key": "769c0728-7bd3-4269-b45a-73c51ae93989",
+                            "Value": 2
+                        }
+                    ],
+                    "RoadCosts": [
+                        {
+                            "guid": "807471db-a9c1-408c-8d58-29432ec75e4a",
+                            "Key": "6ea1332f-97b4-4774-bbe2-9695e09de810",
+                            "Value": 0.5,
+                            "id": "0"
+                        },
+                        {
+                            "guid": "773b653e-b27d-4e90-93b1-4ab8696426f5",
+                            "Key": "2531ff7e-1a84-4f36-8aec-4f8e704b3315",
+                            "Value": 0.3,
+                            "id": "1"
+                        }
+                    ],
+                    "AttackTerrainDamageModel": "c4f6cd0a-1113-4595-9e3d-1f235a09469e",
+                    "DefendTerrainDamageModel": "fad22220-4b10-4fa1-ae2f-141cc3e2c0f8"
                 }
             ],
             "hidden": false,
@@ -2577,6 +2684,12 @@
                     "id": "5",
                     "Model": "7523ad9d-6793-4139-985b-a8b75118e41d",
                     "Domain": "ed6c1bbc-2656-43e7-8614-a100838e4550"
+                },
+                {
+                    "guid": "5589c42a-dcd4-4044-9d6a-b904c8c460ea",
+                    "id": "6",
+                    "Model": "8f397dbd-381d-4f91-8d6b-5e5ad8bae35f",
+                    "Domain": "de341933-a5a0-4c8e-a04f-c3fa6fcc481d"
                 }
             ],
             "hidden": false,

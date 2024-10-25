@@ -14,7 +14,7 @@ using HexGeneral.Game.Logic;
 
 namespace HexGeneral.Game;
 
-public class LandAttackComponent : AttackComponent
+public class LandFightComponent : FightComponent
 {
     public float HardAttack { get; private set; }
     public float SoftAttack { get; private set; }

@@ -24,6 +24,10 @@ public static class NewGameGenerator
             new Dictionary<Vector2I, (ModelIdRef<RoadModel>, float)>(),
             new Dictionary<HexRef, Dictionary<ModelIdRef<ConstructableBuildingModel>, float>>());
         data.Entities.AddEntity(engineerProjects, data);
+        var combatNet = new CombatNet(data.IdDispenser.TakeId(),
+            new TwoWay<ERef<Unit>, HexRef>(new Dictionary<HexRef, HashSet<ERef<Unit>>>(),
+                new Dictionary<ERef<Unit>, HashSet<HexRef>>()));
+        data.Entities.AddEntity(combatNet, data);
         
         MapGenerator.Generate(data, setupData);
         RegimeGenerator.Generate(data, setupData);
