@@ -2764,8 +2764,8 @@
             }
         },
         {
-            "name": "LandAttackComponent",
-            "description": "LandAttackComponent",
+            "name": "LandFightComponent",
+            "description": "LandFightComponent",
             "displayColumn": "id",
             "guid": "a12c55d9-8500-4aee-abee-88b5a60c3d11",
             "columns": [
@@ -2981,8 +2981,8 @@
             }
         },
         {
-            "name": "SurfaceToAirAttackComponent",
-            "description": "SurfaceToAirAttackComponent",
+            "name": "SurfaceToAirFightComponent",
+            "description": "SurfaceToAirFightComponent",
             "displayColumn": "id",
             "guid": "fb3f9dae-382e-407f-bca6-b98383334c58",
             "columns": [
@@ -3152,8 +3152,8 @@
             }
         },
         {
-            "name": "AirAttackComponent",
-            "description": "AirAttackComponent",
+            "name": "AirFightComponent",
+            "description": "AirFightComponent",
             "displayColumn": "id",
             "guid": "2548874e-6241-4b7c-bb96-3b1ccaf48578",
             "columns": [
