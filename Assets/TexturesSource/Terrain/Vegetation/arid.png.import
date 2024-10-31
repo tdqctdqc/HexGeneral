@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcaboqlll7fxg"
-path="res://.godot/imported/grassland.png-84a4ec3b4f37492aa6f10f8c4d4b10c3.ctex"
+uid="uid://t2fijmvw7fka"
+path="res://.godot/imported/arid.png-78b599ba166fc5338d8a02f11e5c8d68.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/Vegetation/grassland.png"
-dest_files=["res://.godot/imported/grassland.png-84a4ec3b4f37492aa6f10f8c4d4b10c3.ctex"]
+source_file="res://Assets/TexturesSource/Terrain/Vegetation/arid.png"
+dest_files=["res://.godot/imported/arid.png-78b599ba166fc5338d8a02f11e5c8d68.ctex"]
 
 [params]
 

@@ -8,4 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GodotUtilities\GodotUtilities\GodotUtilities.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Poly2Tri.dll" Version="1.0.4" />
+  </ItemGroup>
 </Project>

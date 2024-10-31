@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cfu3rpl2cso04"
-path="res://.godot/imported/barren.png-9dcc5c786ab440d18b4a9e123bfb4b6d.ctex"
+uid="uid://dtc6jyto57mf5"
+path="res://.godot/imported/forest2.svg-84b8ac2ef573f675e317ae11f98a110d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/Vegetation/barren.png"
-dest_files=["res://.godot/imported/barren.png-9dcc5c786ab440d18b4a9e123bfb4b6d.ctex"]
+source_file="res://Assets/Textures/Terrain/forest2.svg"
+dest_files=["res://.godot/imported/forest2.svg-84b8ac2ef573f675e317ae11f98a110d.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

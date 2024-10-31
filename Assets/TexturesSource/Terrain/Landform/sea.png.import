@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bniintjvurjxu"
-path="res://.godot/imported/urban.png-15d6ec8e103843a0534085fd2484c75e.ctex"
+uid="uid://dej3g718bm21y"
+path="res://.godot/imported/sea.png-b513ebee3d66d8e4f74bba5fd1a596a6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/Landform/urban.png"
-dest_files=["res://.godot/imported/urban.png-15d6ec8e103843a0534085fd2484c75e.ctex"]
+source_file="res://Assets/TexturesSource/Terrain/Landform/sea.png"
+dest_files=["res://.godot/imported/sea.png-b513ebee3d66d8e4f74bba5fd1a596a6.ctex"]
 
 [params]
 

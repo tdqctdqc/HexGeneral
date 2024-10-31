@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bv81846hu1hx6"
-path="res://.godot/imported/hill.png-e25ee033a14c58785e6e6d3d5dd62e10.ctex"
+uid="uid://b7ms6uhqptoqy"
+path="res://.godot/imported/desert.png-54909c8303116005dd6ca2ee18cca6db.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/Landform/hill.png"
-dest_files=["res://.godot/imported/hill.png-e25ee033a14c58785e6e6d3d5dd62e10.ctex"]
+source_file="res://Assets/TexturesSource/Terrain/Vegetation/desert.png"
+dest_files=["res://.godot/imported/desert.png-54909c8303116005dd6ca2ee18cca6db.ctex"]
 
 [params]
 

@@ -18,7 +18,8 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
     public LocationGraphics LocationGraphics { get; private set; }
     public ConstructionGraphics ConstructionGraphics { get; private set; }
     public HexBaseColorGraphics TerrainGraphics { get; private set; }
-    public TerrainFancyMesh FancyTerrain { get; private set; }
+    public TerrainFancyMesh FancyTerrainMesh { get; private set; }
+    public TerrainDecals TerrainDecals { get; private set; }
     public MapInputCatcher Input { get; private set; }
     public Action Disconnect { get; set; }
 
@@ -65,8 +66,11 @@ public partial class MapGraphics(HexGeneralClient client) : Node2D, IClientCompo
         ConstructionGraphics = new ConstructionGraphics(Client);
         AddChild(ConstructionGraphics);
 
-        FancyTerrain = new TerrainFancyMesh(Client.Data);
-        AddChild(FancyTerrain);
+        FancyTerrainMesh = new TerrainFancyMesh(Client.Data);
+        AddChild(FancyTerrainMesh);
+
+        TerrainDecals = new TerrainDecals(Client.Data);
+        AddChild(TerrainDecals);
     }
 
     public void UpdateForTurn()

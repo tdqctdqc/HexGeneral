@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://t2fijmvw7fka"
-path="res://.godot/imported/arid.png-becc1fb93ad32be480ea8bde29c91a32.ctex"
+uid="uid://cfu3rpl2cso04"
+path="res://.godot/imported/barren.png-f91f882b1d46acfc70b79fed49c5e293.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/Vegetation/arid.png"
-dest_files=["res://.godot/imported/arid.png-becc1fb93ad32be480ea8bde29c91a32.ctex"]
+source_file="res://Assets/TexturesSource/Terrain/Vegetation/barren.png"
+dest_files=["res://.godot/imported/barren.png-f91f882b1d46acfc70b79fed49c5e293.ctex"]
 
 [params]
 

@@ -618,7 +618,7 @@
                     "id": "4",
                     "Model": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
                     "Color": "1e7b1e",
-                    "MinMoisture": 0,
+                    "MinMoisture": 0.4,
                     "AllowedLandforms": [
                         {
                             "guid": "2fdc74db-31d2-4e34-9b89-1bc89a7d170f",

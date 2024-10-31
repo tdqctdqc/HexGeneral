@@ -48,8 +48,7 @@ public partial class HexBorderMultiMesh<TElement> : MultiMeshInstance2D
                     colors.Add(color);
                 }
                 
-                var dir = nHex.Coords - hex.Coords;
-                var angle = -HexExt.HexDirs.IndexOf(dir) * (Mathf.Pi / 3f);
+                var angle = hex.Coords.GetHexAngle(nHex.Coords);
                 transforms.Add(new Transform2D(angle, pos));
                 edges.Add(new Vector2I(hex.Id, nHex.Id));
             }
