@@ -396,6 +396,40 @@
                         "description": "text",
                         "defaultValue": "bool"
                     }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "b36f2569-84c0-4ba0-b113-81e3cff2e42c",
+                    "description": "DecalWidth",
+                    "name": "DecalWidth",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "a5019d73-af33-48d0-9571-177b9a50ab6c",
+                    "description": "DecalDist",
+                    "name": "DecalDist",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
                 }
             ],
             "lines": [
@@ -407,7 +441,9 @@
                     "Color": "d58773",
                     "DarkenFactor": 0,
                     "MinRoughness": 0,
-                    "CanChooseForGen": true
+                    "CanChooseForGen": true,
+                    "DecalWidth": 0,
+                    "DecalDist": 0
                 },
                 {
                     "guid": "b81ee609-faf1-4ad2-b0ce-d408e0d2a3c5",
@@ -417,7 +453,9 @@
                     "Color": "1873cc",
                     "DarkenFactor": 0,
                     "MinRoughness": 9999,
-                    "CanChooseForGen": true
+                    "CanChooseForGen": true,
+                    "DecalWidth": 0,
+                    "DecalDist": 0
                 },
                 {
                     "guid": "d5bb3fd1-1ac3-42e0-8f63-94562168df3a",
@@ -427,7 +465,9 @@
                     "Color": "a52a2a",
                     "DarkenFactor": 0.3,
                     "MinRoughness": 0.25,
-                    "CanChooseForGen": true
+                    "CanChooseForGen": true,
+                    "DecalWidth": 0,
+                    "DecalDist": 0
                 },
                 {
                     "guid": "941f3cd2-e25d-49c1-8838-5a304a372e30",
@@ -437,7 +477,9 @@
                     "Color": "696969",
                     "DarkenFactor": 1,
                     "MinRoughness": 0.5,
-                    "CanChooseForGen": true
+                    "CanChooseForGen": true,
+                    "DecalWidth": 0,
+                    "DecalDist": 0
                 },
                 {
                     "guid": "d8c7fdc7-f227-425b-891a-07ce3dc41b64",
@@ -447,7 +489,9 @@
                     "Color": "cd5c5c",
                     "DarkenFactor": 0,
                     "MinRoughness": 0,
-                    "CanChooseForGen": false
+                    "CanChooseForGen": false,
+                    "DecalWidth": 0.25,
+                    "DecalDist": 0.25
                 }
             ],
             "hidden": false,
@@ -529,6 +573,40 @@
                         "name": "text",
                         "description": "text"
                     }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "65d6717a-46f9-4923-a15d-6c302965661d",
+                    "description": "DecalWidth",
+                    "name": "DecalWidth",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
+                },
+                {
+                    "typeStr": "float",
+                    "guid": "11b15a53-3f41-4e19-9ca2-2e689fed7bb8",
+                    "description": "DecalDist",
+                    "name": "DecalDist",
+                    "min": -10000,
+                    "max": 100000,
+                    "defaultValue": 0,
+                    "iconName": "newFloat",
+                    "configurable": {
+                        "name": "text",
+                        "description": "text",
+                        "min": "float",
+                        "max": "float",
+                        "defaultValue": "float"
+                    }
                 }
             ],
             "lines": [
@@ -549,7 +627,9 @@
                             "id": "1",
                             "Value": "28f79882-fd71-40d2-866d-434a48038a6b"
                         }
-                    ]
+                    ],
+                    "DecalWidth": 0.2,
+                    "DecalDist": 0.5
                 },
                 {
                     "guid": "cf30cb0b-8c0d-4aee-b5b0-7806f72d949f",
@@ -568,7 +648,9 @@
                             "id": "1",
                             "Value": "28f79882-fd71-40d2-866d-434a48038a6b"
                         }
-                    ]
+                    ],
+                    "DecalWidth": 0.2,
+                    "DecalDist": 0.5
                 },
                 {
                     "guid": "676667d4-2241-4e6f-b3ca-d59e66c0dadd",
@@ -592,7 +674,9 @@
                             "id": "2",
                             "Value": "adbbfe39-6aac-4cac-8d3a-c2a30fc2c1f6"
                         }
-                    ]
+                    ],
+                    "DecalWidth": 0,
+                    "DecalDist": 0
                 },
                 {
                     "guid": "c80664b6-07d6-4d12-8840-5e58719170e4",
@@ -611,13 +695,15 @@
                             "id": "1",
                             "Value": "28f79882-fd71-40d2-866d-434a48038a6b"
                         }
-                    ]
+                    ],
+                    "DecalWidth": 0.2,
+                    "DecalDist": 0.25
                 },
                 {
                     "guid": "eaa394b3-c55f-4bb1-87f8-2eef3191ffaf",
                     "id": "4",
                     "Model": "7ccdd1a2-57cd-405b-af9c-9cb9ea560813",
-                    "Color": "1e7b1e",
+                    "Color": "3cb371",
                     "MinMoisture": 0.4,
                     "AllowedLandforms": [
                         {
@@ -630,7 +716,9 @@
                             "id": "1",
                             "Value": "28f79882-fd71-40d2-866d-434a48038a6b"
                         }
-                    ]
+                    ],
+                    "DecalWidth": 0.5,
+                    "DecalDist": 0.5
                 }
             ],
             "hidden": false,

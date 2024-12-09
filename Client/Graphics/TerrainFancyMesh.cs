@@ -28,11 +28,16 @@ public partial class TerrainFancyMesh : Node2D
         ZIndex = (int)GraphicsLayers.Terrain;
         ZAsRelative = false;
         var mb = new MeshBuilder();
+
+        Func<Hex, Hex, bool> compare = (h, i)
+            => h.Landform.Equals(i.Landform)
+               && h.Vegetation.Equals(i.Vegetation);
+        Func<Hex, Hex, bool> compare2 = (h, i) => h.Landform.Get(_data).IsLand
+                                                  == i.Landform.Get(_data).IsLand;
+        
         var unions = UnionFind.Find<Hex, HashSet<Hex>>(
             _data.Map.Hexes.Values,
-            (h, i) 
-                => h.Landform.Equals(i.Landform)
-                        && h.Vegetation.Equals(i.Vegetation),
+            compare,
             h => h.GetNeighbors(_data)
         );
         int iter = 0;
@@ -47,58 +52,59 @@ public partial class TerrainFancyMesh : Node2D
     {
         var lf = union.First().Landform.Get(_data);
 
-        // if (lf == _data.ModelPredefs.Landforms.Sea) return;
         var color = union.First().GetTerrainColor(_data);
         var outlines = GetUnionOutlineAndHoles(union);
-
-        List<Vector2> steiners;
-        
-        
+        var wobble = .075f;
         if (lf == _data.ModelPredefs.Landforms.Hill)
         {
-            steiners = GetSteinerPoints(union, .25f);
+            wobble = .25f;
         }
-        else if (lf == _data.ModelPredefs.Landforms.Mountain)
+        else if (lf == _data.ModelPredefs.Landforms.Sea)
         {
-            steiners = GetSteinerPoints(union, .5f);
-        }
-        else
-        {
-            steiners = union.Select(h =>
-                    h.WorldPos() + (Vector2.Up * .5f)
-                    .Rotated(_data.Random.RandfRange(0f, Mathf.Pi * 2f)))
-                .ToList();
+            wobble = .15f;
         }
         
 
-        int iter = 0;
-
-
-        var poly = GetPoly(outlines, steiners);
-
-
-        if (lf == _data.ModelPredefs.Landforms.Mountain)
+        if (union.Count > 20_000)
         {
-            BuildMountainMesh(poly, mb);
+            var (tris, altitudes)
+                = GetBigPoly(union);
+            BuildDefaultMesh(tris, altitudes, color, wobble, mb);
         }
         else
         {
-            var wobble = .05f;
+            Polygon poly;
+
+            List<Vector2> steiners;
+
+            if (lf == _data.ModelPredefs.Landforms.Mountain)
+            {
+                steiners = GetSteinerPoints(union, .5f);
+                poly = GetPoly(outlines, steiners);
+                BuildMountainMesh(poly, mb);
+                return;
+            }
+            
             if (lf == _data.ModelPredefs.Landforms.Hill)
             {
-                wobble = .25f;
+                steiners = GetSteinerPoints(union, .25f);
             }
-            else if (lf == _data.ModelPredefs.Landforms.Sea)
+            else
             {
-                wobble = .1f;
+                steiners = union.Select(h =>
+                        h.WorldPos() + (Vector2.Up * .5f)
+                        .Rotated(_data.Random.RandfRange(0f, Mathf.Pi * 2f)))
+                    .ToList();
             }
-            var altitudes = GetPointAltitudes(poly);
-            BuildDefaultMesh(poly, altitudes, color, wobble, mb);
+            poly = GetPoly(outlines, steiners);
+            
+            var altitudes = GetPolyAltitudes(poly);
+            BuildDefaultMesh(poly.Triangles, altitudes, color, wobble, mb);
         }
     }
 
     private Polygon GetPoly(List<List<(Vector3I, int)>> outlines,
-        List<Vector2> interiors)
+        List<Vector2> steiners)
     {
         var outer = outlines.MaxBy(Span);
         var poly = new Polygon(outer.Select(getPolyPoint));
@@ -109,10 +115,10 @@ public partial class TerrainFancyMesh : Node2D
             if (outline == outer) continue;
             poly.AddHole(new Polygon(outline.Select(getPolyPoint)));
         }
-        poly.AddSteinerPoints(interiors
+        poly.AddSteinerPoints(steiners
             .Select(p => new TriangulationPoint(p.X, p.Y)).ToList());
-        
         P2T.Triangulate(poly);
+
         return poly;
         
         PolygonPoint getPolyPoint((Vector3I, int) v)
@@ -122,7 +128,84 @@ public partial class TerrainFancyMesh : Node2D
         }
     }
 
-    private Dictionary<Vector2, float> GetPointAltitudes(Polygon poly)
+    private (List<DelaunayTriangle>, 
+        Dictionary<Vector2, float>) GetBigPoly(HashSet<Hex> union)
+    {
+        var dir = Vector2.Up * HexExt.HexHeight * .95f;
+        var dic = union.ToDictionary(h => h,
+            h => h.WorldPos() + dir.Rotated(_data.Random.RandfRange(0f, Mathf.Pi * 2f) *
+                                            _data.Random.RandfRange(0f, HexExt.HexHeight * .5f)));
+        var hexes = _data.Map.Hexes;
+        var tris = new List<DelaunayTriangle>();
+        var alts = new Dictionary<Vector2, float>();
+        
+        foreach (var (key, value) in dic)
+        {
+            alts.Add(value, _data.Random.RandfRange(0f, 1f));
+        }
+        
+        
+        foreach (var hex in union)
+        {
+            var p = getP(hex);
+            for (var i = 0; i < HexExt.HexDirs.Count; i++)
+            {
+                var n1Coord = hex.Coords + HexExt.HexDirs[i];
+                var n2Coord = hex.Coords + HexExt.HexDirs.Modulo(i + 1);
+                var have1 = hexes.TryGetValue(n1Coord, out var n1)
+                    && union.Contains(n1);
+                var have2 = hexes.TryGetValue(n2Coord, out var n2)
+                    && union.Contains(n2);
+                
+                
+                if (have1 && have2)
+                {
+                    if (n1.Id > hex.Id || n2.Id > hex.Id) continue;
+                    var tri = new DelaunayTriangle(p, getP(n1), getP(n2));
+                    tris.Add(tri);
+                }
+                else if(have1)
+                {
+                    if (n1.Id > hex.Id) continue;
+                    var tri = new DelaunayTriangle(p, getP(n1), 
+                        getCornerP(hex, n2Coord));
+                    tris.Add(tri);
+                }
+                else if (have2)
+                {
+                    if (n2.Id > hex.Id) continue;
+                    var tri = new DelaunayTriangle(p, getP(n2), 
+                        getCornerP(hex, n1Coord));
+                    tris.Add(tri);
+                }
+                else
+                {
+                    var tri = new DelaunayTriangle(p, getCornerP(hex, n2Coord), 
+                        getCornerP(hex, n1Coord));
+                    tris.Add(tri);
+                }
+            }
+        }
+
+        return (tris, alts);
+
+
+        TriangulationPoint getP(Hex h)
+        {
+            return new TriangulationPoint(dic[h].X, dic[h].Y);
+        }
+
+        TriangulationPoint getCornerP(Hex hex, Vector3I coord)
+        {
+            var dir = coord.GetWorldPos() - hex.WorldPos();
+            dir = dir.Normalized();
+            dir = dir.Rotated(-Mathf.Pi / 12f);
+            var p = hex.WorldPos() + dir;
+            alts.TryAdd(p, 0f);
+            return new TriangulationPoint(p.X, p.Y);
+        }
+    }
+    private Dictionary<Vector2, float> GetPolyAltitudes(Polygon poly)
     {
         var res = new Dictionary<Vector2, float>();
 
@@ -348,11 +431,11 @@ public partial class TerrainFancyMesh : Node2D
 
         return (ps, borderPs, edges);
     }
-    private void BuildDefaultMesh(Polygon poly, 
+    private void BuildDefaultMesh(IEnumerable<DelaunayTriangle> tris, 
         Dictionary<Vector2, float> altitudes,
         Color color, float wobble, MeshBuilder mb)
     {
-        foreach (var t in poly.Triangles)
+        foreach (var t in tris)
         {
             var a2 = GetV2(t.Points[0]);
             var a = new Vector3(

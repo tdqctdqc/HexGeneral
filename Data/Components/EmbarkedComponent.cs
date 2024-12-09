@@ -21,7 +21,19 @@ public class EmbarkedComponent(ERef<Unit> unit, IMoveComponent inner, ModelIdRef
 
     public Control GetDisplay(GameClient client)
     {
-        return new Control();
+        var c = new VBoxContainer();
+        var model = Mobilizer.Get(client.Client().Data);
+        c.CreateLabelAsChild("Embarked on " + model.Name);
+        
+        var texture = new TextureRect();
+        texture.CustomMinimumSize = Vector2.One * 150f;
+
+        texture.Texture = model.GetTexture();
+        texture.StretchMode = TextureRect.StretchModeEnum.KeepAspect;
+        texture.ExpandMode = TextureRect.ExpandModeEnum.FitWidth;
+        
+        c.AddChild(texture);
+        return c;
     }
 
     public void TurnTick(ProcedureKey key)

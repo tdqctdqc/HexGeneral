@@ -3,17 +3,20 @@ using GodotUtilities.GameData;
 
 namespace HexGeneral.Game;
 
-public class Landform : Model
+public class Landform : Model, ITerrainAspect
 {
     public bool IsLand { get; private set; }
     public Color Color { get; private set; }
     public float DarkenFactor { get; private set; }
     public float MinRoughness { get; private set; }
     public bool CanChooseForGen { get; private set; }
+    public float DecalWidth { get; private set; }
+    public float DecalDist { get; private set; }
     public Landform()
     {
         
     }
-    
+
+
     
 }

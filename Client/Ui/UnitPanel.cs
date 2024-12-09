@@ -17,7 +17,7 @@ public partial class UnitPanel : UiModeTabPanel
 {
     private UnitMode _mode;
     private HexGeneralClient _client;
-    private VBoxContainer _combatInfo, _engineeringInfo;
+    private Container _combatInfo, _engineeringInfo;
     
     public UnitPanel(UnitMode mode, HexGeneralClient client)
         : base(mode, mode.SelectUnitMouseMode)
@@ -39,50 +39,53 @@ public partial class UnitPanel : UiModeTabPanel
         }, this);
         _client.Data.Notices.FinishedTurnStartLogic.SubscribeForNode(DrawTabs, this);
 
-        _combatInfo = new VBoxContainer();
+        _combatInfo = new ScrollContainer();
         _combatInfo.Name = "Combat";
-        _engineeringInfo = new VBoxContainer();
-        _engineeringInfo.Name = "Engineering";
 
+        _engineeringInfo = new ScrollContainer();
+        _engineeringInfo.Name = "Engineering";
         AddTab(_combatInfo, 
             _mode.MoveAttackMouseMode,
             () => _mode.SelectedUnit.Value is not null,
             DrawCombatInfo);
         AddTab(_engineeringInfo, 
             _mode.EngineerMouseMode,
-            () => _mode.SelectedUnit.Value?.Components.Get<EngineerEntityComponent>(_client.Data)
+            () => _mode.SelectedUnit.Value?.Components
+                    .Get<EngineerEntityComponent>(_client.Data)
                     is not null,
             DrawEngineeringInfo);
     }
     private void DrawCombatInfo()
     {
         _combatInfo.ClearChildren();
+        var vbox = new VBoxContainer();
+        _combatInfo.AddChild(vbox);
         var unit = _mode.SelectedUnit.Value;
         var regime = unit.Regime.Get(_client.Data);
         var model = unit.UnitModel.Get(_client.Data);
         var texture = new TextureRect();
         texture.StretchMode = TextureRect.StretchModeEnum.KeepAspect;
+        texture.ExpandMode = TextureRect.ExpandModeEnum.FitWidth;
         texture.Texture = model.GetTexture();
-        texture.Size = Vector2.One * 20f;
-        texture.CustomMinimumSize = texture.Size;
-        _combatInfo.AddChild(texture);
-        _combatInfo.CreateLabelAsChild(model.Name);
-        _combatInfo.CreateLabelAsChild($"Hitpoints: {unit.CurrentHitPoints} / {model.HitPoints}");
-        _combatInfo.AddChild(new VSeparator());
-        _combatInfo.CreateLabelAsChild($"Hardness: {model.Hardness}");
+        texture.CustomMinimumSize = Vector2.One * 150f;
+        vbox.AddChild(texture);
+        vbox.CreateLabelAsChild(model.Name);
+        vbox.CreateLabelAsChild($"Hitpoints: {unit.CurrentHitPoints} / {model.HitPoints}");
+        vbox.AddChild(new VSeparator());
+        vbox.CreateLabelAsChild($"Hardness: {model.Hardness}");
 
         var hex = unit.GetHex(_client.Data);
         var supplyAvailability = SupplyLogic.GetSupplyAvailability(hex,
             _client.Data);
-        _combatInfo.CreateLabelAsChild($"Supply Availability: {supplyAvailability}");
+        vbox.CreateLabelAsChild($"Supply Availability: {supplyAvailability}");
         
         foreach (var unitComponent in unit.Components.All(_client.Data))
         {
-            _combatInfo.AddChild(unitComponent.GetDisplay(_client));
+            vbox.AddChild(unitComponent.GetDisplay(_client));
         }
         
         
-        var reinforce = _combatInfo.AddButton($"Reinforce", () =>
+        var reinforce = vbox.AddButton($"Reinforce", () =>
         {
             var missingRatio = 1f - unit.CurrentHitPoints / model.HitPoints;
             if (missingRatio == 0f) return;
@@ -105,7 +108,7 @@ public partial class UnitPanel : UiModeTabPanel
         });
         reinforce.Disabled = unit.CanReinforce(_client.Data) == false;
         
-        var mobilize = _combatInfo.AddButton("Mobilize", () =>
+        var mobilize = vbox.AddButton("Mobilize", () =>
         {
             MobilizeUnitWindow.Open(unit, _client);
         });
@@ -115,7 +118,8 @@ public partial class UnitPanel : UiModeTabPanel
     private void DrawEngineeringInfo()
     {
         _engineeringInfo.ClearChildren();
-        
+        var vbox = new VBoxContainer();
+        _engineeringInfo.AddChild(vbox);
         var unit = _mode.SelectedUnit.Value;
         var e = unit.Components.Get<EngineerEntityComponent>(_client.Data);
 
@@ -157,7 +161,7 @@ public partial class UnitPanel : UiModeTabPanel
             }
             
             
-            _engineeringInfo.AddButton(text,
+            vbox.AddButton(text,
                 () =>
                 {
                     if (hasLoc == false)

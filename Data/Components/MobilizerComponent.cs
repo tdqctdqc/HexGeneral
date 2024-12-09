@@ -53,9 +53,12 @@ public class MobilizerComponent
         var unit = Unit.Get(data);
         var model = mobilizer.Get(data);
         var texture = new TextureRect();
-        texture.Size = Vector2.One * 50f;
+        texture.Size = Vector2.One * 150f;
+
         texture.Texture = model.GetTexture();
-        texture.StretchMode = TextureRect.StretchModeEnum.Keep;
+        texture.StretchMode = TextureRect.StretchModeEnum.KeepAspect;
+        texture.ExpandMode = TextureRect.ExpandModeEnum.FitWidth;
+
         var moveRatio = unit.Components.Get<MoveCountComponent>(data).MovePointRatioRemaining;
         vbox.AddChild(texture);
         vbox.CreateLabelAsChild("Mobilizer: " + model.Name);

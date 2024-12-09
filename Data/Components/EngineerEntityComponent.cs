@@ -10,7 +10,7 @@ public class EngineerEntityComponent(ERef<Unit> unit, float currentEngineerPoint
 {
     public ERef<Unit> Unit { get; private set; } = unit;
     public float CurrentEngineerPoints { get; private set; } = currentEngineerPoints;
-
+    
     public Control GetDisplay(GameClient client)
     {
         var vbox = new VBoxContainer();

@@ -19,8 +19,4 @@ public partial class MapInputCatcher : Control
     {
         Input?.Invoke(e);
     }
-    public override void _Input(InputEvent e)
-    {
-        Input?.Invoke(e);
-    }
 }

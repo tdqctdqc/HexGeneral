@@ -9,5 +9,6 @@ public enum GraphicsLayers
     Roads,
     Locations,
     Units, 
-    Debug
+    Debug,
+    Input
 }
